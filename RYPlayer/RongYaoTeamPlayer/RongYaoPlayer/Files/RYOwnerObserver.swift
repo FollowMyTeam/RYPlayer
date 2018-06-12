@@ -39,11 +39,15 @@ public class RYOwnerObserver: NSObject {
     
     /// Remove
     func remove(owner: AnyObject) {
-        if ( self.observeKey != nil ) {
+        if ( observeKey != nil ) {
             owner.removeObserver(self, forKeyPath: observeKey!)
         }
-        else if ( self.nota != nil ) {
+        else if ( nota != nil ) {
             NotificationCenter.default.removeObserver(self, name: nota, object: owner)
         }
+    }
+    
+    deinit {
+        print("%s - %s", #function, NSStringFromClass(self.classForCoder))
     }
 }

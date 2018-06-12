@@ -43,9 +43,11 @@ public class RYAVPlayer: AVPlayer {
     public override init(playerItem item: AVPlayerItem?) {
         super.init(playerItem: item)
         self.ry_observeTimeChangeOfCurrentTime()
+        print("%s - %s", #function, NSStringFromClass(self.classForCoder))
     }
     
     deinit {
+        print("%s - %s", #function, NSStringFromClass(self.classForCoder))
         self.ry_removeCurrentTiemObserver()
     }
 }
@@ -53,11 +55,21 @@ public class RYAVPlayer: AVPlayer {
 /// 处理当前时间变更的回调
 private extension RYAVPlayer {
     private struct RYAVPlayerHandleCurrentTimeChangeAssociatedKeys {
-        static var ry_currentTimeObserver: Any?
+        static var kry_currentTimeObserver = "kry_currentTimeObserver"
+    }
+    
+    var ry_currentTimeObserver: Any? {
+        set {
+            objc_setAssociatedObject(self, &RYAVPlayerHandleCurrentTimeChangeAssociatedKeys.kry_currentTimeObserver, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+        
+        get {
+            return objc_getAssociatedObject(self, &RYAVPlayerHandleCurrentTimeChangeAssociatedKeys.kry_currentTimeObserver)
+        }
     }
     
     private func ry_observeTimeChangeOfCurrentTime() {
-        RYAVPlayerHandleCurrentTimeChangeAssociatedKeys.ry_currentTimeObserver = self.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(0.5, Int32(NSEC_PER_SEC)), queue: DispatchQueue.main, using: { [weak self] (time) in
+        ry_currentTimeObserver = self.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(0.5, Int32(NSEC_PER_SEC)), queue: DispatchQueue.main, using: { [weak self] (time) in
             guard let `self` = self else {
                 return
             }
@@ -66,8 +78,8 @@ private extension RYAVPlayer {
     }
     
     private func ry_removeCurrentTiemObserver() {
-        if ( RYAVPlayerHandleCurrentTimeChangeAssociatedKeys.ry_currentTimeObserver != nil ) {
-            self.removeTimeObserver(RYAVPlayerHandleCurrentTimeChangeAssociatedKeys.ry_currentTimeObserver!)
+        if ( ry_currentTimeObserver != nil ) {
+            self.removeTimeObserver(ry_currentTimeObserver!)
         }
     }
 }

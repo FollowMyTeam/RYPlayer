@@ -75,9 +75,11 @@ public class RYAVPlayerItem: AVPlayerItem {
     public override init(asset: AVAsset, automaticallyLoadedAssetKeys: [String]?) {
         super.init(asset: asset, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
         self.ry_addKeyObservers()
+        print("%s - %s", #function, NSStringFromClass(self.classForCoder))
     }
     
     deinit {
+        print("%s - %s", #function, NSStringFromClass(self.classForCoder))
         self.ry_removeKeyObservers()
     }
 }
@@ -85,13 +87,8 @@ public class RYAVPlayerItem: AVPlayerItem {
 /// handle buffer empty
 private extension RYAVPlayerItem {
     struct RYAVPlayerItemHandleBufferAssociatedKeys {
-        /// 用于刷新当前的缓冲进度
-        /// 此timer将会每2秒刷新一次
-        /// 缓冲进度 > ry_maxPreTime, 代表可以继续播放
-        static var ry_refreshBufferTimer: Timer?
-        
-        /// 是否正在等待缓冲
-        static var ry_isWaitingPlaybackBuffer: Bool?
+        static var kry_refreshBufferTimer = "kry_refreshBufferTimer"
+        static var kry_isWaitingPlaybackBuffer = "kry_isWaitingPlaybackBuffer"
     }
     
     /// 最长准备时间(缓冲)可以播放
@@ -107,13 +104,41 @@ private extension RYAVPlayerItem {
         }
     }
     
+    /// 用于刷新当前的缓冲进度
+    /// 此timer将会每2秒刷新一次
+    /// 缓冲进度 > ry_maxPreTime, 代表可以继续播放
+    var ry_refreshBufferTimer: Timer? {
+        set {
+            objc_setAssociatedObject(self, &RYAVPlayerItemHandleBufferAssociatedKeys.kry_refreshBufferTimer, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+        
+        get {
+            return objc_getAssociatedObject(self, &RYAVPlayerItemHandleBufferAssociatedKeys.kry_refreshBufferTimer) as? Timer
+        }
+    }
+    
+    /// 是否正在等待缓冲
+    var ry_isWaitingPlaybackBuffer: Bool {
+        set {
+            objc_setAssociatedObject(self, &RYAVPlayerItemHandleBufferAssociatedKeys.kry_isWaitingPlaybackBuffer, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+        
+        get {
+            let b = objc_getAssociatedObject(self, &RYAVPlayerItemHandleBufferAssociatedKeys.kry_isWaitingPlaybackBuffer) as? Bool
+            if ( b == nil ) {
+                return false
+            }
+            return b!
+        }
+    }
+    
     /// 轮询缓冲, 查看是否可以继续播放
     func ry_pollingPlaybackBuffer() {
-        if ( RYAVPlayerItemHandleBufferAssociatedKeys.ry_isWaitingPlaybackBuffer == true ) {
+        if ( ry_isWaitingPlaybackBuffer == true ) {
             return
         }
         
-        let ry_refreshBufferTimer = Timer.sj_timer(interval: 2, block: { [weak self] (timer) in
+        ry_refreshBufferTimer = Timer.sj_timer(interval: 2, block: { [weak self] (timer) in
             guard let `self` = self else {
                 timer.invalidate()
                 return
@@ -131,13 +156,12 @@ private extension RYAVPlayerItem {
             }
             
             timer.invalidate()
-            RYAVPlayerItemHandleBufferAssociatedKeys.ry_isWaitingPlaybackBuffer = false
+            ry_isWaitingPlaybackBuffer = false
             self.ry_delegate?.playerItemPlaybackBufferFull(self)
         }, repeats: true)
         
-        RunLoop.main.add(ry_refreshBufferTimer, forMode: .commonModes)
-        ry_refreshBufferTimer.fireDate = Date.init(timeIntervalSinceNow: ry_refreshBufferTimer.timeInterval)
-        RYAVPlayerItemHandleBufferAssociatedKeys.ry_refreshBufferTimer = ry_refreshBufferTimer
+        RunLoop.main.add(ry_refreshBufferTimer!, forMode: .commonModes)
+        ry_refreshBufferTimer!.fireDate = Date.init(timeIntervalSinceNow: ry_refreshBufferTimer!.timeInterval)
     }
 }
 
@@ -145,11 +169,24 @@ private extension RYAVPlayerItem {
 /// observers
 private  extension RYAVPlayerItem  {
     struct RYAVPlayerItemObserverAssociatedKeys {
-        static var ry_ownerObservers = [RYOwnerObserver]()
+        static var kry_ownerObservers = "kry_ownerObservers"
+    }
+    
+    var ry_ownerObservers: [RYOwnerObserver]? {
+        set {
+            objc_setAssociatedObject(self, &RYAVPlayerItemObserverAssociatedKeys.kry_ownerObservers, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+        get {
+            return objc_getAssociatedObject(self, &RYAVPlayerItemObserverAssociatedKeys.kry_ownerObservers) as? [RYOwnerObserver]
+        }
     }
     
     func ry_addKeyObservers() {
-        RYAVPlayerItemObserverAssociatedKeys.ry_ownerObservers.append(RYOwnerObserver.init(owner: self, observeKey: "duration", exeBlock: { [weak self] (helper) in
+        if ( self.ry_ownerObservers == nil ) {
+            self.ry_ownerObservers = [RYOwnerObserver]()
+        }
+        
+        ry_ownerObservers?.append(RYOwnerObserver.init(owner: self, observeKey: "duration", exeBlock: { [weak self] (helper) in
             guard let `self` = self else {
                 return
             }
@@ -157,21 +194,21 @@ private  extension RYAVPlayerItem  {
             self.ry_delegate?.playerItemDurationDidChange(self)
         }))
         
-        RYAVPlayerItemObserverAssociatedKeys.ry_ownerObservers.append(RYOwnerObserver.init(owner: self, observeKey: "loadedTimeRanges", exeBlock: { [weak self] (helper) in
+        ry_ownerObservers?.append(RYOwnerObserver.init(owner: self, observeKey: "loadedTimeRanges", exeBlock: { [weak self] (helper) in
             guard let `self` = self else {
                 return
             }
             self.ry_delegate?.playerItemCurrentBufferLoadedTimeDidChange(self)
         }))
         
-        RYAVPlayerItemObserverAssociatedKeys.ry_ownerObservers.append(RYOwnerObserver.init(owner: self, observeKey: "status", exeBlock: { [weak self] (helper) in
+        ry_ownerObservers?.append(RYOwnerObserver.init(owner: self, observeKey: "status", exeBlock: { [weak self] (helper) in
             guard let `self` = self else {
                 return
             }
             self.ry_delegate?.playerItemStatusDidChange(self)
         }))
         
-        RYAVPlayerItemObserverAssociatedKeys.ry_ownerObservers.append(RYOwnerObserver.init(owner: self, observeKey: "playbackBufferEmpty", exeBlock: { [weak self] (helper) in
+        ry_ownerObservers?.append(RYOwnerObserver.init(owner: self, observeKey: "playbackBufferEmpty", exeBlock: { [weak self] (helper) in
             guard let `self` = self else {
                 return
             }
@@ -179,14 +216,14 @@ private  extension RYAVPlayerItem  {
             self.ry_pollingPlaybackBuffer()
         }))
         
-        RYAVPlayerItemObserverAssociatedKeys.ry_ownerObservers.append(RYOwnerObserver.init(owner: self, observeKey: "presentationSize", exeBlock: { [weak self] (helper) in
+        ry_ownerObservers?.append(RYOwnerObserver.init(owner: self, observeKey: "presentationSize", exeBlock: { [weak self] (helper) in
             guard let `self` = self else {
                 return
             }
             self.ry_delegate?.playerItemDidLoadPresentationSize(self)
         }))
         
-        RYAVPlayerItemObserverAssociatedKeys.ry_ownerObservers.append(RYOwnerObserver.init(owner: self, nota: NSNotification.Name.AVPlayerItemDidPlayToEndTime, exeBlock: { [weak self] (helper) in
+        ry_ownerObservers?.append(RYOwnerObserver.init(owner: self, nota: NSNotification.Name.AVPlayerItemDidPlayToEndTime, exeBlock: { [weak self] (helper) in
             guard let `self` = self else {
                 return
             }
@@ -195,9 +232,10 @@ private  extension RYAVPlayerItem  {
     }
     
     func ry_removeKeyObservers() {
-        let helpers = RYAVPlayerItemObserverAssociatedKeys.ry_ownerObservers
-        for kvo in helpers {
-            kvo.remove(owner: self)
+        if ( ry_ownerObservers != nil ) {
+            for kvo in ry_ownerObservers! {
+                kvo.remove(owner: self)
+            }
         }
     }
 }
