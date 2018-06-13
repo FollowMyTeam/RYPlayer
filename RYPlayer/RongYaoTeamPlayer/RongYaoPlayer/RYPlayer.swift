@@ -9,21 +9,33 @@
 import UIKit
 import AVFoundation
 
-//SJVideoPlayerPlayState_Unknown = 0,
-//SJVideoPlayerPlayState_Prepare,
-//SJVideoPlayerPlayState_Playing,
-//SJVideoPlayerPlayState_Buffing,
-//SJVideoPlayerPlayState_Paused,
-//SJVideoPlayerPlayState_PlayEnd,
-//SJVideoPlayerPlayState_PlayFailed,
 
+/// 播放器当前的状态
+///
+/// - unknown: 未播放任何资源时的状态
+/// - prepare: 准备播放一个新的资源时的状态
+/// - playing: 播放中
+/// - buffering: 缓冲中
+/// - pause: 暂停
+/// - playEnd: 播放结束
+/// - playFailed: 播放失败
 public enum RYPlayerPlayState {
     case unknown
     case prepare
+    case playing
+    enum paused {
+        case buffering
+        case pause
+    }
+    enum stopped {
+        case playEnd
+        case playFailed
+    }
 }
 
 public protocol RYPlayerDelegate: NSObjectProtocol {
-    /// 准备播放一个新的URL的回调
+    /// 播放一个新的URL的回调
+    /// 当设置`player.ry_URL`时, 将回调此方法
     func player(_ player: RYPlayer, prepareToPlay URL: URL?) -> Void
     
     /// 当前时间改变的回调
@@ -106,7 +118,7 @@ private extension RYPlayer {
     /// 用来初始化Player的队列
     static var SERIAL_QUEUE: OperationQueue?
     
-    /// 初始化的操作
+    /// 初始化的操作对象
     var ry_initOperation: Operation? {
         set {
             objc_setAssociatedObject(self, &RYPlayerInitPlayerAssociatedKeys.kry_initOperation, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -116,17 +128,18 @@ private extension RYPlayer {
         }
     }
 
+    /// 播放一个新的URL
     func ry_prepareToPlay(_ newURL: URL?) {
         if ( ry_URL == nil ) {
-            self.ry_avPlayer = nil
+            ry_avPlayer = nil
             return
         }
         
-        self.ry_delegate?.player(self, prepareToPlay: self.ry_URL)
+        ry_delegate?.player(self, prepareToPlay: newURL)
         
         ry_cancelInitOperation()
         
-        addOperationToQueue()
+        ry_addOperationToQueue()
     }
     
     /// 取消之前的操作并置空
@@ -134,14 +147,16 @@ private extension RYPlayer {
         guard let `initOperation` = ry_initOperation else {
             return
         }
+        
         if ( !initOperation.isFinished && !initOperation.isExecuting && !initOperation.isCancelled ) {
             initOperation.cancel()
-            self.ry_initOperation = nil
         }
+        
+        self.ry_initOperation = nil
     }
     
     /// 添加初始化任务到队列
-    func addOperationToQueue() {
+    func ry_addOperationToQueue() {
         if ( ry_initOperation != nil ) {
             ry_cancelInitOperation()
         }
@@ -157,7 +172,6 @@ private extension RYPlayer {
             item.ry_delegate = self
             let player = RYAVPlayer.init(playerItem: item)
             player.ry_delegate = self
-            player.play()
             self.ry_avPlayer = player
             self.ry_initOperation = nil
         }

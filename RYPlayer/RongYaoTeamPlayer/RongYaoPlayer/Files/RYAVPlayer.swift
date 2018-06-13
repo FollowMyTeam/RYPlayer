@@ -47,6 +47,7 @@ public class RYAVPlayer: AVPlayer {
     }
     
     deinit {
+        self.pause()
         print("%s - %s", #function, NSStringFromClass(self.classForCoder))
         self.ry_removeCurrentTiemObserver()
     }
