@@ -29,31 +29,31 @@ class RYTestViewController: UIViewController {
 
 extension RYTestViewController: RYPlayerDelegate {
     func player(_ player: RYPlayer, prepareToPlay URL: URL?) {
-        print("准备播放: ", URL!)
+        print("准备播放: ", URL!, Thread.current, "\n")
     }
     
     func playerCurrentTimeDidChange(_ player: RYPlayer) {
-        print("当前时间: ", player.ry_currentTime!)
+        print("当前时间: ", player.ry_currentTime!, Thread.current, "\n")
     }
     
     func playerDurationDidChange(_ player: RYPlayer) {
-        print("播放持续时间: ", player.ry_duration!)
+        print("播放持续时间: ", player.ry_duration!, Thread.current, "\n")
     }
     
     func playerCurrentBufferLoadedTimeDidChange(_ player: RYPlayer) {
-        print("当前缓冲: ", player.ry_currentBufferLoadedTime!)
+        print("当前缓冲: ", player.ry_bufferLoadedTime!, Thread.current, "\n")
     }
     
     func playerStatusDidChange(_ player: RYPlayer) {
-        print("播放状态改变: ", player.state)
+        print("播放状态改变: ", player.ry_state, Thread.current, "\n")
     }
     
     func playerPlaybackBufferEmpty(_ player: RYPlayer) {
-        print("缓冲为空")
+        print("缓冲为空", Thread.current, "\n")
     }
     
     func playerPlaybackBufferFull(_ player: RYPlayer) {
-        print("缓冲已满")
+        print("缓冲已满", Thread.current, "\n")
     }
     
     func playerDidLoadPresentationSize(_ player: RYPlayer) {
@@ -61,6 +61,6 @@ extension RYTestViewController: RYPlayerDelegate {
     }
     
     func playerDidPlayToEndTime(_ player: RYPlayer) {
-        print("播放完毕")
+        print("播放完毕", Thread.current, "\n")
     }
 }

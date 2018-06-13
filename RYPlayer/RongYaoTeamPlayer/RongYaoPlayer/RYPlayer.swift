@@ -52,108 +52,163 @@ public protocol RYPlayerDelegate: NSObjectProtocol {
 }
 
 
-open class RYPlayer: NSObject {
+public class RYPlayer: NSObject {
 
-    open var ry_URL: URL? {
-        didSet {
-            prepareToPlay(ry_URL)
-        }
-    }
+    @objc public dynamic var ry_URL: URL?
 
-    open var ry_view: UIView?
+    public var ry_view: UIView?
     
-    open var ry_error: Error?
+    public var ry_error: Error?
     
-    open var state: RYPlayerPlayState
+    public var ry_state: RYPlayerPlayState
     
-    open weak var ry_delegate: RYPlayerDelegate?
-    
-    open var ry_duration: TimeInterval? {
-        return self.avPlayerItem?.ry_duration
-    }
-    
-    open var ry_currentTime: TimeInterval? {
-        return self.avPlayerItem?.ry_currentTime
-    }
-    
-    open var ry_currentBufferLoadedTime: TimeInterval? {
-        return self.avPlayerItem?.ry_currentBufferLoadedTime
-    }
+    public weak var ry_delegate: RYPlayerDelegate?
     
     public override init() {
-        state = .unknown
+        ry_state = .unknown
         super.init()
-        
+        ry_addKeyObservers()
     }
     
     deinit {
-        
+        ry_cancelInitOperation()
+        ry_removeKeyObservers()
     }
     
-    private var avAsset: AVURLAsset? {
-        get {
-            return self.avPlayerItem?.asset as? AVURLAsset
+    private var ry_avAsset: AVURLAsset? { return self.ry_avPlayerItem?.asset as? AVURLAsset }
+    private var ry_avPlayerItem: RYAVPlayerItem? { return self.ry_avPlayer?.ry_playerItem }
+    private var ry_avPlayer: RYAVPlayer?
+    
+    private var ry_ownerObservers = [RYOwnerObserver]()
+    private func ry_addKeyObservers() {
+        /// URL
+        self.ry_ownerObservers.append(RYOwnerObserver.init(owner: self, observeKey: "ry_URL", exeBlock: { [weak self] (helper) in
+            guard let `self` = self else {
+                return
+            }
+            self.ry_prepareToPlay(self.ry_URL)
+        }))
+    }
+    private func ry_removeKeyObservers () {
+        for helper in ry_ownerObservers {
+            helper.remove(owner: self)
         }
     }
+}
+
+/// 播放器的初始化
+private extension RYPlayer {
     
-    private var avPlayerItem: RYAVPlayerItem? {
+    struct RYPlayerInitPlayerAssociatedKeys {
+        static var kry_initOperation = "kry_initOperation"
+    }
+
+    /// 用来初始化Player的队列
+    static var SERIAL_QUEUE: OperationQueue?
+    
+    /// 初始化的操作
+    var ry_initOperation: Operation? {
+        set {
+            objc_setAssociatedObject(self, &RYPlayerInitPlayerAssociatedKeys.kry_initOperation, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
         get {
-            return self.avPlayer?.ry_playerItem
+            return objc_getAssociatedObject(self, &RYPlayerInitPlayerAssociatedKeys.kry_initOperation) as? Operation
         }
     }
-    
-    private var avPlayer: RYAVPlayer?
-    
-    private static var SERIAL_QUEUE: OperationQueue?
-    
-    private func prepareToPlay(_ newURL: URL?) {
+
+    func ry_prepareToPlay(_ newURL: URL?) {
         if ( ry_URL == nil ) {
-            self.avPlayer = nil
+            self.ry_avPlayer = nil
             return
         }
         
         self.ry_delegate?.player(self, prepareToPlay: self.ry_URL)
-        if ( RYPlayer.SERIAL_QUEUE == nil ) {
-            RYPlayer.SERIAL_QUEUE = OperationQueue.init()
-            RYPlayer.SERIAL_QUEUE?.name = "com.SJPlayer.serialQueue"
-            RYPlayer.SERIAL_QUEUE?.maxConcurrentOperationCount = 1
+        
+        ry_cancelInitOperation()
+        
+        addOperationToQueue()
+    }
+    
+    /// 取消之前的操作并置空
+    func ry_cancelInitOperation() {
+        guard let `initOperation` = ry_initOperation else {
+            return
+        }
+        if ( !initOperation.isFinished && !initOperation.isExecuting && !initOperation.isCancelled ) {
+            initOperation.cancel()
+            self.ry_initOperation = nil
+        }
+    }
+    
+    /// 添加初始化任务到队列
+    func addOperationToQueue() {
+        if ( ry_initOperation != nil ) {
+            ry_cancelInitOperation()
         }
         
-        RYPlayer.SERIAL_QUEUE?.addOperation({[weak self] in
+        ry_initOperation = Operation.init()
+        
+        ry_initOperation?.completionBlock = { [weak self] in
             guard let `self` = self else {
                 return
             }
-            
             let asset = AVURLAsset.init(url: self.ry_URL!)
             let item = RYAVPlayerItem.init(asset: asset, automaticallyLoadedAssetKeys: ["duration"])
             item.ry_delegate = self
             let player = RYAVPlayer.init(playerItem: item)
             player.ry_delegate = self
             player.play()
-            self.avPlayer = player
-        });
+            self.ry_avPlayer = player
+            self.ry_initOperation = nil
+        }
+        
+        if ( RYPlayer.SERIAL_QUEUE == nil ) {
+            RYPlayer.SERIAL_QUEUE = OperationQueue.init()
+            RYPlayer.SERIAL_QUEUE?.name = "com.SJPlayer.serialQueue"
+            RYPlayer.SERIAL_QUEUE?.maxConcurrentOperationCount = 1
+        }
+        
+        RYPlayer.SERIAL_QUEUE?.addOperation(ry_initOperation!)
+    }
+}
+
+
+public extension RYPlayer {
+    /// 播放时长
+    var ry_duration: TimeInterval? {
+        return self.ry_avPlayerItem?.ry_duration
+    }
+    
+    /// 当前时间
+    var ry_currentTime: TimeInterval? {
+        return self.ry_avPlayerItem?.ry_currentTime
+    }
+    
+    /// 已缓冲到的时间
+    var ry_bufferLoadedTime: TimeInterval? {
+        return self.ry_avPlayerItem?.ry_bufferLoadedTime
     }
 }
 
 /// play control
-extension RYPlayer {
+public extension RYPlayer {
     
 //    open var autoPlay: Bool = true
 //    open var rate: Float?
 
-    open func pause() {
+    func pause() {
         
     }
     
-    open func play() {
+    func play() {
         
     }
     
-    open func stop() {
+    func stop() {
         
     }
     
-    open func replay() {
+    func replay() {
         
     }
 }

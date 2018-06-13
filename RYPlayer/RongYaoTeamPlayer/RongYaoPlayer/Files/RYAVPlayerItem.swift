@@ -65,7 +65,7 @@ public class RYAVPlayerItem: AVPlayerItem {
     
     /// 当前缓冲加载到的位置
     /// 单位秒
-    open var ry_currentBufferLoadedTime: TimeInterval {
+    open var ry_bufferLoadedTime: TimeInterval {
         get {
             if ( self.loadedTimeRanges.first == nil ) {
                 return 0;
@@ -154,7 +154,7 @@ private extension RYAVPlayerItem {
             }
             
             let pre_buffer = self.ry_maxPreTime;
-            let currentBufferLoadedTime = self.ry_currentBufferLoadedTime
+            let currentBufferLoadedTime = self.ry_bufferLoadedTime
             if ( pre_buffer > currentBufferLoadedTime ) {
                 return
             }
