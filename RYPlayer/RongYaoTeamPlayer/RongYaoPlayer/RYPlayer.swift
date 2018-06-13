@@ -9,7 +9,6 @@
 import UIKit
 import AVFoundation
 
-
 /// 播放器当前的状态
 ///
 /// - unknown: 未播放任何资源时的状态
@@ -19,7 +18,7 @@ import AVFoundation
 /// - pause: 暂停
 /// - playEnd: 播放结束
 /// - playFailed: 播放失败
-public enum RYPlayerPlayState {
+public enum RYPlayState {
     case unknown
     case prepare
     case playing
@@ -35,7 +34,12 @@ public enum RYPlayerPlayState {
 
 public protocol RYPlayerDelegate: NSObjectProtocol {
     /// 播放一个新的URL的回调
-    /// 当设置`player.ry_URL`时, 将回调此方法
+    /// 也就是当设置`player.ry_URL`时, 将回调此方法
+    ///
+    /// - Parameters:
+    ///   - player:             播放器
+    ///   - URL:                播放地址
+    /// - Returns:              Void
     func player(_ player: RYPlayer, prepareToPlay URL: URL?) -> Void
     
     /// 当前时间改变的回调
@@ -45,7 +49,7 @@ public protocol RYPlayerDelegate: NSObjectProtocol {
     func playerDurationDidChange(_ player: RYPlayer) -> Void
     
     /// 缓冲进度改变的回调
-    func playerCurrentBufferLoadedTimeDidChange(_ player: RYPlayer) -> Void
+    func playerBufferLoadedTimeDidChange(_ player: RYPlayer) -> Void
     
     /// 状态改变的回调
     func playerStatusDidChange(_ player: RYPlayer) -> Void
@@ -66,15 +70,26 @@ public protocol RYPlayerDelegate: NSObjectProtocol {
 
 public class RYPlayer: NSObject {
 
+    /// 播放地址
     @objc public dynamic var ry_URL: URL?
 
+    /// 播放器视图
     public var ry_view: UIView?
     
+    /// 播放报错时的error
     public var ry_error: Error?
     
-    public var ry_state: RYPlayerPlayState
+    /// 播放状态
+    public var ry_state: RYPlayState
     
+    /// 代理
     public weak var ry_delegate: RYPlayerDelegate?
+    
+    private var ry_asset: AVURLAsset? { return self.ry_playerItem?.asset as? AVURLAsset }
+    
+    private var ry_playerItem: RYAVPlayerItem? { return self.ry_player?.ry_playerItem }
+    
+    private var ry_player: RYAVPlayer?
     
     public override init() {
         ry_state = .unknown
@@ -87,11 +102,12 @@ public class RYPlayer: NSObject {
         ry_removeKeyObservers()
     }
     
-    private var ry_avAsset: AVURLAsset? { return self.ry_avPlayerItem?.asset as? AVURLAsset }
-    private var ry_avPlayerItem: RYAVPlayerItem? { return self.ry_avPlayer?.ry_playerItem }
-    private var ry_avPlayer: RYAVPlayer?
     
+    /// 观察`ry_URL`的变更
+    /// 观察 ...
     private var ry_ownerObservers = [RYOwnerObserver]()
+    
+    ///
     private func ry_addKeyObservers() {
         /// URL
         self.ry_ownerObservers.append(RYOwnerObserver.init(owner: self, observeKey: "ry_URL", exeBlock: { [weak self] (helper) in
@@ -101,6 +117,8 @@ public class RYPlayer: NSObject {
             self.ry_prepareToPlay(self.ry_URL)
         }))
     }
+    
+    ///
     private func ry_removeKeyObservers () {
         for helper in ry_ownerObservers {
             helper.remove(owner: self)
@@ -108,7 +126,27 @@ public class RYPlayer: NSObject {
     }
 }
 
+
+public extension RYPlayer {
+    /// 播放时长
+    var ry_duration: TimeInterval? {
+        return self.ry_playerItem?.ry_duration
+    }
+    
+    /// 当前时间
+    var ry_currentTime: TimeInterval? {
+        return self.ry_playerItem?.ry_currentTime
+    }
+    
+    /// 已缓冲到的时间
+    var ry_bufferLoadedTime: TimeInterval? {
+        return self.ry_playerItem?.ry_bufferLoadedTime
+    }
+}
+
 /// 播放器的初始化
+/// 用来初始化一个RYAVPlayer
+/// 由于创建耗时, 这里将初始化放到了子线程中
 private extension RYPlayer {
     
     struct RYPlayerInitPlayerAssociatedKeys {
@@ -116,9 +154,12 @@ private extension RYPlayer {
     }
 
     /// 用来初始化Player的队列
+    /// 由于创建耗时所以, 将初始化任务放到了这个队列中
+    /// 使用队列便于管理操作对象, 在某个时刻可以进行取消任务
     static var SERIAL_QUEUE: OperationQueue?
     
     /// 初始化的操作对象
+    /// `创建一个RYAVPlayer`的操作任务
     var ry_initOperation: Operation? {
         set {
             objc_setAssociatedObject(self, &RYPlayerInitPlayerAssociatedKeys.kry_initOperation, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -129,9 +170,14 @@ private extension RYPlayer {
     }
 
     /// 播放一个新的URL
+    /// 当播放一个新的URL时, 将操作任务添加到队列中.
+    /// 同时取消上一次可能存在的任务
     func ry_prepareToPlay(_ newURL: URL?) {
+        
+        // clean old avplayer
+        ry_player = nil
+
         if ( ry_URL == nil ) {
-            ry_avPlayer = nil
             return
         }
         
@@ -142,7 +188,9 @@ private extension RYPlayer {
         ry_addOperationToQueue()
     }
     
-    /// 取消之前的操作并置空
+    /// 取消之前的操作并将操作对象置空
+    /// 当操作对象未完成并且未进行并且未取消时, 将其取消
+    /// 最后操作对象置为nil
     func ry_cancelInitOperation() {
         guard let `initOperation` = ry_initOperation else {
             return
@@ -156,6 +204,8 @@ private extension RYPlayer {
     }
     
     /// 添加初始化任务到队列
+    /// 由于创建一个AVPlayer耗时, 因此将其放入子线程进行操作
+    /// 当队列为空时, 这里进行了队列的初始化工作
     func ry_addOperationToQueue() {
         if ( ry_initOperation != nil ) {
             ry_cancelInitOperation()
@@ -167,12 +217,22 @@ private extension RYPlayer {
             guard let `self` = self else {
                 return
             }
+            
+            // create asset
             let asset = AVURLAsset.init(url: self.ry_URL!)
+            
+            // create palyer item
             let item = RYAVPlayerItem.init(asset: asset, automaticallyLoadedAssetKeys: ["duration"])
             item.ry_delegate = self
+            
+            // create avplayer
             let player = RYAVPlayer.init(playerItem: item)
             player.ry_delegate = self
-            self.ry_avPlayer = player
+            
+            // set new av player
+            self.ry_player = player
+            
+            // clean operation object
             self.ry_initOperation = nil
         }
         
@@ -183,24 +243,6 @@ private extension RYPlayer {
         }
         
         RYPlayer.SERIAL_QUEUE?.addOperation(ry_initOperation!)
-    }
-}
-
-
-public extension RYPlayer {
-    /// 播放时长
-    var ry_duration: TimeInterval? {
-        return self.ry_avPlayerItem?.ry_duration
-    }
-    
-    /// 当前时间
-    var ry_currentTime: TimeInterval? {
-        return self.ry_avPlayerItem?.ry_currentTime
-    }
-    
-    /// 已缓冲到的时间
-    var ry_bufferLoadedTime: TimeInterval? {
-        return self.ry_avPlayerItem?.ry_bufferLoadedTime
     }
 }
 
@@ -237,35 +279,35 @@ extension RYPlayer {
 }
 
 extension RYPlayer: RYAVPlayerItemDelegate, RYAVPlayerDelegate {
-    public func playerItemDurationDidChange(_ playerItem: RYAVPlayerItem) {
+    func playerItemDurationDidChange(_ playerItem: RYAVPlayerItem) {
         self.ry_delegate?.playerDurationDidChange(self)
     }
     
-    public func playerItemCurrentBufferLoadedTimeDidChange(_ playerItem: RYAVPlayerItem) {
-        self.ry_delegate?.playerCurrentBufferLoadedTimeDidChange(self)
+    func playerItemBufferLoadedTimeDidChange(_ playerItem: RYAVPlayerItem) {
+        self.ry_delegate?.playerBufferLoadedTimeDidChange(self)
     }
     
-    public func playerItemStatusDidChange(_ playerItem: RYAVPlayerItem) {
+    func playerItemStatusDidChange(_ playerItem: RYAVPlayerItem) {
 //        self.delegate
     }
     
-    public func playerItemPlaybackBufferEmpty(_ playerItem: RYAVPlayerItem) {
+    func playerItemPlaybackBufferEmpty(_ playerItem: RYAVPlayerItem) {
         self.ry_delegate?.playerPlaybackBufferEmpty(self)
     }
     
-    public func playerItemPlaybackBufferFull(_ playerItem: RYAVPlayerItem) {
+    func playerItemPlaybackBufferFull(_ playerItem: RYAVPlayerItem) {
         self.ry_delegate?.playerPlaybackBufferFull(self)
     }
     
-    public func playerItemDidLoadPresentationSize(_ playerItem: RYAVPlayerItem) {
+    func playerItemDidLoadPresentationSize(_ playerItem: RYAVPlayerItem) {
         self.ry_delegate?.playerDidLoadPresentationSize(self)
     }
     
-    public func playerItemDidPlayToEndTime(_ playerItem: RYAVPlayerItem) {
+    func playerItemDidPlayToEndTime(_ playerItem: RYAVPlayerItem) {
         self.ry_delegate?.playerDidPlayToEndTime(self)
     }
     
-    public func playerCurrentTimeDidChange(_ player: RYAVPlayer) {
+    func playerCurrentTimeDidChange(_ player: RYAVPlayer) {
         self.ry_delegate?.playerCurrentTimeDidChange(self)
     }
 }

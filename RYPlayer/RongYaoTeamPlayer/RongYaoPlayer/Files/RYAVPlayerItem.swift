@@ -9,12 +9,12 @@
 import UIKit
 import AVFoundation
 
-public protocol RYAVPlayerItemDelegate: NSObjectProtocol {
+internal protocol RYAVPlayerItemDelegate: NSObjectProtocol {
     /// 持续时间改变的回调
     func playerItemDurationDidChange(_ playerItem: RYAVPlayerItem) -> Void;
     
     /// 缓冲进度改变的回调
-    func playerItemCurrentBufferLoadedTimeDidChange(_ playerItem: RYAVPlayerItem) -> Void;
+    func playerItemBufferLoadedTimeDidChange(_ playerItem: RYAVPlayerItem) -> Void;
     
     /// 状态改变的回调
     func playerItemStatusDidChange(_ playerItem: RYAVPlayerItem) -> Void;
@@ -32,15 +32,15 @@ public protocol RYAVPlayerItemDelegate: NSObjectProtocol {
     func playerItemDidPlayToEndTime(_ playerItem: RYAVPlayerItem) -> Void;
 }
 
-public class RYAVPlayerItem: AVPlayerItem {
+internal class RYAVPlayerItem: AVPlayerItem {
     
     /// 代理
     /// 回调请看协议
-    open weak var ry_delegate: RYAVPlayerItemDelegate?
+    weak var ry_delegate: RYAVPlayerItemDelegate?
 
     /// 持续时间
     /// 单位秒
-    open var ry_duration: TimeInterval? {
+    var ry_duration: TimeInterval? {
         get {
             return self._ry_duration
         }
@@ -49,7 +49,7 @@ public class RYAVPlayerItem: AVPlayerItem {
     
     /// 当前时间
     /// 单位秒
-    open var ry_currentTime: TimeInterval {
+    var ry_currentTime: TimeInterval {
         get {
             if ( self.ry_duration == nil ) {
                 return 0
@@ -65,7 +65,7 @@ public class RYAVPlayerItem: AVPlayerItem {
     
     /// 当前缓冲加载到的位置
     /// 单位秒
-    open var ry_bufferLoadedTime: TimeInterval {
+    var ry_bufferLoadedTime: TimeInterval {
         get {
             if ( self.loadedTimeRanges.first == nil ) {
                 return 0;
@@ -79,12 +79,13 @@ public class RYAVPlayerItem: AVPlayerItem {
     public override init(asset: AVAsset, automaticallyLoadedAssetKeys: [String]?) {
         super.init(asset: asset, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
         self.ry_addKeyObservers()
-        print("%s - %s", #function, NSStringFromClass(self.classForCoder))
     }
     
     deinit {
-        print("%s - %s", #function, NSStringFromClass(self.classForCoder))
         self.ry_removeKeyObservers()
+        #if DEBUG
+        print("\(#function) - \(#line) - \(NSStringFromClass(self.classForCoder))")
+        #endif
     }
 }
 
@@ -203,7 +204,7 @@ private  extension RYAVPlayerItem  {
             guard let `self` = self else {
                 return
             }
-            self.ry_delegate?.playerItemCurrentBufferLoadedTimeDidChange(self)
+            self.ry_delegate?.playerItemBufferLoadedTimeDidChange(self)
         }))
         
         ry_ownerObservers?.append(RYOwnerObserver.init(owner: self, observeKey: "status", exeBlock: { [weak self] (helper) in

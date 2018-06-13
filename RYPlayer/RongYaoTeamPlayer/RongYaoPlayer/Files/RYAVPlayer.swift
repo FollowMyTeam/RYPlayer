@@ -9,21 +9,19 @@
 import UIKit
 import AVFoundation
 
-public protocol RYAVPlayerDelegate: NSObjectProtocol {
+internal protocol RYAVPlayerDelegate: NSObjectProtocol {
     /// 当前播放时间改变的回调
     func playerCurrentTimeDidChange(_ player: RYAVPlayer) -> Void
     
 }
 
-
-public class RYAVPlayer: AVPlayer {
-
+internal class RYAVPlayer: AVPlayer {
     /// 代理
     /// 回调请看协议
-    open weak var ry_delegate: RYAVPlayerDelegate?
+    weak var ry_delegate: RYAVPlayerDelegate?
 
     /// 当前播放器的playerItem如果类型为RY, 则返回
-    open var ry_playerItem: RYAVPlayerItem? {
+    var ry_playerItem: RYAVPlayerItem? {
         get {
             if ( self.currentItem == nil ) {
                 return nil
@@ -43,12 +41,13 @@ public class RYAVPlayer: AVPlayer {
     public override init(playerItem item: AVPlayerItem?) {
         super.init(playerItem: item)
         self.ry_observeTimeChangeOfCurrentTime()
-        print("%s - %s", #function, NSStringFromClass(self.classForCoder))
     }
     
     deinit {
         self.pause()
-        print("%s - %s", #function, NSStringFromClass(self.classForCoder))
+        #if DEBUG
+        print("\(#function) - \(#line) - \(NSStringFromClass(self.classForCoder))")
+        #endif
         self.ry_removeCurrentTiemObserver()
     }
 }

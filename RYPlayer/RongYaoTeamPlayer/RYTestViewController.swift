@@ -40,7 +40,7 @@ extension RYTestViewController: RYPlayerDelegate {
         print("播放持续时间: ", player.ry_duration!, Thread.current, "\n")
     }
     
-    func playerCurrentBufferLoadedTimeDidChange(_ player: RYPlayer) {
+    func playerBufferLoadedTimeDidChange(_ player: RYPlayer) {
         print("当前缓冲: ", player.ry_bufferLoadedTime!, Thread.current, "\n")
     }
     

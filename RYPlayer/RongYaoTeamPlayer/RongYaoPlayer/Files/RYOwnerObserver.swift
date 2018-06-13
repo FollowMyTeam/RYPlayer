@@ -55,6 +55,8 @@ public class RYOwnerObserver: NSObject {
     }
     
     deinit {
-        print("%s - %s", #function, NSStringFromClass(self.classForCoder))
+        #if DEBUG
+        print("\(#function) - \(#line) - \(NSStringFromClass(self.classForCoder))")
+        #endif
     }
 }
