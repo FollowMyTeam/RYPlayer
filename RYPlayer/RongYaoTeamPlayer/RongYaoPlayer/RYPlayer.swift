@@ -170,41 +170,33 @@ extension RYPlayer {
 extension RYPlayer: RYAVPlayerItemDelegate, RYAVPlayerDelegate {
     public func playerItemDurationDidChange(_ playerItem: RYAVPlayerItem) {
         self.ry_delegate?.playerDurationDidChange(self)
-        print(#function)
     }
     
     public func playerItemCurrentBufferLoadedTimeDidChange(_ playerItem: RYAVPlayerItem) {
         self.ry_delegate?.playerCurrentBufferLoadedTimeDidChange(self)
-        print(#function)
     }
     
     public func playerItemStatusDidChange(_ playerItem: RYAVPlayerItem) {
 //        self.delegate
-        print(#function)
     }
     
     public func playerItemPlaybackBufferEmpty(_ playerItem: RYAVPlayerItem) {
-//        <#code#>
-        print(#function)
+        self.ry_delegate?.playerPlaybackBufferEmpty(self)
     }
     
     public func playerItemPlaybackBufferFull(_ playerItem: RYAVPlayerItem) {
-//        <#code#>
-        print(#function)
+        self.ry_delegate?.playerPlaybackBufferFull(self)
     }
     
     public func playerItemDidLoadPresentationSize(_ playerItem: RYAVPlayerItem) {
-//        <#code#>
-        print(#function)
+        self.ry_delegate?.playerDidLoadPresentationSize(self)
     }
     
     public func playerItemDidPlayToEndTime(_ playerItem: RYAVPlayerItem) {
-//        <#code#>
-        print(#function)
+        self.ry_delegate?.playerDidPlayToEndTime(self)
     }
     
     public func playerCurrentTimeDidChange(_ player: RYAVPlayer) {
-//        <#code#>
-        print(#function)
+        self.ry_delegate?.playerCurrentTimeDidChange(self)
     }
 }

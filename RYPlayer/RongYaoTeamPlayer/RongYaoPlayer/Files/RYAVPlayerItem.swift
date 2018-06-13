@@ -55,7 +55,11 @@ public class RYAVPlayerItem: AVPlayerItem {
                 return 0
             }
             
-            return CMTimeGetSeconds(self.currentTime())
+            let currentTime = CMTimeGetSeconds(self.currentTime())
+            if ( currentTime < 0 ) {
+                return 0
+            }
+            return currentTime
         }
     }
     
@@ -190,6 +194,7 @@ private  extension RYAVPlayerItem  {
             guard let `self` = self else {
                 return
             }
+
             self._ry_duration = CMTimeGetSeconds(self.duration)
             self.ry_delegate?.playerItemDurationDidChange(self)
         }))

@@ -11,53 +11,56 @@ import AVFoundation
 
 class RYTestViewController: UIViewController {
     
-    
     var player: RYPlayer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let URL = Bundle.main.url(forResource: "sample", withExtension: "mp4")!
+//        let videoURL = Bundle.main.url(forResource: "sample", withExtension: "mp4")!
+        let videoURL = URL.init(string: "https://www.apple.com/105/media/us/iphone-x/2017/01df5b43-28e4-4848-bf20-490c34a926a7/films/feature/iphone-x-feature-tpl-cc-us-20170912_1280x720h.mp4")
         player = RYPlayer.init()
-        player?.ry_URL = URL
+        player?.ry_URL = videoURL
+        player?.ry_delegate = self
         
         // Do any additional setup after loading the view, typically from a nib.
     }
 
 }
 
-extension RYTestViewController: RYAVPlayerDelegate {
-    func playerCurrentTimeDidChange(_ player: RYAVPlayer) {
-        print(#function)
-    }
-}
-
-extension RYTestViewController: RYAVPlayerItemDelegate {
-    func playerItemDurationDidChange(_ playerItem: RYAVPlayerItem) {
-        print(#function)
+extension RYTestViewController: RYPlayerDelegate {
+    func player(_ player: RYPlayer, prepareToPlay URL: URL?) {
+        print("准备播放: ", URL!)
     }
     
-    func playerItemCurrentBufferLoadedTimeDidChange(_ playerItem: RYAVPlayerItem) {
-        print(#function)
+    func playerCurrentTimeDidChange(_ player: RYPlayer) {
+        print("当前时间: ", player.ry_currentTime!)
     }
     
-    func playerItemStatusDidChange(_ playerItem: RYAVPlayerItem) {
-        print(#function)
+    func playerDurationDidChange(_ player: RYPlayer) {
+        print("播放持续时间: ", player.ry_duration!)
     }
     
-    func playerItemPlaybackBufferEmpty(_ playerItem: RYAVPlayerItem) {
-        print(#function)
+    func playerCurrentBufferLoadedTimeDidChange(_ player: RYPlayer) {
+        print("当前缓冲: ", player.ry_currentBufferLoadedTime!)
     }
     
-    func playerItemPlaybackBufferFull(_ playerItem: RYAVPlayerItem) {
-        print(#function)
+    func playerStatusDidChange(_ player: RYPlayer) {
+        print("播放状态改变: ", player.state)
     }
     
-    func playerItemDidLoadPresentationSize(_ playerItem: RYAVPlayerItem) {
-        print(#function)
+    func playerPlaybackBufferEmpty(_ player: RYPlayer) {
+        print("缓冲为空")
     }
     
-    func playerItemDidPlayToEndTime(_ playerItem: RYAVPlayerItem) {
-        print(#function)
+    func playerPlaybackBufferFull(_ player: RYPlayer) {
+        print("缓冲已满")
+    }
+    
+    func playerDidLoadPresentationSize(_ player: RYPlayer) {
+//        print("视频size: %@", player.p)
+    }
+    
+    func playerDidPlayToEndTime(_ player: RYPlayer) {
+        print("播放完毕")
     }
 }
