@@ -22,11 +22,11 @@ public enum RYPlayState {
     case unknown
     case prepare
     case playing
-    enum paused {
+    public enum paused {
         case buffering
         case pause
     }
-    enum stopped {
+    public enum stopped {
         case playEnd
         case playFailed
     }
@@ -169,8 +169,8 @@ private extension RYPlayer {
         }
     }
 
-    /// 播放一个新的URL
-    /// 当播放一个新的URL时, 将操作任务添加到队列中.
+    /// 准备播放一个新的URL
+    /// 此时, 将操作任务添加到队列中
     /// 同时取消上一次可能存在的任务
     func ry_prepareToPlay(_ newURL: URL?) {
         
@@ -189,7 +189,7 @@ private extension RYPlayer {
     }
     
     /// 取消之前的操作并将操作对象置空
-    /// 当操作对象未完成并且未进行并且未取消时, 将其取消
+    /// 当操作对象`未完成`&`未进行`&`未取消`时, 将其取消
     /// 最后操作对象置为nil
     func ry_cancelInitOperation() {
         guard let `initOperation` = ry_initOperation else {
@@ -218,18 +218,18 @@ private extension RYPlayer {
                 return
             }
             
-            // create asset
+            // create AVURLAsset
             let asset = AVURLAsset.init(url: self.ry_URL!)
             
-            // create palyer item
+            // create RYPalyerItem
             let item = RYAVPlayerItem.init(asset: asset, automaticallyLoadedAssetKeys: ["duration"])
             item.ry_delegate = self
             
-            // create avplayer
+            // create RYAVPlayer
             let player = RYAVPlayer.init(playerItem: item)
             player.ry_delegate = self
             
-            // set new av player
+            // retain
             self.ry_player = player
             
             // clean operation object
