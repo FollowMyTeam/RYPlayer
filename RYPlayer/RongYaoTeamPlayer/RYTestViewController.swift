@@ -28,43 +28,11 @@ class RYTestViewController: UIViewController {
 }
 
 extension RYTestViewController: RongYaoTeamPlayerDelegate {
-    func player(_ player: RongYaoTeamPlayer, valueDidChangeForKey: RongYaoTeamPlayerPropertyKey) {
-        
-    }
-    
-    func player(_ player: RongYaoTeamPlayer, prepareToPlay URL: URL?) {
-        print("准备播放: ", URL!, Thread.current, "\n")
-    }
-    
-    func playerCurrentTimeDidChange(_ player: RongYaoTeamPlayer) {
-        print("当前时间: ", player.ry_currentTime, Thread.current, "\n")
-    }
-    
-    func playerDurationDidChange(_ player: RongYaoTeamPlayer) {
-        print("播放持续时间: ", player.ry_duration, Thread.current, "\n")
-    }
-    
-    func playerBufferLoadedTimeDidChange(_ player: RongYaoTeamPlayer) {
-        print("当前缓冲: ", player.ry_bufferLoadedTime, Thread.current, "\n")
-    }
-    
-    func playerStatusDidChange(_ player: RongYaoTeamPlayer) {
-        print("播放状态改变: ", player.ry_state, Thread.current, "\n")
-    }
-    
-    func playerPlaybackBufferEmpty(_ player: RongYaoTeamPlayer) {
-        print("缓冲为空", Thread.current, "\n")
-    }
-    
-    func playerPlaybackBufferFull(_ player: RongYaoTeamPlayer) {
-        print("缓冲已满", Thread.current, "\n")
-    }
-    
-    func playerDidLoadPresentationSize(_ player: RongYaoTeamPlayer) {
-//        print("视频size: %@", player.p)
-    }
-    
-    func playerDidPlayToEndTime(_ player: RongYaoTeamPlayer) {
-        print("播放完毕", Thread.current, "\n")
+    func player(_ player: RongYaoTeamPlayer, valueDidChangeForKey Key: RongYaoTeamPlayerPropertyKey) {
+        switch Key {
+        case .ry_state:
+            print(player.ry_state)
+        default: break
+        }
     }
 }

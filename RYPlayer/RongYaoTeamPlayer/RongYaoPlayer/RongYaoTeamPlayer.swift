@@ -17,7 +17,7 @@ public protocol RongYaoTeamPlayerDelegate: NSObjectProtocol {
     ///   - player: 播放器
     ///   - valueDidChangeForKey: 相应的属性
     /// - Returns: Void
-    func player(_ player: RongYaoTeamPlayer, valueDidChangeForKey: RongYaoTeamPlayerPropertyKey) -> Void
+    func player(_ player: RongYaoTeamPlayer, valueDidChangeForKey Key: RongYaoTeamPlayerPropertyKey) -> Void
 }
 /// 播放器当前的状态
 ///
@@ -112,34 +112,45 @@ public class RongYaoTeamPlayerAsset {
 }
 
 
-public class RongYaoTeamPlayer {
+public class RongYaoTeamPlayer: NSObject {
+    deinit {
+        #if DEBUG
+        print("\(#function) - \(#line) - \(NSStringFromClass(self.classForCoder))")
+        #endif
+    }
+    
     /// 播放资源
-    public var ry_asset: RongYaoTeamPlayerAsset? { didSet { print(Thread.current); ry_assetDidChange() } }
+    public var ry_asset: RongYaoTeamPlayerAsset? { didSet { ry_assetDidChange() } }
     
     /// 代理
     public weak var ry_delegate: RongYaoTeamPlayerDelegate?
     
     /// 播放状态
-    public fileprivate(set) var ry_state: RYPlayState = .unknown { didSet { valueDidChangeForKey(.ry_state, oldValue: oldValue) } }
+    public fileprivate(set) var ry_state: RYPlayState = .unknown { didSet { ry_valueDidChangeForKey(.ry_state, oldValue: oldValue) } }
     
     /// 播放时长
-    public fileprivate(set) var ry_duration: TimeInterval = 0 { didSet { valueDidChangeForKey(.ry_duration, oldValue: oldValue) } }
+    public fileprivate(set) var ry_duration: TimeInterval = 0 { didSet { ry_valueDidChangeForKey(.ry_duration, oldValue: oldValue) } }
     
     /// 当前时间
-    public fileprivate(set) var ry_currentTime: TimeInterval = 0 { didSet { valueDidChangeForKey(.ry_currentTime, oldValue: oldValue) } }
+    public fileprivate(set) var ry_currentTime: TimeInterval = 0 { didSet { ry_valueDidChangeForKey(.ry_currentTime, oldValue: oldValue) } }
     
     /// 已缓冲到的时间
-    public fileprivate(set) var ry_bufferLoadedTime: TimeInterval = 0 { didSet { valueDidChangeForKey(.ry_bufferLoadedTime, oldValue: oldValue) } }
+    public fileprivate(set) var ry_bufferLoadedTime: TimeInterval = 0 { didSet { ry_valueDidChangeForKey(.ry_bufferLoadedTime, oldValue: oldValue) } }
     
     /// 缓冲状态
-    public fileprivate(set) var ry_bufferState: RongYaoTeamPlayerBufferState = .unknown { didSet { valueDidChangeForKey(.ry_bufferState, oldValue: oldValue) } }
+    public fileprivate(set) var ry_bufferState: RongYaoTeamPlayerBufferState = .unknown { didSet { ry_valueDidChangeForKey(.ry_bufferState, oldValue: oldValue) } }
     
     /// 视频宽高
-    public fileprivate(set) var ry_presentationSize: CGSize = CGSize.zero { didSet { valueDidChangeForKey(.ry_presentationSize, oldValue: oldValue) } }
+    public fileprivate(set) var ry_presentationSize: CGSize = CGSize.zero { didSet { ry_valueDidChangeForKey(.ry_presentationSize, oldValue: oldValue) } }
     
     /// 当前 player item 的状态
-    fileprivate var ry_playerItemStatus: AVPlayerItemStatus = .unknown { didSet { playerItemStatusDidChange()} }
+    fileprivate var ry_playerItemStatus: AVPlayerItemStatus = .unknown { didSet { ry_playerItemStatusDidChange()} }
 
+    /// 是否自动播放
+    /// - 当资源初始化完成后, 是否自动播放
+    /// - 默认为 true
+    public var ry_autoplay: Bool = true
+    
     /// 资源属性观察者
     /// - 负责观察 playerItem 属性值的改变
     ///     - duration
@@ -154,12 +165,12 @@ public class RongYaoTeamPlayer {
     private var ry_assetPropertyObserver: RongYaoTeamPlayerAssetPropertyObserver?
 
     
-    private func valueDidChangeForKey (_ key: RongYaoTeamPlayerPropertyKey, oldValue: Any) {
-        self.ry_delegate?.player(self, valueDidChangeForKey: key)
-        switch key {
-        default:
-            print("----dsfsd----")
-        }
+    private func ry_valueDidChangeForKey (_ key: RongYaoTeamPlayerPropertyKey, oldValue: Any) {
+        ry_delegate?.player(self, valueDidChangeForKey: key)
+//        switch key {
+//        default:
+//            print("----dsfsd----")
+//        }
     }
     
     private func ry_assetDidChange() {
@@ -184,27 +195,41 @@ public class RongYaoTeamPlayer {
     
     /// 准备播放一个Asset
     /// - 初始化AVPlayer
-    /// - 创建资源属性观察者
+    /// - 当初始化完成后, 在主线程回调 ry_initializedAsset()
     private func ry_preparePlayAsset() {
         guard let `ry_asset` = ry_asset else { return }
         ry_asset.ry_initializingPlayer { [weak self] (asset) in
-            guard let `self` = self else { return }
-            self.ry_assetPropertyObserver = RongYaoTeamPlayerAssetPropertyObserver.init(asset, self)
+            DispatchQueue.main.async {
+                guard let `self` = self else { return }
+                self.ry_initializedAsset()
+            }
         }
     }
     
+    /// 资源初始化完成
+    private func ry_initializedAsset() {
+        self.ry_assetPropertyObserver = RongYaoTeamPlayerAssetPropertyObserver.init(self.ry_asset!, self)
+    }
+    
     /// 处理 AVPlayerItem 状态变更
-    fileprivate func playerItemStatusDidChange() {
+    fileprivate func ry_playerItemStatusDidChange() {
         switch self.ry_playerItemStatus {
-        case .unknown:
-            print("unknown")
+        case .unknown: break
         case .readyToPlay:
-            print("readyToPlay:")
             self.ry_asset?.ry_player?.play()
         case .failed:
-            print("failed")
+            self.ry_state = .stopped(reason: .playFailed)
         }
     }
+    
+    /// 使播放
+    ///
+    /// - Returns: 当异常状态时, 将有可能播放失败. 即返回NO
+    public func play() -> Bool {
+        return true
+    }
+    
+    
 }
 
 /// 资源属性观察者
