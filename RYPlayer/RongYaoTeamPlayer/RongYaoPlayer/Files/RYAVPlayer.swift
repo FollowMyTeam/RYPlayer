@@ -34,45 +34,33 @@ internal class RYAVPlayer: AVPlayer {
         }
     }
     
+    var ry_currentTime: TimeInterval = 0
+    
     public override init() {
         super.init()
+        ry_observeTimeChangeOfCurrentTime()
     }
     
     public override init(playerItem item: AVPlayerItem?) {
         super.init(playerItem: item)
-        self.ry_observeTimeChangeOfCurrentTime()
     }
     
     deinit {
-        self.pause()
+        pause()
+        ry_removeCurrentTiemObserver()
         #if DEBUG
         print("\(#function) - \(#line) - \(NSStringFromClass(self.classForCoder))")
         #endif
-        self.ry_removeCurrentTiemObserver()
-    }
-}
-
-/// 处理当前时间变更的回调
-private extension RYAVPlayer {
-    private struct RYAVPlayerHandleCurrentTimeChangeAssociatedKeys {
-        static var kry_currentTimeObserver = "kry_currentTimeObserver"
     }
     
-    var ry_currentTimeObserver: Any? {
-        set {
-            objc_setAssociatedObject(self, &RYAVPlayerHandleCurrentTimeChangeAssociatedKeys.kry_currentTimeObserver, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
-        
-        get {
-            return objc_getAssociatedObject(self, &RYAVPlayerHandleCurrentTimeChangeAssociatedKeys.kry_currentTimeObserver)
-        }
-    }
+    private var ry_currentTimeObserver: Any?
     
     private func ry_observeTimeChangeOfCurrentTime() {
         ry_currentTimeObserver = self.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(0.5, Int32(NSEC_PER_SEC)), queue: DispatchQueue.main, using: { [weak self] (time) in
             guard let `self` = self else {
                 return
             }
+            self.ry_currentTime = TimeInterval.init(CMTimeGetSeconds(time))
             self.ry_delegate?.playerCurrentTimeDidChange(self)
         })
     }

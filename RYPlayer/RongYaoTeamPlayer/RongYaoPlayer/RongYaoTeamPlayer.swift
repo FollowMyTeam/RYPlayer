@@ -12,8 +12,8 @@ import AVFoundation
 
 /// 播放暂停的理由
 ///
-/// - buffering: 缓冲中
-/// - pause: 暂停播放
+/// - buffering: 正在缓冲
+/// - pause: 被暂停
 public enum RongYaoTeamPlayerPausedReason {
     case buffering
     case pause
@@ -76,25 +76,60 @@ public protocol RongYaoTeamPlayerDelegate: NSObjectProtocol {
 
 public class RongYaoTeamPlayer: NSObject {
     /// 播放的资源URL
-    @objc public dynamic var ry_URL: URL?
+    public var ry_URL: URL? {
+        didSet {
+            print(oldValue as Any, self.ry_URL as Any)
+            valueDidChangeForKey(.ry_URL, oldValue: oldValue)
+        }
+    }
     
     /// 播放状态
-    public private(set) var ry_state: RYPlayState = .unknown
+    public private(set) var ry_state: RYPlayState = .unknown {
+        didSet {
+            print("ry_state \(oldValue) \(ry_state)\n")
+            valueDidChangeForKey(.ry_state, oldValue: oldValue)
+        }
+    }
     
     /// 播放时长
-    public private(set) var ry_duration: TimeInterval = 0
+    public private(set) var ry_duration: TimeInterval = 0 {
+        didSet {
+            print("ry_duration \(oldValue) \(ry_duration)\n")
+            valueDidChangeForKey(.ry_duration, oldValue: oldValue)
+        }
+    }
     
     /// 当前时间
-    public private(set) var ry_currentTime: TimeInterval = 0
+    public private(set) var ry_currentTime: TimeInterval = 0 {
+        didSet {
+            print("ry_currentTime \(oldValue) \(ry_currentTime)\n")
+            valueDidChangeForKey(.ry_currentTime, oldValue: oldValue)
+        }
+    }
 
     /// 已缓冲到的时间
-    public private(set) var ry_bufferLoadedTime: TimeInterval = 0
+    public private(set) var ry_bufferLoadedTime: TimeInterval = 0 {
+        didSet {
+            print("ry_bufferLoadedTime \(oldValue) \(ry_bufferLoadedTime)\n")
+            valueDidChangeForKey(.ry_bufferLoadedTime, oldValue: oldValue)
+        }
+    }
     
     /// 缓冲状态
-    public private(set) var ry_bufferState: RongYaoTeamPlayerBufferState = .unknown
+    public private(set) var ry_bufferState: RongYaoTeamPlayerBufferState = .unknown {
+        didSet {
+            print("ry_bufferState \(oldValue) \(ry_bufferState)\n")
+            valueDidChangeForKey(.ry_bufferState, oldValue: oldValue)
+        }
+    }
     
     ///
-    public private(set) var ry_presentationSize: CGSize = CGSize.zero
+    public private(set) var ry_presentationSize: CGSize = CGSize.zero {
+        didSet {
+            print("ry_presentationSize \(oldValue) \(ry_presentationSize)\n")
+            valueDidChangeForKey(.ry_presentationSize, oldValue: oldValue)
+        }
+    }
     
     /// 播放器视图
     public var ry_view: UIView?
@@ -113,40 +148,21 @@ public class RongYaoTeamPlayer: NSObject {
     
     public override init() {
         super.init()
-        ry_addKeyObservers()
         
-        ry_state = .stopped(reason: .playEnd)
-        
-        print(ry_state)
-        
-        print(ry_state)
     }
     
     deinit {
         ry_cancelInitOperation()
-        ry_removeKeyObservers()
     }
     
-    
-    /// 观察`ry_URL`的变更
-    /// 观察 ...
-    private var ry_ownerObservers = [RYOwnerObserver]()
-    
-    ///
-    private func ry_addKeyObservers() {
-        /// URL
-        self.ry_ownerObservers.append(RYOwnerObserver.init(owner: self, observeKey: "ry_URL", exeBlock: { [weak self] (helper) in
-            guard let `self` = self else {
-                return
-            }
-            self.ry_prepareToPlay(self.ry_URL)
-        }))
-    }
-    
-    ///
-    private func ry_removeKeyObservers () {
-        for helper in ry_ownerObservers {
-            helper.remove(owner: self)
+    private func valueDidChangeForKey (_ key: RongYaoTeamPlayerValueKey, oldValue: Any?) {
+        self.ry_delegate?.player(self, valueDidChangeForKey: key)
+        
+        switch key {
+        case .ry_URL:
+            ry_URLDidChange(self.ry_URL)
+        default:
+            print("----dsfsd----")
         }
     }
 }
@@ -185,7 +201,7 @@ private extension RongYaoTeamPlayer {
     /// 准备播放一个新的URL
     /// 此时, 将操作任务添加到队列中
     /// 同时取消上一次可能存在的任务
-    func ry_prepareToPlay(_ newURL: URL?) {
+    func ry_URLDidChange(_ newURL: URL?) {
         
         // clean old avplayer
         ry_player = nil
@@ -291,34 +307,47 @@ extension RongYaoTeamPlayer {
 
 extension RongYaoTeamPlayer: RYAVPlayerItemDelegate, RYAVPlayerDelegate {
     func playerItemDurationDidChange(_ playerItem: RYAVPlayerItem) {
-//        self.ry_delegate?.playerDurationDidChange(self)
+        self.ry_duration = playerItem.ry_duration
     }
     
     func playerItemBufferLoadedTimeDidChange(_ playerItem: RYAVPlayerItem) {
-//        self.ry_delegate?.playerBufferLoadedTimeDidChange(self)
+        self.ry_bufferLoadedTime = playerItem.ry_bufferLoadedTime
     }
     
     func playerItemStatusDidChange(_ playerItem: RYAVPlayerItem) {
-//        self.delegate
+// 查看是否播放失败
+        switch playerItem.status {
+        case .unknown:
+            print("unknown")
+        case .readyToPlay:
+            print("readyToPlay")
+            self.ry_player?.play()
+        case.failed:
+            print("failed")
+        }
     }
     
     func playerItemPlaybackBufferEmpty(_ playerItem: RYAVPlayerItem) {
-//        self.ry_delegate?.playerPlaybackBufferEmpty(self)
+// 为空的时候, 暂停
+        
+        self.ry_bufferState = .empty
     }
     
     func playerItemPlaybackBufferFull(_ playerItem: RYAVPlayerItem) {
-//        self.ry_delegate?.playerPlaybackBufferFull(self)
+// 加满的时候, 是否播放?
+        
+        self.ry_bufferState = .full
     }
     
     func playerItemDidLoadPresentationSize(_ playerItem: RYAVPlayerItem) {
-//        self.ry_delegate?.playerDidLoadPresentationSize(self)
+        self.ry_presentationSize = playerItem.presentationSize
     }
     
     func playerItemDidPlayToEndTime(_ playerItem: RYAVPlayerItem) {
-//        self.ry_delegate?.playerDidPlayToEndTime(self)
+        self.ry_state = .stopped(reason: .playEnd)
     }
     
     func playerCurrentTimeDidChange(_ player: RYAVPlayer) {
-//        self.ry_delegate?.playerCurrentTimeDidChange(self)
+        self.ry_currentTime = player.ry_currentTime
     }
 }

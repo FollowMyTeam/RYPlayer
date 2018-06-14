@@ -21,7 +21,7 @@ class RYTestViewController: UIViewController {
         player = RongYaoTeamPlayer.init()
         player?.ry_URL = videoURL
         player?.ry_delegate = self
-    
+        
         // Do any additional setup after loading the view, typically from a nib.
     }
 
