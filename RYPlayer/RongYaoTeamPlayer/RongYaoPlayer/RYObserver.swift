@@ -1,5 +1,5 @@
 //
-//  RYOwnerObserver.swift
+//  RYObserver.swift
 //  RongYaoTeamPlayer
 //
 //  Created by BlueDancer on 2018/6/9.
@@ -8,15 +8,15 @@
 
 import UIKit
 
-public class RYOwnerObserver: NSObject {
+public class RYObserver: NSObject {
     var observeKey: String?
-    var exeBlock: ((RYOwnerObserver)->Void)
+    var exeBlock: ((RYObserver)->Void)
     var nota: Notification.Name?
     
     /// KVO
     var value_new: AnyObject?
     var value_old: AnyObject?
-    init(owner: AnyObject, observeKey: String, exeBlock: @escaping (RYOwnerObserver)->Void ) {
+    init(owner: AnyObject, observeKey: String, exeBlock: @escaping (RYObserver)->Void ) {
         self.observeKey = observeKey
         self.exeBlock = exeBlock
         super.init()
@@ -33,7 +33,7 @@ public class RYOwnerObserver: NSObject {
     }
     
     /// Notification
-    init(owner: AnyObject, nota: Notification.Name, exeBlock: @escaping (RYOwnerObserver)->Void) {
+    init(owner: AnyObject, nota: Notification.Name, exeBlock: @escaping (RYObserver)->Void) {
         self.nota = nota;
         self.exeBlock = exeBlock
         super.init()

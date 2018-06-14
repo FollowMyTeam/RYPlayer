@@ -8,24 +8,19 @@
 
 /* Begin PBXBuildFile section */
 		771C27A720CBE1D900C17E34 /* RongYaoTeamPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771C27A620CBE1D900C17E34 /* RongYaoTeamPlayer.swift */; };
-		771C27A920CBE78300C17E34 /* RYPlayModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771C27A820CBE78300C17E34 /* RYPlayModel.swift */; };
 		7790D18A20CABA2C00F7CAF5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7790D18920CABA2C00F7CAF5 /* AppDelegate.swift */; };
 		7790D18C20CABA2C00F7CAF5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7790D18B20CABA2C00F7CAF5 /* ViewController.swift */; };
 		7790D18F20CABA2C00F7CAF5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7790D18D20CABA2C00F7CAF5 /* Main.storyboard */; };
 		7790D19120CABA2D00F7CAF5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7790D19020CABA2D00F7CAF5 /* Assets.xcassets */; };
 		7790D19420CABA2D00F7CAF5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7790D19220CABA2D00F7CAF5 /* LaunchScreen.storyboard */; };
-		7790D19F20CABA6900F7CAF5 /* RYAVPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7790D19E20CABA6900F7CAF5 /* RYAVPlayer.swift */; };
 		7790D1A220CABA7300F7CAF5 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7790D1A120CABA7300F7CAF5 /* AVFoundation.framework */; };
-		7790D1A420CACC1E00F7CAF5 /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7790D1A320CACC1E00F7CAF5 /* Timer.swift */; };
-		7790D1A620CAD5B600F7CAF5 /* RYAVPlayerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7790D1A520CAD5B600F7CAF5 /* RYAVPlayerItem.swift */; };
 		7790D1A820CADC6F00F7CAF5 /* RYTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7790D1A720CADC6F00F7CAF5 /* RYTestViewController.swift */; };
-		7790D1AA20CBB22900F7CAF5 /* RYOwnerObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7790D1A920CBB22900F7CAF5 /* RYOwnerObserver.swift */; };
+		7790D1AA20CBB22900F7CAF5 /* RYObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7790D1A920CBB22900F7CAF5 /* RYObserver.swift */; };
 		A658746220CB8E0500611B72 /* sample.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = A658746120CB8E0500611B72 /* sample.mp4 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		771C27A620CBE1D900C17E34 /* RongYaoTeamPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoTeamPlayer.swift; sourceTree = "<group>"; };
-		771C27A820CBE78300C17E34 /* RYPlayModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYPlayModel.swift; sourceTree = "<group>"; };
 		7790D18620CABA2C00F7CAF5 /* RongYaoTeamPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RongYaoTeamPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7790D18920CABA2C00F7CAF5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7790D18B20CABA2C00F7CAF5 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -33,12 +28,9 @@
 		7790D19020CABA2D00F7CAF5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7790D19320CABA2D00F7CAF5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7790D19520CABA2D00F7CAF5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		7790D19E20CABA6900F7CAF5 /* RYAVPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYAVPlayer.swift; sourceTree = "<group>"; };
 		7790D1A120CABA7300F7CAF5 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		7790D1A320CACC1E00F7CAF5 /* Timer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Timer.swift; sourceTree = "<group>"; };
-		7790D1A520CAD5B600F7CAF5 /* RYAVPlayerItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYAVPlayerItem.swift; sourceTree = "<group>"; };
 		7790D1A720CADC6F00F7CAF5 /* RYTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYTestViewController.swift; sourceTree = "<group>"; };
-		7790D1A920CBB22900F7CAF5 /* RYOwnerObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYOwnerObserver.swift; sourceTree = "<group>"; };
+		7790D1A920CBB22900F7CAF5 /* RYObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYObserver.swift; sourceTree = "<group>"; };
 		A658746120CB8E0500611B72 /* sample.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample.mp4; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -54,18 +46,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		771C27AA20CBF2A500C17E34 /* Files */ = {
-			isa = PBXGroup;
-			children = (
-				7790D19E20CABA6900F7CAF5 /* RYAVPlayer.swift */,
-				771C27A820CBE78300C17E34 /* RYPlayModel.swift */,
-				7790D1A520CAD5B600F7CAF5 /* RYAVPlayerItem.swift */,
-				7790D1A920CBB22900F7CAF5 /* RYOwnerObserver.swift */,
-				7790D1A320CACC1E00F7CAF5 /* Timer.swift */,
-			);
-			path = Files;
-			sourceTree = "<group>";
-		};
 		7790D17D20CABA2C00F7CAF5 = {
 			isa = PBXGroup;
 			children = (
@@ -103,7 +83,7 @@
 			isa = PBXGroup;
 			children = (
 				771C27A620CBE1D900C17E34 /* RongYaoTeamPlayer.swift */,
-				771C27AA20CBF2A500C17E34 /* Files */,
+				7790D1A920CBB22900F7CAF5 /* RYObserver.swift */,
 			);
 			path = RongYaoPlayer;
 			sourceTree = "<group>";
@@ -189,15 +169,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				771C27A920CBE78300C17E34 /* RYPlayModel.swift in Sources */,
 				7790D18C20CABA2C00F7CAF5 /* ViewController.swift in Sources */,
 				771C27A720CBE1D900C17E34 /* RongYaoTeamPlayer.swift in Sources */,
 				7790D18A20CABA2C00F7CAF5 /* AppDelegate.swift in Sources */,
-				7790D1A620CAD5B600F7CAF5 /* RYAVPlayerItem.swift in Sources */,
 				7790D1A820CADC6F00F7CAF5 /* RYTestViewController.swift in Sources */,
-				7790D19F20CABA6900F7CAF5 /* RYAVPlayer.swift in Sources */,
-				7790D1AA20CBB22900F7CAF5 /* RYOwnerObserver.swift in Sources */,
-				7790D1A420CACC1E00F7CAF5 /* Timer.swift in Sources */,
+				7790D1AA20CBB22900F7CAF5 /* RYObserver.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
