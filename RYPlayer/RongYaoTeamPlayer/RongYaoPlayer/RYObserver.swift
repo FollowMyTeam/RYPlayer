@@ -53,10 +53,4 @@ public class RYObserver: NSObject {
             NotificationCenter.default.removeObserver(self, name: nota, object: owner)
         }
     }
-    
-    deinit {
-        #if DEBUG
-        print("\(#function) - \(#line) - \(NSStringFromClass(self.classForCoder))")
-        #endif
-    }
 }
