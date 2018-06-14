@@ -9,27 +9,36 @@
 import UIKit
 import AVFoundation
 
+
+/// 播放暂停的理由
+///
+/// - buffering: 缓冲中
+/// - pause: 暂停播放
+public enum RYPlayerPausedReason {
+    case buffering
+    case pause
+}
+/// 播放停止的原因
+///
+/// - playEnd: 播放完毕
+/// - playFailed: 播放失败
+public enum RYPlayerStoppedReason {
+    case playEnd
+    case playFailed
+}
 /// 播放器当前的状态
 ///
 /// - unknown: 未播放任何资源时的状态
 /// - prepare: 准备播放一个新的资源时的状态
 /// - playing: 播放中
-/// - buffering: 缓冲中
-/// - pause: 暂停
-/// - playEnd: 播放结束
-/// - playFailed: 播放失败
+/// - paused: 播放暂停状态
+/// - stopped: 播放停止
 public enum RYPlayState {
     case unknown
     case prepare
     case playing
-    public enum paused {
-        case buffering
-        case pause
-    }
-    public enum stopped {
-        case playEnd
-        case playFailed
-    }
+    case paused(reason: RYPlayerPausedReason)
+    case stopped(reason: RYPlayerStoppedReason)
 }
 
 public protocol RYPlayerDelegate: NSObjectProtocol {
@@ -95,6 +104,12 @@ public class RYPlayer: NSObject {
         ry_state = .unknown
         super.init()
         ry_addKeyObservers()
+        
+        ry_state = .stopped(reason: .playEnd)
+        
+        print(ry_state)
+        
+        print(ry_state)
     }
     
     deinit {
