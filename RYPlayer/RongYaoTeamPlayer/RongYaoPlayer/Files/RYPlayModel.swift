@@ -15,8 +15,8 @@ public protocol RYPlayModelViewProtocol: NSObjectProtocol {
     var tag: Int {get set}
 }
 
-/// - RYPlayer super view
-///     - RYPlayer
+/// - RongYaoTeamPlayer super view
+///     - RongYaoTeamPlayer
 open class RYPlayModel: NSObject {
     
     init(URL: URL) {
@@ -29,8 +29,8 @@ open class RYPlayModel: NSObject {
 
 /// - UITableView
 ///     - UITableViewCell
-///         - RYPlayer super view
-///             - RYPlayer
+///         - RongYaoTeamPlayer super view
+///             - RongYaoTeamPlayer
 open class RYUITableViewCellPlayModel: RYPlayModel {
     init(URL: URL, atIndexPath: IndexPath, superView: UIView & RYPlayModelViewProtocol, tableView: UITableView) {
         self.atIndexPath = atIndexPath
@@ -46,8 +46,8 @@ open class RYUITableViewCellPlayModel: RYPlayModel {
 
 /// - UICollectionView
 ///     - UICollectionViewCell
-///         - RYPlayer super view
-///             - RYPlayer
+///         - RongYaoTeamPlayer super view
+///             - RongYaoTeamPlayer
 open class RYUICollectionViewCellPlayModel: RYPlayModel {
     init(URL: URL, atIndexPath: IndexPath, superView: UIView & RYPlayModelViewProtocol, collectionView: UICollectionView) {
         self.atIndexPath = atIndexPath
@@ -63,8 +63,8 @@ open class RYUICollectionViewCellPlayModel: RYPlayModel {
 
 /// - UITableView
 ///     - UITableViewHeaderView
-///         - RYPlayer super view
-///             - RYPlayer
+///         - RongYaoTeamPlayer super view
+///             - RongYaoTeamPlayer
 open class RYUITableHeaderViewPlayModel: RYPlayModel {
     init(URL: URL, superView: UIView, tableView: UITableView) {
         self.superView = superView
@@ -80,8 +80,8 @@ open class RYUITableHeaderViewPlayModel: RYPlayModel {
 ///     - UITableViewCell
 ///         - UICollectionView
 ///             - UICollectionViewCell
-///                 - RYPlayer super view
-///                     - RYPlayer
+///                 - RongYaoTeamPlayer super view
+///                     - RongYaoTeamPlayer
 open class RYNestedPlayModel: RYPlayModel {
     init(URL: URL, atIndexPath: IndexPath, superView: UIView & RYPlayModelViewProtocol, collectionView: UICollectionView & RYPlayModelViewProtocol, collectionViewIndexPath: IndexPath, tableView: UITableView) {
         self.atIndexPath = atIndexPath

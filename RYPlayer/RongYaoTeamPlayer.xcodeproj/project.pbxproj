@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		771C27A720CBE1D900C17E34 /* RYPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771C27A620CBE1D900C17E34 /* RYPlayer.swift */; };
+		771C27A720CBE1D900C17E34 /* RongYaoTeamPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771C27A620CBE1D900C17E34 /* RongYaoTeamPlayer.swift */; };
 		771C27A920CBE78300C17E34 /* RYPlayModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771C27A820CBE78300C17E34 /* RYPlayModel.swift */; };
 		7790D18A20CABA2C00F7CAF5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7790D18920CABA2C00F7CAF5 /* AppDelegate.swift */; };
 		7790D18C20CABA2C00F7CAF5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7790D18B20CABA2C00F7CAF5 /* ViewController.swift */; };
@@ -24,7 +24,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		771C27A620CBE1D900C17E34 /* RYPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYPlayer.swift; sourceTree = "<group>"; };
+		771C27A620CBE1D900C17E34 /* RongYaoTeamPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoTeamPlayer.swift; sourceTree = "<group>"; };
 		771C27A820CBE78300C17E34 /* RYPlayModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYPlayModel.swift; sourceTree = "<group>"; };
 		7790D18620CABA2C00F7CAF5 /* RongYaoTeamPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RongYaoTeamPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7790D18920CABA2C00F7CAF5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -102,7 +102,7 @@
 		7790D19B20CABA4300F7CAF5 /* RongYaoPlayer */ = {
 			isa = PBXGroup;
 			children = (
-				771C27A620CBE1D900C17E34 /* RYPlayer.swift */,
+				771C27A620CBE1D900C17E34 /* RongYaoTeamPlayer.swift */,
 				771C27AA20CBF2A500C17E34 /* Files */,
 			);
 			path = RongYaoPlayer;
@@ -191,7 +191,7 @@
 			files = (
 				771C27A920CBE78300C17E34 /* RYPlayModel.swift in Sources */,
 				7790D18C20CABA2C00F7CAF5 /* ViewController.swift in Sources */,
-				771C27A720CBE1D900C17E34 /* RYPlayer.swift in Sources */,
+				771C27A720CBE1D900C17E34 /* RongYaoTeamPlayer.swift in Sources */,
 				7790D18A20CABA2C00F7CAF5 /* AppDelegate.swift in Sources */,
 				7790D1A620CAD5B600F7CAF5 /* RYAVPlayerItem.swift in Sources */,
 				7790D1A820CADC6F00F7CAF5 /* RYTestViewController.swift in Sources */,

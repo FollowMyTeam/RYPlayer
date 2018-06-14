@@ -40,9 +40,12 @@ internal class RYAVPlayerItem: AVPlayerItem {
 
     /// 持续时间
     /// 单位秒
-    var ry_duration: TimeInterval? {
+    var ry_duration: TimeInterval {
         get {
-            return self._ry_duration
+            if ( self._ry_duration != nil ) {
+                return self._ry_duration!
+            }
+            return 0
         }
     }
     private var _ry_duration: TimeInterval?
@@ -51,7 +54,7 @@ internal class RYAVPlayerItem: AVPlayerItem {
     /// 单位秒
     var ry_currentTime: TimeInterval {
         get {
-            if ( self.ry_duration == nil ) {
+            if ( self._ry_duration == nil ) {
                 return 0
             }
             
@@ -101,11 +104,11 @@ private extension RYAVPlayerItem {
     var ry_maxPreTime: TimeInterval {
         get {
             let max = self.ry_duration
-            if ( max == nil ) {
+            if ( max == 0 ) {
                 return 0
             }
             let pre = self.ry_currentTime + 5
-            return pre < max! ? pre : max!
+            return pre < max ? pre : max
         }
     }
     
@@ -150,7 +153,7 @@ private extension RYAVPlayerItem {
             }
             
             let duration = self.ry_duration
-            if ( duration == nil ) {
+            if ( duration == 0 ) {
                 return
             }
             

@@ -1,5 +1,5 @@
 //
-//  RYPlayer.swift
+//  RongYaoTeamPlayer.swift
 //  RongYaoTeamPlayer
 //
 //  Created by BlueDancer on 2018/6/9.
@@ -14,7 +14,7 @@ import AVFoundation
 ///
 /// - buffering: 缓冲中
 /// - pause: 暂停播放
-public enum RYPlayerPausedReason {
+public enum RongYaoTeamPlayerPausedReason {
     case buffering
     case pause
 }
@@ -22,7 +22,7 @@ public enum RYPlayerPausedReason {
 ///
 /// - playEnd: 播放完毕
 /// - playFailed: 播放失败
-public enum RYPlayerStoppedReason {
+public enum RongYaoTeamPlayerStoppedReason {
     case playEnd
     case playFailed
 }
@@ -31,68 +31,79 @@ public enum RYPlayerStoppedReason {
 /// - unknown: 未播放任何资源时的状态
 /// - prepare: 准备播放一个新的资源时的状态
 /// - playing: 播放中
-/// - paused: 播放暂停状态
-/// - stopped: 播放停止
+/// - paused:  暂停状态
+/// - stopped: 停止状态
 public enum RYPlayState {
     case unknown
     case prepare
     case playing
-    case paused(reason: RYPlayerPausedReason)
-    case stopped(reason: RYPlayerStoppedReason)
+    case paused(reason: RongYaoTeamPlayerPausedReason)
+    case stopped(reason: RongYaoTeamPlayerStoppedReason)
+}
+/// 播放器的一些公开属性
+///
+/// - ry_URL: 同 RongYaoTeamPlayer.ry_URL
+/// - ry_state: 同 RongYaoTeamPlayer.ry_state
+/// - ry_duration: 同 RongYaoTeamPlayer.ry_duration
+/// - ry_currentTime: 同 RongYaoTeamPlayer.ry_currentTime
+/// - ry_bufferLoadedTime: 同 RongYaoTeamPlayer.ry_bufferLoadedTime
+/// - ry_bufferState: 同 RongYaoTeamPlayer.ry_bufferState
+/// - ry_presentationSize: 同 RongYaoTeamPlayer.ry_presentationSize
+public enum RongYaoTeamPlayerValueKey {
+    case ry_URL
+    case ry_state
+    case ry_duration
+    case ry_currentTime
+    case ry_bufferLoadedTime
+    case ry_bufferState
+    case ry_presentationSize
+}
+/// 缓冲的状态
+///
+/// - unknown: 未知, 可能还未播放
+/// - empty: 缓冲区为空
+/// - full: 缓冲区已满
+public enum RongYaoTeamPlayerBufferState {
+    case unknown
+    case empty
+    case full
 }
 
-public protocol RYPlayerDelegate: NSObjectProtocol {
-    /// 播放一个新的URL的回调
-    /// 也就是当设置`player.ry_URL`时, 将回调此方法
-    ///
-    /// - Parameters:
-    ///   - player:             播放器
-    ///   - URL:                播放地址
-    /// - Returns:              Void
-    func player(_ player: RYPlayer, prepareToPlay URL: URL?) -> Void
-    
-    /// 当前时间改变的回调
-    func playerCurrentTimeDidChange(_ player: RYPlayer) -> Void
-    
-    /// 持续时间改变的回调
-    func playerDurationDidChange(_ player: RYPlayer) -> Void
-    
-    /// 缓冲进度改变的回调
-    func playerBufferLoadedTimeDidChange(_ player: RYPlayer) -> Void
-    
-    /// 状态改变的回调
-    func playerStatusDidChange(_ player: RYPlayer) -> Void
-    
-    /// 缓冲区为空的回调
-    func playerPlaybackBufferEmpty(_ player: RYPlayer) -> Void
-    
-    /// 缓冲区加满的回调
-    func playerPlaybackBufferFull(_ player: RYPlayer) -> Void
-    
-    /// 视频呈现的大小
-    func playerDidLoadPresentationSize(_ player: RYPlayer) -> Void
-    
-    /// 播放完毕的回调
-    func playerDidPlayToEndTime(_ player: RYPlayer) -> Void
+public protocol RongYaoTeamPlayerDelegate: NSObjectProtocol {
+    func player(_ player: RongYaoTeamPlayer, valueDidChangeForKey: RongYaoTeamPlayerValueKey) -> Void
 }
 
 
-public class RYPlayer: NSObject {
-
-    /// 播放地址
+public class RongYaoTeamPlayer: NSObject {
+    /// 播放的资源URL
     @objc public dynamic var ry_URL: URL?
+    
+    /// 播放状态
+    public private(set) var ry_state: RYPlayState = .unknown
+    
+    /// 播放时长
+    public private(set) var ry_duration: TimeInterval = 0
+    
+    /// 当前时间
+    public private(set) var ry_currentTime: TimeInterval = 0
 
+    /// 已缓冲到的时间
+    public private(set) var ry_bufferLoadedTime: TimeInterval = 0
+    
+    /// 缓冲状态
+    public private(set) var ry_bufferState: RongYaoTeamPlayerBufferState = .unknown
+    
+    ///
+    public private(set) var ry_presentationSize: CGSize = CGSize.zero
+    
     /// 播放器视图
     public var ry_view: UIView?
     
     /// 播放报错时的error
     public var ry_error: Error?
     
-    /// 播放状态
-    public var ry_state: RYPlayState
-    
     /// 代理
-    public weak var ry_delegate: RYPlayerDelegate?
+    public weak var ry_delegate: RongYaoTeamPlayerDelegate?
     
     private var ry_asset: AVURLAsset? { return self.ry_playerItem?.asset as? AVURLAsset }
     
@@ -101,7 +112,6 @@ public class RYPlayer: NSObject {
     private var ry_player: RYAVPlayer?
     
     public override init() {
-        ry_state = .unknown
         super.init()
         ry_addKeyObservers()
         
@@ -142,29 +152,17 @@ public class RYPlayer: NSObject {
 }
 
 
-public extension RYPlayer {
-    /// 播放时长
-    var ry_duration: TimeInterval? {
-        return self.ry_playerItem?.ry_duration
-    }
+public extension RongYaoTeamPlayer {
     
-    /// 当前时间
-    var ry_currentTime: TimeInterval? {
-        return self.ry_playerItem?.ry_currentTime
-    }
     
-    /// 已缓冲到的时间
-    var ry_bufferLoadedTime: TimeInterval? {
-        return self.ry_playerItem?.ry_bufferLoadedTime
-    }
 }
 
 /// 播放器的初始化
 /// 用来初始化一个RYAVPlayer
 /// 由于创建耗时, 这里将初始化放到了子线程中
-private extension RYPlayer {
+private extension RongYaoTeamPlayer {
     
-    struct RYPlayerInitPlayerAssociatedKeys {
+    struct RongYaoTeamPlayerInitPlayerAssociatedKeys {
         static var kry_initOperation = "kry_initOperation"
     }
 
@@ -177,10 +175,10 @@ private extension RYPlayer {
     /// `创建一个RYAVPlayer`的操作任务
     var ry_initOperation: Operation? {
         set {
-            objc_setAssociatedObject(self, &RYPlayerInitPlayerAssociatedKeys.kry_initOperation, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, &RongYaoTeamPlayerInitPlayerAssociatedKeys.kry_initOperation, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
         get {
-            return objc_getAssociatedObject(self, &RYPlayerInitPlayerAssociatedKeys.kry_initOperation) as? Operation
+            return objc_getAssociatedObject(self, &RongYaoTeamPlayerInitPlayerAssociatedKeys.kry_initOperation) as? Operation
         }
     }
 
@@ -195,8 +193,6 @@ private extension RYPlayer {
         if ( ry_URL == nil ) {
             return
         }
-        
-        ry_delegate?.player(self, prepareToPlay: newURL)
         
         ry_cancelInitOperation()
         
@@ -251,18 +247,18 @@ private extension RYPlayer {
             self.ry_initOperation = nil
         }
         
-        if ( RYPlayer.SERIAL_QUEUE == nil ) {
-            RYPlayer.SERIAL_QUEUE = OperationQueue.init()
-            RYPlayer.SERIAL_QUEUE?.name = "com.SJPlayer.serialQueue"
-            RYPlayer.SERIAL_QUEUE?.maxConcurrentOperationCount = 1
+        if ( RongYaoTeamPlayer.SERIAL_QUEUE == nil ) {
+            RongYaoTeamPlayer.SERIAL_QUEUE = OperationQueue.init()
+            RongYaoTeamPlayer.SERIAL_QUEUE?.name = "com.SJPlayer.serialQueue"
+            RongYaoTeamPlayer.SERIAL_QUEUE?.maxConcurrentOperationCount = 1
         }
         
-        RYPlayer.SERIAL_QUEUE?.addOperation(ry_initOperation!)
+        RongYaoTeamPlayer.SERIAL_QUEUE?.addOperation(ry_initOperation!)
     }
 }
 
 /// play control
-public extension RYPlayer {
+public extension RongYaoTeamPlayer {
     
 //    open var autoPlay: Bool = true
 //    open var rate: Float?
@@ -285,7 +281,7 @@ public extension RYPlayer {
 }
 
 /// mute / volume / brightness
-extension RYPlayer {
+extension RongYaoTeamPlayer {
 
 //    open var mute: Bool
 //    open var volume: Float?
@@ -293,13 +289,13 @@ extension RYPlayer {
     
 }
 
-extension RYPlayer: RYAVPlayerItemDelegate, RYAVPlayerDelegate {
+extension RongYaoTeamPlayer: RYAVPlayerItemDelegate, RYAVPlayerDelegate {
     func playerItemDurationDidChange(_ playerItem: RYAVPlayerItem) {
-        self.ry_delegate?.playerDurationDidChange(self)
+//        self.ry_delegate?.playerDurationDidChange(self)
     }
     
     func playerItemBufferLoadedTimeDidChange(_ playerItem: RYAVPlayerItem) {
-        self.ry_delegate?.playerBufferLoadedTimeDidChange(self)
+//        self.ry_delegate?.playerBufferLoadedTimeDidChange(self)
     }
     
     func playerItemStatusDidChange(_ playerItem: RYAVPlayerItem) {
@@ -307,22 +303,22 @@ extension RYPlayer: RYAVPlayerItemDelegate, RYAVPlayerDelegate {
     }
     
     func playerItemPlaybackBufferEmpty(_ playerItem: RYAVPlayerItem) {
-        self.ry_delegate?.playerPlaybackBufferEmpty(self)
+//        self.ry_delegate?.playerPlaybackBufferEmpty(self)
     }
     
     func playerItemPlaybackBufferFull(_ playerItem: RYAVPlayerItem) {
-        self.ry_delegate?.playerPlaybackBufferFull(self)
+//        self.ry_delegate?.playerPlaybackBufferFull(self)
     }
     
     func playerItemDidLoadPresentationSize(_ playerItem: RYAVPlayerItem) {
-        self.ry_delegate?.playerDidLoadPresentationSize(self)
+//        self.ry_delegate?.playerDidLoadPresentationSize(self)
     }
     
     func playerItemDidPlayToEndTime(_ playerItem: RYAVPlayerItem) {
-        self.ry_delegate?.playerDidPlayToEndTime(self)
+//        self.ry_delegate?.playerDidPlayToEndTime(self)
     }
     
     func playerCurrentTimeDidChange(_ player: RYAVPlayer) {
-        self.ry_delegate?.playerCurrentTimeDidChange(self)
+//        self.ry_delegate?.playerCurrentTimeDidChange(self)
     }
 }
