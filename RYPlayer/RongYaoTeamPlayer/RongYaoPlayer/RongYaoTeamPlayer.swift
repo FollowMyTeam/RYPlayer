@@ -9,23 +9,6 @@
 import UIKit
 import AVFoundation
 
-
-/// 播放暂停的理由
-///
-/// - buffering: 正在缓冲
-/// - pause: 被暂停
-public enum RongYaoTeamPlayerPausedReason {
-    case buffering
-    case pause
-}
-/// 播放停止的原因
-///
-/// - playEnd: 播放完毕
-/// - playFailed: 播放失败
-public enum RongYaoTeamPlayerStoppedReason {
-    case playEnd
-    case playFailed
-}
 /// 播放器当前的状态
 ///
 /// - unknown: 未播放任何资源时的状态
@@ -40,17 +23,51 @@ public enum RYPlayState {
     case paused(reason: RongYaoTeamPlayerPausedReason)
     case stopped(reason: RongYaoTeamPlayerStoppedReason)
 }
+/// 播放暂停的理由
+///
+/// - buffering: 正在缓冲
+/// - pause:     被暂停
+public enum RongYaoTeamPlayerPausedReason {
+    case buffering
+    case pause
+}
+/// 播放停止的原因
+///
+/// - playEnd:    播放完毕
+/// - playFailed: 播放失败
+public enum RongYaoTeamPlayerStoppedReason {
+    case playEnd
+    case playFailed
+}
+/// 缓冲的状态
+///
+/// - unknown: 未知, 可能还未播放
+/// - empty:   缓冲区为空
+/// - full:    缓冲区已满
+public enum RongYaoTeamPlayerBufferState {
+    case unknown
+    case empty
+    case full
+}
+/// 播放器的代理
+public protocol RongYaoTeamPlayerDelegate: NSObjectProtocol {
+    /// 相应的属性, 当值改变时的回调
+    ///
+    /// - Parameters:
+    ///   - player: 播放器
+    ///   - valueDidChangeForKey: 相应的属性
+    /// - Returns: Void
+    func player(_ player: RongYaoTeamPlayer, valueDidChangeForKey: RongYaoTeamPlayerPropertyKey) -> Void
+}
 /// 播放器的一些公开属性
 ///
-/// - ry_URL: 同 RongYaoTeamPlayer.ry_URL
 /// - ry_state: 同 RongYaoTeamPlayer.ry_state
 /// - ry_duration: 同 RongYaoTeamPlayer.ry_duration
 /// - ry_currentTime: 同 RongYaoTeamPlayer.ry_currentTime
 /// - ry_bufferLoadedTime: 同 RongYaoTeamPlayer.ry_bufferLoadedTime
 /// - ry_bufferState: 同 RongYaoTeamPlayer.ry_bufferState
 /// - ry_presentationSize: 同 RongYaoTeamPlayer.ry_presentationSize
-public enum RongYaoTeamPlayerValueKey {
-    case ry_URL
+public enum RongYaoTeamPlayerPropertyKey {
     case ry_state
     case ry_duration
     case ry_currentTime
@@ -58,29 +75,32 @@ public enum RongYaoTeamPlayerValueKey {
     case ry_bufferState
     case ry_presentationSize
 }
-/// 缓冲的状态
-///
-/// - unknown: 未知, 可能还未播放
-/// - empty: 缓冲区为空
-/// - full: 缓冲区已满
-public enum RongYaoTeamPlayerBufferState {
-    case unknown
-    case empty
-    case full
-}
 
-public protocol RongYaoTeamPlayerDelegate: NSObjectProtocol {
-    func player(_ player: RongYaoTeamPlayer, valueDidChangeForKey: RongYaoTeamPlayerValueKey) -> Void
-}
-
-
+/// 播放器
 public class RongYaoTeamPlayer: NSObject {
+    
+    /// 代理
+    public weak var ry_delegate: RongYaoTeamPlayerDelegate?
+    
+    /// 播放器视图
+    public var ry_view: UIView?
+
     /// 播放的资源URL
     public var ry_URL: URL? {
         didSet {
             print(oldValue as Any, self.ry_URL as Any)
-            valueDidChangeForKey(.ry_URL, oldValue: oldValue)
+            self.specifyStartTime = 0
+            self.ry_initializingPlayer(ry_URL)
         }
+    }
+    
+    private var specifyStartTime: TimeInterval = 0
+    
+    /// 播放一个资源, 并从指定的时间开始播放
+    public func ry_URL(_ playURL: URL?, specifyStartTime: TimeInterval) {
+        self.ry_URL = playURL
+        self.specifyStartTime = specifyStartTime
+        self.ry_initializingPlayer(playURL)
     }
     
     /// 播放状态
@@ -131,14 +151,8 @@ public class RongYaoTeamPlayer: NSObject {
         }
     }
     
-    /// 播放器视图
-    public var ry_view: UIView?
-    
     /// 播放报错时的error
     public var ry_error: Error?
-    
-    /// 代理
-    public weak var ry_delegate: RongYaoTeamPlayerDelegate?
     
     private var ry_asset: AVURLAsset? { return self.ry_playerItem?.asset as? AVURLAsset }
     
@@ -155,12 +169,12 @@ public class RongYaoTeamPlayer: NSObject {
         ry_cancelInitOperation()
     }
     
-    private func valueDidChangeForKey (_ key: RongYaoTeamPlayerValueKey, oldValue: Any?) {
+    private func valueDidChangeForKey (_ key: RongYaoTeamPlayerPropertyKey, oldValue: Any) {
+        
+        // call delegate method
         self.ry_delegate?.player(self, valueDidChangeForKey: key)
         
         switch key {
-        case .ry_URL:
-            ry_URLDidChange(self.ry_URL)
         default:
             print("----dsfsd----")
         }
@@ -173,39 +187,19 @@ public extension RongYaoTeamPlayer {
     
 }
 
-/// 播放器的初始化
-/// 用来初始化一个RYAVPlayer
-/// 由于创建耗时, 这里将初始化放到了子线程中
+/// - 播放器的初始化
+/// - 用来初始化一个RYAVPlayer
+/// - 由于创建耗时, 这里将初始化放到了子线程中
 private extension RongYaoTeamPlayer {
     
-    struct RongYaoTeamPlayerInitPlayerAssociatedKeys {
-        static var kry_initOperation = "kry_initOperation"
-    }
-
-    /// 用来初始化Player的队列
-    /// 由于创建耗时所以, 将初始化任务放到了这个队列中
-    /// 使用队列便于管理操作对象, 在某个时刻可以进行取消任务
-    static var SERIAL_QUEUE: OperationQueue?
-    
-    /// 初始化的操作对象
-    /// `创建一个RYAVPlayer`的操作任务
-    var ry_initOperation: Operation? {
-        set {
-            objc_setAssociatedObject(self, &RongYaoTeamPlayerInitPlayerAssociatedKeys.kry_initOperation, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
-        get {
-            return objc_getAssociatedObject(self, &RongYaoTeamPlayerInitPlayerAssociatedKeys.kry_initOperation) as? Operation
-        }
-    }
-
-    /// 准备播放一个新的URL
-    /// 此时, 将操作任务添加到队列中
-    /// 同时取消上一次可能存在的任务
-    func ry_URLDidChange(_ newURL: URL?) {
+    /// - 初始化播放器
+    /// - 此时, 将操作任务添加到队列中
+    /// - 同时取消上一次可能存在的任务
+    func ry_initializingPlayer(_ newURL: URL?) {
         
         // clean old avplayer
         ry_player = nil
-
+        
         if ( ry_URL == nil ) {
             return
         }
@@ -215,9 +209,29 @@ private extension RongYaoTeamPlayer {
         ry_addOperationToQueue()
     }
     
-    /// 取消之前的操作并将操作对象置空
-    /// 当操作对象`未完成`&`未进行`&`未取消`时, 将其取消
-    /// 最后操作对象置为nil
+    struct RongYaoTeamPlayerInitPlayerAssociatedKeys {
+        static var kry_initOperation = "kry_initOperation"
+    }
+
+    /// - 用来初始化Player的队列
+    /// - 由于创建耗时所以, 将初始化任务放到了这个队列中
+    /// - 使用队列便于管理操作对象, 在某个时刻可以进行取消任务
+    static var SERIAL_QUEUE: OperationQueue?
+    
+    /// - 初始化的操作对象
+    /// - `创建一个RYAVPlayer`的操作任务
+    var ry_initOperation: Operation? {
+        set {
+            objc_setAssociatedObject(self, &RongYaoTeamPlayerInitPlayerAssociatedKeys.kry_initOperation, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+        get {
+            return objc_getAssociatedObject(self, &RongYaoTeamPlayerInitPlayerAssociatedKeys.kry_initOperation) as? Operation
+        }
+    }
+
+    /// - 取消之前的操作并将操作对象置空
+    /// - 当操作对象`未完成`&`未进行`&`未取消`时, 将其取消
+    /// - 最后操作对象置为nil
     func ry_cancelInitOperation() {
         guard let `initOperation` = ry_initOperation else {
             return
@@ -230,9 +244,9 @@ private extension RongYaoTeamPlayer {
         self.ry_initOperation = nil
     }
     
-    /// 添加初始化任务到队列
-    /// 由于创建一个AVPlayer耗时, 因此将其放入子线程进行操作
-    /// 当队列为空时, 这里进行了队列的初始化工作
+    /// - 添加初始化任务到队列
+    /// - 由于创建一个AVPlayer耗时, 因此将其放入子线程进行操作
+    /// - 当队列为空时, 这里进行了队列的初始化工作
     func ry_addOperationToQueue() {
         if ( ry_initOperation != nil ) {
             ry_cancelInitOperation()

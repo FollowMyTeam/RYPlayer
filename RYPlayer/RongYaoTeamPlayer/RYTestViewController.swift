@@ -28,7 +28,7 @@ class RYTestViewController: UIViewController {
 }
 
 extension RYTestViewController: RongYaoTeamPlayerDelegate {
-    func player(_ player: RongYaoTeamPlayer, valueDidChangeForKey: RongYaoTeamPlayerValueKey) {
+    func player(_ player: RongYaoTeamPlayer, valueDidChangeForKey: RongYaoTeamPlayerPropertyKey) {
         
     }
     
