@@ -8,6 +8,17 @@
 
 import UIKit
 import AVFoundation
+
+/// 播放器的代理
+public protocol RongYaoTeamPlayerDelegate: NSObjectProtocol {
+    /// 相应的属性, 当值改变时的回调
+    ///
+    /// - Parameters:
+    ///   - player: 播放器
+    ///   - valueDidChangeForKey: 相应的属性
+    /// - Returns: Void
+    func player(_ player: RongYaoTeamPlayer, valueDidChangeForKey: RongYaoTeamPlayerPropertyKey) -> Void
+}
 /// 播放器当前的状态
 ///
 /// - unknown: 未播放任何资源时的状态
@@ -48,16 +59,6 @@ public enum RongYaoTeamPlayerBufferState {
     case empty
     case full
 }
-/// 播放器的代理
-public protocol RongYaoTeamPlayerDelegate: NSObjectProtocol {
-    /// 相应的属性, 当值改变时的回调
-    ///
-    /// - Parameters:
-    ///   - player: 播放器
-    ///   - valueDidChangeForKey: 相应的属性
-    /// - Returns: Void
-    func player(_ player: RongYaoTeamPlayer, valueDidChangeForKey: RongYaoTeamPlayerPropertyKey) -> Void
-}
 /// 播放器的属性key
 ///
 /// - ry_state: 同 RongYaoTeamPlayer.ry_state
@@ -74,16 +75,21 @@ public enum RongYaoTeamPlayerPropertyKey {
     case ry_bufferState
     case ry_presentationSize
 }
-
 /// 播放器资源
-/// - 记录URL
-/// - 记录播放的开始时间
+/// 使用两个参数进行初始化分别如下:
+/// - URL
+/// - 播放的开始时间
 public class RongYaoTeamPlayerAsset {
     
     public private(set) var ry_URL: URL
     public private(set) var ry_specifyStartTime: TimeInterval = 0
     public private(set) var ry_isOtherAsset = false
     
+    /// 创建一个Asset
+    ///
+    /// - Parameters:
+    ///   - playURL: 播放的URL(本地/远程)
+    ///   - specifyStartTime: 从指定时间开始播放, 默认为0
     public init(_ playURL: URL, specifyStartTime: TimeInterval) {
         ry_specifyStartTime = specifyStartTime
         ry_URL = playURL
@@ -106,64 +112,47 @@ public class RongYaoTeamPlayerAsset {
 }
 
 
-public class RongYaoTeamPlayer: RongYaoTeamPlayerAssetDelegate {
+public class RongYaoTeamPlayer {
     /// 播放资源
-    public var ry_asset: RongYaoTeamPlayerAsset? {
-        didSet {
-            if let `asset` = ry_asset { asset.ry_initializingPlayer(delegate: self) }
-        }
-    }
+    public var ry_asset: RongYaoTeamPlayerAsset? { didSet { print(Thread.current); ry_assetDidChange() } }
     
     /// 代理
     public weak var ry_delegate: RongYaoTeamPlayerDelegate?
     
     /// 播放状态
-    public private(set) var ry_state: RYPlayState = .unknown {
-        didSet {
-            print("ry_state \(oldValue) \(ry_state)\n")
-            valueDidChangeForKey(.ry_state, oldValue: oldValue)
-        }
-    }
+    public fileprivate(set) var ry_state: RYPlayState = .unknown { didSet { valueDidChangeForKey(.ry_state, oldValue: oldValue) } }
     
     /// 播放时长
-    public private(set) var ry_duration: TimeInterval = 0 {
-        didSet {
-            print("ry_duration \(oldValue) \(ry_duration)\n")
-            valueDidChangeForKey(.ry_duration, oldValue: oldValue)
-        }
-    }
+    public fileprivate(set) var ry_duration: TimeInterval = 0 { didSet { valueDidChangeForKey(.ry_duration, oldValue: oldValue) } }
     
     /// 当前时间
-    public private(set) var ry_currentTime: TimeInterval = 0 {
-        didSet {
-            print("ry_currentTime \(oldValue) \(ry_currentTime)\n")
-            valueDidChangeForKey(.ry_currentTime, oldValue: oldValue)
-        }
-    }
+    public fileprivate(set) var ry_currentTime: TimeInterval = 0 { didSet { valueDidChangeForKey(.ry_currentTime, oldValue: oldValue) } }
     
     /// 已缓冲到的时间
-    public private(set) var ry_bufferLoadedTime: TimeInterval = 0 {
-        didSet {
-            print("ry_bufferLoadedTime \(oldValue) \(ry_bufferLoadedTime)\n")
-            valueDidChangeForKey(.ry_bufferLoadedTime, oldValue: oldValue)
-        }
-    }
+    public fileprivate(set) var ry_bufferLoadedTime: TimeInterval = 0 { didSet { valueDidChangeForKey(.ry_bufferLoadedTime, oldValue: oldValue) } }
     
     /// 缓冲状态
-    public private(set) var ry_bufferState: RongYaoTeamPlayerBufferState = .unknown {
-        didSet {
-            print("ry_bufferState \(oldValue) \(ry_bufferState)\n")
-            valueDidChangeForKey(.ry_bufferState, oldValue: oldValue)
-        }
-    }
+    public fileprivate(set) var ry_bufferState: RongYaoTeamPlayerBufferState = .unknown { didSet { valueDidChangeForKey(.ry_bufferState, oldValue: oldValue) } }
     
-    ///
-    public private(set) var ry_presentationSize: CGSize = CGSize.zero {
-        didSet {
-            print("ry_presentationSize \(oldValue) \(ry_presentationSize)\n")
-            valueDidChangeForKey(.ry_presentationSize, oldValue: oldValue)
-        }
-    }
+    /// 视频宽高
+    public fileprivate(set) var ry_presentationSize: CGSize = CGSize.zero { didSet { valueDidChangeForKey(.ry_presentationSize, oldValue: oldValue) } }
+    
+    /// 当前 player item 的状态
+    fileprivate var ry_playerItemStatus: AVPlayerItemStatus = .unknown { didSet { playerItemStatusDidChange()} }
+
+    /// 资源属性观察者
+    /// - 负责观察 playerItem 属性值的改变
+    ///     - duration
+    ///     - loadedTimeRanges
+    ///     - status
+    ///     - playbackBufferEmpty
+    ///     - presentationSize
+    ///     - AVPlayerItemDidPlayToEndTime
+    /// - 负责观察 player 当前播放时间的改变
+    /// - 负责观察 缓冲的状态
+    /// - 负责监听 视频播放完毕
+    private var ry_assetPropertyObserver: RongYaoTeamPlayerAssetPropertyObserver?
+
     
     private func valueDidChangeForKey (_ key: RongYaoTeamPlayerPropertyKey, oldValue: Any) {
         self.ry_delegate?.player(self, valueDidChangeForKey: key)
@@ -173,28 +162,82 @@ public class RongYaoTeamPlayer: RongYaoTeamPlayerAssetDelegate {
         }
     }
     
-    deinit {
-        if let `asset` = self.ry_asset {
-            ry_removeTimeObserverOfPlayer(asset.ry_player)
-            ry_removeObserverOfPlayerItem(asset.ry_playerItem, observerContainer: &ry_playerItemObservers)
+    private func ry_assetDidChange() {
+        // 1. reset
+        ry_resetPropertys()
+        // 2. prepare
+        ry_preparePlayAsset()
+    }
+    
+    
+    /// 重置播放所有相关的属性
+    private func ry_resetPropertys() {
+        ry_state = .unknown
+        ry_duration = 0
+        ry_currentTime = 0
+        ry_bufferLoadedTime = 0
+        ry_bufferState = .unknown
+        ry_presentationSize = .zero
+        ry_playerItemStatus = .unknown
+        ry_assetPropertyObserver = nil
+    }
+    
+    /// 准备播放一个Asset
+    /// - 初始化AVPlayer
+    /// - 创建资源属性观察者
+    private func ry_preparePlayAsset() {
+        guard let `ry_asset` = ry_asset else { return }
+        ry_asset.ry_initializingPlayer { [weak self] (asset) in
+            guard let `self` = self else { return }
+            self.ry_assetPropertyObserver = RongYaoTeamPlayerAssetPropertyObserver.init(asset, self)
         }
     }
     
-    private var ry_playerItemObservers = [RYObserver]()
-    
-    public func playerInitializedOfAsset(_ asset: RongYaoTeamPlayerAsset) {
-        if ( asset.ry_initialized == false ) {
-            return
+    /// 处理 AVPlayerItem 状态变更
+    fileprivate func playerItemStatusDidChange() {
+        switch self.ry_playerItemStatus {
+        case .unknown:
+            print("unknown")
+        case .readyToPlay:
+            print("readyToPlay:")
+            self.ry_asset?.ry_player?.play()
+        case .failed:
+            print("failed")
         }
-        
-        ry_addObserverOfPlayerItem(asset.ry_playerItem!, observerCotainer: &ry_playerItemObservers)
-        ry_addTimeObserverOfPlayer(asset.ry_player!)
     }
 }
 
+/// 资源属性观察者
+/// - 负责观察 playerItem 属性值的改变
+///     - duration
+///     - loadedTimeRanges
+///     - status
+///     - playbackBufferEmpty
+///     - presentationSize
+///     - AVPlayerItemDidPlayToEndTime
+/// - 负责观察 player 当前播放时间的改变
+/// - 负责观察 缓冲的状态
+/// - 负责监听 视频播放完毕
+private class RongYaoTeamPlayerAssetPropertyObserver {
+    init(_ asset: RongYaoTeamPlayerAsset, _ player: RongYaoTeamPlayer) {
+        ry_asset = asset
+        ry_player = player
+        
+        ry_addTimeObserverOfPlayer(asset.ry_player)
+        ry_addObserverOfPlayerItem(asset.ry_playerItem, observerCotainer: &ry_playerItemObservers)
+    }
+    
+    deinit {
+        ry_removeTimeObserverOfPlayer(ry_asset.ry_player)
+        ry_removeObserverOfPlayerItem(ry_asset.ry_playerItem, observerContainer: &ry_playerItemObservers)
+    }
+    
+    fileprivate private(set) var ry_asset: RongYaoTeamPlayerAsset
+    fileprivate private(set) weak var ry_player: RongYaoTeamPlayer?
 
-
-extension RongYaoTeamPlayer {
+    /// 存放 player item 的属性观察者
+    private var ry_playerItemObservers = [RYObserver]()
+    
     /// - player item observers
     private func ry_addObserverOfPlayerItem(_ playerItem: AVPlayerItem?, observerCotainer: inout [RYObserver]) {
         guard let `playerItem` = playerItem else {
@@ -206,13 +249,14 @@ extension RongYaoTeamPlayer {
                 return
             }
             
-            self.ry_duration = CMTimeGetSeconds(playerItem.duration)
+            self.ry_player?.ry_duration = CMTimeGetSeconds(playerItem.duration)
         }))
         
         observerCotainer.append(RYObserver.init(owner: playerItem, observeKey: "loadedTimeRanges", exeBlock: { [weak self] (helper) in
             guard let `self` = self else {
                 return
             }
+            
             var time: TimeInterval = 0
             if ( playerItem.loadedTimeRanges.first == nil ) {
                 time = 0
@@ -221,29 +265,23 @@ extension RongYaoTeamPlayer {
                 let range = playerItem.loadedTimeRanges.first!.timeRangeValue
                 time = TimeInterval.init(CMTimeGetSeconds(range.start) + CMTimeGetSeconds(range.duration))
             }
-            self.ry_bufferLoadedTime = time
+            self.ry_player?.ry_bufferLoadedTime = time
         }))
         
         observerCotainer.append(RYObserver.init(owner: playerItem, observeKey: "status", exeBlock: { [weak self] (helper) in
             guard let `self` = self else {
                 return
             }
-            //            self.ry_playerItemStatus = playerItem.status
-            /// next next next next next next next next next next
-            /// next next next next next next next next next next
-            /// next next next next next next next next next next
-            /// next next next next next next next next next next
-            /// next next next next next next next next next next
-            self.ry_asset?.ry_player?.play()
-            print(self)
+            self.ry_player?.ry_playerItemStatus = playerItem.status
         }))
         
         observerCotainer.append(RYObserver.init(owner: playerItem, observeKey: "playbackBufferEmpty", exeBlock: { [weak self] (helper) in
             guard let `self` = self else {
                 return
             }
+            
             if ( playerItem.isPlaybackBufferEmpty == true ) {
-                self.ry_bufferState = .empty
+                self.ry_player?.ry_bufferState = .empty
                 self.ry_pollingPlaybackBuffer()
             }
         }))
@@ -252,7 +290,8 @@ extension RongYaoTeamPlayer {
             guard let `self` = self else {
                 return
             }
-            self.ry_presentationSize = playerItem.presentationSize
+            
+            self.ry_player?.ry_presentationSize = playerItem.presentationSize
         }))
         
         observerCotainer.append(RYObserver.init(owner: playerItem, nota: NSNotification.Name.AVPlayerItemDidPlayToEndTime, exeBlock: { [weak self] (helper) in
@@ -273,6 +312,7 @@ extension RongYaoTeamPlayer {
         guard let `playerItem` = playerItem else {
             return
         }
+        
         for kvo in observerContainer {
             kvo.remove(owner: playerItem)
         }
@@ -290,20 +330,20 @@ extension RongYaoTeamPlayer {
                 return
             }
             
-            let duration = self.ry_duration
+            let duration = self.ry_player!.ry_duration
             if ( duration == 0 ) {
                 return
             }
             
             let pre_buffer = self.ry_maxPreTime;
-            let currentBufferLoadedTime = self.ry_bufferLoadedTime
+            let currentBufferLoadedTime = self.ry_player!.ry_bufferLoadedTime
             if ( pre_buffer > currentBufferLoadedTime ) {
                 return
             }
             
             timer.invalidate()
             ry_isWaitingPlaybackBuffer = false
-            self.ry_bufferState = .full
+            self.ry_player!.ry_bufferState = .full
             }, repeats: true)
         
         RunLoop.main.add(ry_refreshBufferTimer!, forMode: .commonModes)
@@ -314,11 +354,11 @@ extension RongYaoTeamPlayer {
     /// - 单位秒
     private var ry_maxPreTime: TimeInterval {
         get {
-            let max = self.ry_duration
+            let max = self.ry_player!.ry_duration
             if ( max == 0 ) {
                 return 0
             }
-            let pre = self.ry_currentTime + 5
+            let pre = self.ry_player!.ry_currentTime + 5
             return pre < max ? pre : max
         }
     }
@@ -326,40 +366,14 @@ extension RongYaoTeamPlayer {
     /// - 用于刷新当前的缓冲进度
     /// - 此timer将会每2秒刷新一次
     /// - 缓冲进度 > ry_maxPreTime, 代表可以继续播放
-    private var ry_refreshBufferTimer: Timer? {
-        set {
-            objc_setAssociatedObject(self, &RongYaoTeamPlayerBufferRefreshAssociatedKeys.kry_refreshBufferTimer, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
-        
-        get {
-            return objc_getAssociatedObject(self, &RongYaoTeamPlayerBufferRefreshAssociatedKeys.kry_refreshBufferTimer) as? Timer
-        }
-    }
+    private var ry_refreshBufferTimer: Timer?
     
     /// - 是否正在等待缓冲
-    private var ry_isWaitingPlaybackBuffer: Bool {
-        set {
-            objc_setAssociatedObject(self, &RongYaoTeamPlayerBufferRefreshAssociatedKeys.kry_isWaitingPlaybackBuffer, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
-        
-        get {
-            let b = objc_getAssociatedObject(self, &RongYaoTeamPlayerBufferRefreshAssociatedKeys.kry_isWaitingPlaybackBuffer) as? Bool
-            if ( b != nil ) { return b! }
-            return false
-        }
-    }
+    private var ry_isWaitingPlaybackBuffer: Bool = false
     
     /// - player current timer observer
-    private var ry_currentTimeObserver: Any? {
-        set {
-            objc_setAssociatedObject(self, &RongYaoTeamPlayerBufferRefreshAssociatedKeys.kry_currentTimeObserver, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
-        
-        get {
-            return objc_getAssociatedObject(self, &RongYaoTeamPlayerBufferRefreshAssociatedKeys.kry_currentTimeObserver)
-        }
-    }
-
+    private var ry_currentTimeObserver: Any?
+    
     private func ry_addTimeObserverOfPlayer(_ player: AVPlayer?) {
         guard let `player` = player else {
             return
@@ -369,7 +383,8 @@ extension RongYaoTeamPlayer {
             guard let `self` = self else {
                 return
             }
-            self.ry_currentTime = TimeInterval.init(CMTimeGetSeconds(time))
+            
+            self.ry_player!.ry_currentTime = TimeInterval.init(CMTimeGetSeconds(time))
         })
     }
     
@@ -377,22 +392,15 @@ extension RongYaoTeamPlayer {
         guard let `player` = player else {
             return
         }
-        if ( ry_currentTimeObserver != nil ) { player.removeTimeObserver(ry_currentTimeObserver!) }
-    }
-    
-    private struct RongYaoTeamPlayerBufferRefreshAssociatedKeys {
-        static var kry_refreshBufferTimer = "kry_refreshBufferTimer"
-        static var kry_isWaitingPlaybackBuffer = "kry_isWaitingPlaybackBuffer"
-        static var kry_currentTimeObserver = "kry_currentTimeObserver"
+        
+        if ( ry_currentTimeObserver != nil ) {
+            player.removeTimeObserver(ry_currentTimeObserver!)
+            ry_currentTimeObserver = nil
+        }
     }
 }
 
-
-
-public protocol RongYaoTeamPlayerAssetDelegate {
-    func playerInitializedOfAsset(_ asset: RongYaoTeamPlayerAsset)
-}
-
+// MARK: - 资源 - 初始化AVPlayer
 fileprivate extension RongYaoTeamPlayerAsset {
     fileprivate var ry_player: AVPlayer? {
         set {
@@ -423,18 +431,18 @@ fileprivate extension RongYaoTeamPlayerAsset {
     /// - 将操作任务添加到队列中
     /// - 同时, 取消上一次可能存在的任务
     /// - 任务完成后, 将回调delegate
-    fileprivate func ry_initializingPlayer(delegate: AnyObject & RongYaoTeamPlayerAssetDelegate) {
+    fileprivate func ry_initializingPlayer(_ completionBlock: @escaping (_ asset: RongYaoTeamPlayerAsset)->Void) {
         if ( self.ry_initialized == true || ry_isOtherAsset == true ) {
-            delegate.playerInitializedOfAsset(self)
+            completionBlock(self)
             return
         }
+        
         ry_cancelOperation()
-        weak var weakDelegate = delegate
         ry_addOperationToQueue { [weak self] in
             guard let `self` = self else {
                 return
             }
-            weakDelegate?.playerInitializedOfAsset(self)
+            completionBlock(self)
         }
     }
     
