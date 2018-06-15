@@ -80,6 +80,11 @@ public enum RongYaoTeamPlayerPropertyKey {
 /// - URL
 /// - 播放的开始时间
 public class RongYaoTeamPlayerAsset {
+    deinit {
+        #if DEBUG
+        print("\(#function) - \(#line) - RongYaoTeamPlayerAsset")
+        #endif
+    }
     
     public private(set) var ry_URL: URL
     public private(set) var ry_specifyStartTime: TimeInterval = 0
@@ -395,6 +400,16 @@ fileprivate protocol RongYaoTeamPlayerAssetPropertiesDelegate: NSObjectProtocol 
 /// 记录资源的一些信息
 public class RongYaoTeamPlayerAssetProperties {
     
+    deinit {
+        #if DEBUG
+        print("\(#function) - \(#line) - RongYaoTeamPlayerAssetProperties")
+        #endif
+        
+        ry_asset.ry_avPlayer?.pause()
+        ry_removeTimeObserverOfPlayer(ry_asset.ry_avPlayer)
+        ry_removeObserverOfPlayerItem(ry_asset.ry_playerItem, observerContainer: &ry_playerItemObservers)
+    }
+    
     /// 播放时长
     public private(set) var ry_duration: TimeInterval = 0 { didSet{ self.ry_delegate!.properties(self, durationDidChange: self.ry_duration) } }
     
@@ -434,12 +449,6 @@ public class RongYaoTeamPlayerAssetProperties {
         ry_delegate = delegate
         ry_addTimeObserverOfPlayer(asset.ry_avPlayer)
         ry_addObserverOfPlayerItem(asset.ry_playerItem, observerCotainer: &ry_playerItemObservers)
-    }
-    
-    deinit {
-        ry_asset.ry_avPlayer?.pause()
-        ry_removeTimeObserverOfPlayer(ry_asset.ry_avPlayer)
-        ry_removeObserverOfPlayerItem(ry_asset.ry_playerItem, observerContainer: &ry_playerItemObservers)
     }
     
     fileprivate private(set) var ry_asset: RongYaoTeamPlayerAsset
@@ -723,6 +732,13 @@ fileprivate extension Timer {
 }
 
 fileprivate class RongYaoTeamPlayerView: UIView {
+    
+    deinit {
+        #if DEBUG
+        print("\(#function) - \(#line) - \(NSStringFromClass(self.classForCoder))")
+        #endif
+    }
+    
     override class var layerClass: Swift.AnyClass {
         return AVPlayerLayer.self
     }
@@ -737,11 +753,5 @@ fileprivate class RongYaoTeamPlayerView: UIView {
     
     private func avPlayerDidChange() {
         self.playerLayer.player = self.avPlayer
-    }
-    
-    deinit {
-        #if DEBUG
-        print("\(#function) - \(#line) - \(NSStringFromClass(self.classForCoder))")
-        #endif
     }
 }
