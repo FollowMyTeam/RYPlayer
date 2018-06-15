@@ -18,7 +18,6 @@ public protocol RongYaoTeamPlayerDelegate: NSObjectProtocol {
     ///   - valueDidChangeForKey: 相应的属性
     /// - Returns: Void
     func player(_ player: RongYaoTeamPlayer, valueDidChangeForKey Key: RongYaoTeamPlayerPropertyKey)
-    
 }
 /// 播放器当前的状态
 ///
@@ -38,17 +37,17 @@ public enum RYPlayState {
 ///
 /// - buffering: 正在缓冲
 /// - pause:     被暂停
-public enum RongYaoTeamPlayerPausedReason: Int {
-    case buffering = 1
-    case pause = 2
+public enum RongYaoTeamPlayerPausedReason {
+    case buffering
+    case pause
 }
 /// 播放停止的原因
 ///
 /// - playEnd:    播放完毕
 /// - playFailed: 操作失败
-public enum RongYaoTeamPlayerStoppedReason: Int {
-    case playEnd = 1
-    case playFailed = 2
+public enum RongYaoTeamPlayerStoppedReason {
+    case playEnd
+    case playFailed
 }
 /// 缓冲的状态
 ///
@@ -140,13 +139,19 @@ public class RongYaoTeamPlayer: NSObject {
     /// 使播放
     ///
     /// - Returns: 当异常状态时, 将有可能操作失败. 即返回 false
+    @discardableResult
     public func play() -> Bool {
+        guard let `ry_assetProperties` = ry_assetProperties else { return false }
+        if ( ry_assetProperties.ry_playerItemStatus != .readyToPlay ) { return false }
+        ry_assetProperties.ry_asset.ry_avPlayer?.play()
+        ry_state = .playing
         return true
     }
     
     /// 使暂停
     ///
     /// - Returns: 当异常状态时, 将有可能操作失败. 即返回 false
+    @discardableResult
     public func pause() -> Bool {
         return true
     }
@@ -154,6 +159,7 @@ public class RongYaoTeamPlayer: NSObject {
     /// 使停止
     ///
     /// - Returns: 当异常状态时, 将有可能操作失败. 即返回 false
+    @discardableResult
     public func stop() -> Bool {
         return true
     }
@@ -161,6 +167,7 @@ public class RongYaoTeamPlayer: NSObject {
     /// 使重新播放
     ///
     /// - Returns: 当异常状态时, 将有可能操作失败. 即返回 false
+    @discardableResult
     public func replay() -> Bool {
         return true
     }
@@ -235,8 +242,7 @@ public class RongYaoTeamPlayer: NSObject {
         switch status {
         case .unknown: break
         case .readyToPlay:
-            ry_asset?.ry_avPlayer?.play()
-            ry_state = .playing
+            play()
         case .failed:
             ry_state = .stopped(reason: .playFailed)
         }
