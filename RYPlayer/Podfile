@@ -7,4 +7,5 @@ target 'RongYaoTeamPlayer' do
 
   # Pods for RongYaoTeamPlayer
   pod 'SnapKit'
+  pod 'SJSlider'
 end

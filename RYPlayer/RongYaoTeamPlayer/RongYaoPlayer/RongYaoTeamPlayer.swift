@@ -17,7 +17,7 @@ public protocol RongYaoTeamPlayerDelegate: NSObjectProtocol {
     ///   - player: 播放器
     ///   - valueDidChangeForKey: 相应的属性
     /// - Returns: Void
-    func player(_ player: RongYaoTeamPlayer, valueDidChangeForKey Key: RongYaoTeamPlayerPropertyKey)
+    func player(_ player: RongYaoTeamPlayer, valueDidChangeForKey key: RongYaoTeamPlayerPropertyKey)
 }
 /// 播放器当前的状态
 ///
@@ -155,6 +155,11 @@ public class RongYaoTeamPlayer: NSObject {
             return
         }
         
+        if case RongYaoTeamPlayerPlayStatus.inactivity(reason: .playEnd) = ry_state {
+            ry_replay()
+            return
+        }
+        
         // 播放失败
         if case RongYaoTeamPlayerPlayStatus.inactivity(reason: .playFailed) = ry_state {
             // 尝试重新播放
@@ -235,7 +240,12 @@ public class RongYaoTeamPlayer: NSObject {
             self.ry_asset = RongYaoTeamPlayerAsset.init(ry_asset.ry_URL, specifyStartTime: ry_asset.ry_specifyStartTime)
             return
         }
-        ry_seekToTime(0) { (_, _) in }
+        
+        ry_seekToTime(0) { (player, _) in
+            player.ry_asset?.ry_avPlayer?.play()
+            player.ry_state = .playing
+            player.ry_operationOfInitializing = nil
+        }
     }
     
     /// 跳转到指定时间
@@ -270,7 +280,6 @@ public class RongYaoTeamPlayer: NSObject {
         ry_asset?.ry_playerItem?.cancelPendingSeeks()
         ry_asset?.ry_playerItem?.seek(to: CMTimeMakeWithSeconds(Float64.init(time), Int32(NSEC_PER_SEC)), completionHandler: { [weak self] (finished) in
             guard let `self` = self else { return }
-            self.ry_play()
             completionHandler(self, finished)
         })
     }
@@ -376,31 +385,31 @@ public class RongYaoTeamPlayer: NSObject {
 }
 
 extension RongYaoTeamPlayer: RongYaoTeamPlayerAssetPropertiesDelegate {
-    func properties(_ p: RongYaoTeamPlayerAssetProperties, durationDidChange duration: TimeInterval) {
+    fileprivate func properties(_ p: RongYaoTeamPlayerAssetProperties, durationDidChange duration: TimeInterval) {
         self.ry_valueDidChangeForKey(.ry_duration)
     }
     
-    func properties(_ p: RongYaoTeamPlayerAssetProperties, currentTimeDidChange currentTime: TimeInterval) {
+    fileprivate func properties(_ p: RongYaoTeamPlayerAssetProperties, currentTimeDidChange currentTime: TimeInterval) {
         self.ry_valueDidChangeForKey(.ry_currentTime)
     }
     
-    func properties(_ p: RongYaoTeamPlayerAssetProperties, bufferLoadedTimeDidChange bufferLoadedTime: TimeInterval) {
+    fileprivate func properties(_ p: RongYaoTeamPlayerAssetProperties, bufferLoadedTimeDidChange bufferLoadedTime: TimeInterval) {
         self.ry_valueDidChangeForKey(.ry_bufferLoadedTime)
     }
     
-    func properties(_ p: RongYaoTeamPlayerAssetProperties, bufferStatusDidChange bufferStatus: RongYaoTeamPlayerBufferStatus) {
+    fileprivate func properties(_ p: RongYaoTeamPlayerAssetProperties, bufferStatusDidChange bufferStatus: RongYaoTeamPlayerBufferStatus) {
         self.ry_bufferStatusDidChange(bufferStatus)
     }
     
-    func properties(_ p: RongYaoTeamPlayerAssetProperties, presentationSizeDidChange presentationSize: CGSize) {
+    fileprivate func properties(_ p: RongYaoTeamPlayerAssetProperties, presentationSizeDidChange presentationSize: CGSize) {
         self.ry_valueDidChangeForKey(.ry_presentationSize)
     }
     
-    func playerItemDidPlayToEnd(_ p: RongYaoTeamPlayerAssetProperties) {
+    fileprivate func playerItemDidPlayToEnd(_ p: RongYaoTeamPlayerAssetProperties) {
         self.ry_playerItemDidPlayToEnd()
     }
     
-    func properties(_ p: RongYaoTeamPlayerAssetProperties, playerItemStatusDidChange status: AVPlayerItemStatus) {
+    fileprivate func properties(_ p: RongYaoTeamPlayerAssetProperties, playerItemStatusDidChange status: AVPlayerItemStatus) {
         self.ry_playerItemStatusDidChange(status)
     }
 }
@@ -517,6 +526,7 @@ public class RongYaoTeamPlayerAssetProperties {
             }
             if ( playerItem.isPlaybackBufferEmpty == false ) { return }
             if ( self.ry_bufferStatus == .empty ) { return }
+            if ( floor(self.ry_currentTime) == floor(self.ry_duration) ) { return }
             self.ry_bufferStatus = .empty
             self.ry_pollingPlaybackBuffer()
         }))
