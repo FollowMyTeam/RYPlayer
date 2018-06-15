@@ -106,8 +106,6 @@ public class RongYaoTeamPlayerAsset {
         ry_isOtherAsset = true
     }
 }
-
-
 public class RongYaoTeamPlayer: NSObject {
     deinit {
         #if DEBUG
@@ -118,6 +116,13 @@ public class RongYaoTeamPlayer: NSObject {
     /// 播放资源
     /// - 使用URL进行初始化
     public var ry_asset: RongYaoTeamPlayerAsset? { didSet { ry_assetDidChange() } }
+    
+    /// player view
+    public var ry_view: UIView = {
+       let view = RongYaoTeamPlayerView.init(frame: .zero)
+        view.backgroundColor = .black
+        return view
+    }()
     
     /// 资源播放的一些属性
     /// - 如: ry_assetProperties.duration
@@ -286,6 +291,11 @@ public class RongYaoTeamPlayer: NSObject {
         ry_asset?.ry_initializingAVPlayer { [weak self] (asset) in
             DispatchQueue.main.async {
                 guard let `self` = self else { return }
+                guard let `avplayer` = asset.ry_avPlayer else {
+                    self.ry_state = .inactivity(reason: .playFailed)
+                    return
+                }
+                (self.ry_view as! RongYaoTeamPlayerView).avPlayer = avplayer
                 // 3. obseve properties
                 self.ry_assetProperties = RongYaoTeamPlayerAssetProperties.init(self.ry_asset!, delegate: self)
             }
@@ -324,19 +334,19 @@ public class RongYaoTeamPlayer: NSObject {
     /// -----------------------------------------------------------------------
     
     fileprivate func ry_bufferStatusDidChange(_ buffer: RongYaoTeamPlayerBufferStatus) {
-        ry_valueDidChangeForKey(.ry_bufferStatus)
         switch buffer {
         case .unknown: break
         case .empty:
             _pause(.buffering)
         case .full:
-            // 如果已暂停, return
+            // 如果已暂停, break
             if case RongYaoTeamPlayerPlayStatus.paused(reason: .pause) = ry_state {
-                return
+                break
             }
             ry_play()
         }
         
+        ry_valueDidChangeForKey(.ry_bufferStatus)
         print("bufferState: ", buffer)
     }
 }
@@ -709,5 +719,29 @@ fileprivate extension Timer {
         else {
             block!(timer)
         }
+    }
+}
+
+fileprivate class RongYaoTeamPlayerView: UIView {
+    override class var layerClass: Swift.AnyClass {
+        return AVPlayerLayer.self
+    }
+    
+    private var playerLayer: AVPlayerLayer {
+        return self.layer as! AVPlayerLayer
+    }
+    
+    fileprivate var avPlayer: AVPlayer?
+    
+    fileprivate var videoGravity: AVLayerVideoGravity = AVLayerVideoGravity.resizeAspect
+    
+    private func avPlayerDidChange() {
+        self.playerLayer.player = self.avPlayer
+    }
+    
+    deinit {
+        #if DEBUG
+        print("\(#function) - \(#line) - \(NSStringFromClass(self.classForCoder))")
+        #endif
     }
 }
