@@ -88,6 +88,7 @@ public class RongYaoTeamPlayerAsset {
         #endif
     }
     
+    
     public private(set) var ry_URL: URL
     public private(set) var ry_specifyStartTime: TimeInterval = 0
     public private(set) var ry_isOtherAsset = false
@@ -113,13 +114,17 @@ public class RongYaoTeamPlayerAsset {
         ry_isOtherAsset = true
     }
 }
-public class RongYaoTeamPlayer: NSObject {
+public class RongYaoTeamPlayer {
     deinit {
         #if DEBUG
-        print("\(#function) - \(#line) - \(NSStringFromClass(self.classForCoder))")
+        print("\(#function) - \(#line) - RongYaoTeamPlayer")
         #endif
     }
     
+    init() {
+        registrar.delegate = self
+    }
+
     /// 播放资源
     /// - 使用URL进行初始化
     public var ry_asset: RongYaoTeamPlayerAsset? { didSet { ry_assetDidChange() } }
@@ -411,6 +416,10 @@ public class RongYaoTeamPlayer: NSObject {
             ry_valueDidChangeForKey(.ry_currentTime)
         }
     }
+    
+    /// -----------------------------------------------------------------------
+    /// 通知记录员
+    private var registrar: RongYaoTeamRegistrar = RongYaoTeamRegistrar.init()
 }
 
 extension RongYaoTeamPlayer: RongYaoTeamPlayerAssetPropertiesDelegate {
@@ -443,7 +452,7 @@ extension RongYaoTeamPlayer: RongYaoTeamPlayerAssetPropertiesDelegate {
     }
 }
 
-fileprivate protocol RongYaoTeamPlayerAssetPropertiesDelegate: NSObjectProtocol {
+fileprivate protocol RongYaoTeamPlayerAssetPropertiesDelegate {
     func properties(_ p: RongYaoTeamPlayerAssetProperties, durationDidChange duration: TimeInterval)
     func properties(_ p: RongYaoTeamPlayerAssetProperties, currentTimeDidChange currentTime: TimeInterval)
     func properties(_ p: RongYaoTeamPlayerAssetProperties, bufferLoadedTimeDidChange bufferLoadedTime: TimeInterval)
@@ -452,6 +461,25 @@ fileprivate protocol RongYaoTeamPlayerAssetPropertiesDelegate: NSObjectProtocol 
 
     func playerItemDidPlayToEnd(_ p: RongYaoTeamPlayerAssetProperties)
     func properties(_ p: RongYaoTeamPlayerAssetProperties, playerItemStatusDidChange status: AVPlayerItemStatus)
+}
+
+
+extension RongYaoTeamPlayer: RongYaoTeamRegistrarDelegate {
+    fileprivate func appWillEnterForeground() {
+        
+    }
+    
+    fileprivate func appDidEnterBackground() {
+        
+    }
+    
+    fileprivate func oldDeviceUnavailable() {
+        
+    }
+    
+    fileprivate func audioSessionInterruption() {
+        
+    }
 }
 
 /// 记录资源的一些信息
@@ -496,12 +524,12 @@ public class RongYaoTeamPlayerAssetProperties {
     /// -----------------------------------------------------------------------
     /// 不好看 不好看 不好看 不好看 不好看 不好看 不好看 不好看 不好看 不好看 不好看 不好看
     /// -----------------------------------------------------------------------
-    private weak var ry_delegate: RongYaoTeamPlayerAssetPropertiesDelegate?
+    private weak var ry_delegate: (AnyObject & RongYaoTeamPlayerAssetPropertiesDelegate)?
     
     /// 当前 player item 的状态
     fileprivate var ry_playerItemStatus: AVPlayerItemStatus = .unknown { didSet{ self.ry_delegate!.properties(self, playerItemStatusDidChange: ry_playerItemStatus) } }
 
-    fileprivate init(_ asset: RongYaoTeamPlayerAsset, delegate: RongYaoTeamPlayerAssetPropertiesDelegate) {
+    fileprivate init(_ asset: RongYaoTeamPlayerAsset, delegate: AnyObject & RongYaoTeamPlayerAssetPropertiesDelegate) {
         ry_asset = asset
         ry_delegate = delegate
         ry_addTimeObserverOfPlayer(asset.ry_avPlayer)
@@ -823,5 +851,56 @@ fileprivate class RongYaoTeamPlayerView: UIView {
     
     private func avPlayerDidChange() {
         self.playerLayer.player = self.avPlayer
+    }
+}
+
+
+fileprivate protocol RongYaoTeamRegistrarDelegate {
+    func appWillEnterForeground()
+    func appDidEnterBackground()
+    func oldDeviceUnavailable()
+    func audioSessionInterruption()
+}
+
+fileprivate class RongYaoTeamRegistrar {
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    fileprivate weak var delegate: (AnyObject & RongYaoTeamRegistrarDelegate)?
+    
+    private func installNotifiactions(){
+        NotificationCenter.default.addObserver(self, selector: #selector(appWillEnterBackground), name: .UIApplicationWillEnterForeground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterBackground), name: .UIApplicationDidEnterBackground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(audioSessionRouteChange(_:)), name: .AVAudioSessionRouteChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(audioSessionInterruption(_:)), name: .AVAudioSessionInterruption, object: AVAudioSession.sharedInstance())
+    }
+    
+    @objc func appWillEnterBackground() {
+        self.delegate?.appWillEnterForeground()
+    }
+    
+    @objc func appDidEnterBackground() {
+        self.delegate?.appDidEnterBackground()
+    }
+    
+    @objc func audioSessionRouteChange(_ notifi: Notification) {
+        DispatchQueue.main.async { [weak self] in
+            let info = notifi.userInfo!
+            let reason = info[AVAudioSessionRouteChangeReasonKey] as! AVAudioSessionRouteChangeReason
+            switch reason {
+            case .oldDeviceUnavailable:
+                self?.delegate?.oldDeviceUnavailable()
+            default: break
+            }
+        }
+    }
+    
+    @objc func audioSessionInterruption(_ notifi: Notification) {
+        let info = notifi.userInfo!
+        let type = info[AVAudioSessionInterruptionTypeKey] as! AVAudioSessionInterruptionType
+        if ( type.rawValue == AVAudioSessionInterruptionType.began.rawValue ) {
+            self.delegate?.audioSessionInterruption()
+        }
     }
 }
