@@ -22,13 +22,13 @@ public protocol RongYaoTeamPlayerDelegate: NSObjectProtocol {
 /// 播放器当前的状态
 ///
 /// - unknown: 未播放任何资源时的状态
-/// - prepare: 准备播放一个新的资源时的状态
+/// - readyToPlay: 资源准备就绪
 /// - playing: 播放中
 /// - paused:  暂停状态
 /// - stopped: 停止状态
-public enum RYPlayState {
+public enum RongYaoTeamPlayerPlayState {
     case unknown
-    case prepare
+    case readyToPlay
     case playing
     case paused(reason: RongYaoTeamPlayerPausedReason)
     case stopped(reason: RongYaoTeamPlayerStoppedReason)
@@ -129,47 +129,68 @@ public class RongYaoTeamPlayer: NSObject {
     public weak var ry_delegate: RongYaoTeamPlayerDelegate?
     
     /// 播放状态
-    public fileprivate(set) var ry_state: RYPlayState = .unknown { didSet { ry_valueDidChangeForKey(.ry_state) } }
+    public fileprivate(set) var ry_state: RongYaoTeamPlayerPlayState = .unknown { didSet { ry_stateDidChange() } }
     
     /// 是否自动播放
     /// - 当资源初始化完成后, 是否自动播放
     /// - 默认为 true
     public var ry_autoplay: Bool = true
 
+    /// 资源初始化期间, 开发者进行的操作
+    private var ry_operationOfInitializing: ()?
+
     /// 使播放
-    ///
-    /// - Returns: 当异常状态时, 将有可能操作失败. 即返回 false
-    @discardableResult
-    public func play() -> Bool {
-        guard let `ry_assetProperties` = ry_assetProperties else { return false }
-        if ( ry_assetProperties.ry_playerItemStatus != .readyToPlay ) { return false }
-        ry_assetProperties.ry_asset.ry_avPlayer?.play()
+    public func ry_play() {
+        // 播放失败
+        if case RongYaoTeamPlayerPlayState.stopped(reason: .playFailed) = ry_state {
+            // 尝试重新播放
+            ry_replay()
+            return
+        }
+        
+        // 播放中
+        if case RongYaoTeamPlayerPlayState.playing = ry_state {
+            return
+        }
+        
+        // 状态未知
+        if case RongYaoTeamPlayerPlayState.unknown = ry_state {
+            // 记录操作
+            ry_operationOfInitializing = self.ry_replay()
+            return
+        }
+        
+        ry_asset?.ry_avPlayer?.play()
         ry_state = .playing
-        return true
     }
     
     /// 使暂停
-    ///
-    /// - Returns: 当异常状态时, 将有可能操作失败. 即返回 false
-    @discardableResult
-    public func pause() -> Bool {
-        return true
+    public func ry_pause() {
+        if case RongYaoTeamPlayerPlayState.stopped(reason: .playFailed) = ry_state {
+            return
+        }
+        
+        if case RongYaoTeamPlayerPlayState.paused(reason: .pause) = ry_state {
+            return
+        }
+        
+//        if ( ry_initialized ) {
+//            ry_asset?.ry_avPlayer?.pause()
+//            ry_state = .paused(reason: .pause)
+//        }
+//        else {
+//            ry_operationOfInitializing = self.ry_pause()
+//        }
     }
     
     /// 使停止
-    ///
-    /// - Returns: 当异常状态时, 将有可能操作失败. 即返回 false
-    @discardableResult
-    public func stop() -> Bool {
-        return true
+    public func ry_stop() {
+        
     }
     
     /// 使重新播放
-    ///
-    /// - Returns: 当异常状态时, 将有可能操作失败. 即返回 false
-    @discardableResult
-    public func replay() -> Bool {
-        return true
+    public func ry_replay() {
+
     }
     
     /// 跳转到指定时间
@@ -177,7 +198,7 @@ public class RongYaoTeamPlayer: NSObject {
     /// - Parameters:
     ///   - time:              将要跳转的时间
     ///   - completionHandler: 操作完成/失败 后的回调
-    public func seekToTime(_ time: TimeInterval, completionHandler: @escaping (_ player: RongYaoTeamPlayer, _ finished: Bool)->Void) {
+    public func ry_seekToTime(_ time: TimeInterval, completionHandler: @escaping (_ player: RongYaoTeamPlayer, _ finished: Bool)->Void) {
         guard let `ry_assetProperties` = ry_assetProperties else {
             completionHandler(self, false)
             return
@@ -205,10 +226,12 @@ public class RongYaoTeamPlayer: NSObject {
         })
     }
     
-    
-    
-    
-    
+    private enum RongYaoTeamPlayerOperation: String {
+        case play = "play"
+        case pause = "pause"
+        case stop = "stop"
+        case replay = "replay"
+    }
     
     
     /// -----------------------------------------------------------------------
@@ -216,12 +239,18 @@ public class RongYaoTeamPlayer: NSObject {
     /// -----------------------------------------------------------------------
     /// 不好看 不好看 不好看 不好看 不好看 不好看 不好看 不好看 不好看 不好看 不好看 不好看
     /// -----------------------------------------------------------------------
-   
     
-    fileprivate func ry_valueDidChangeForKey (_ key: RongYaoTeamPlayerPropertyKey) {
+    fileprivate func ry_valueDidChangeForKey(_ key: RongYaoTeamPlayerPropertyKey) {
         ry_delegate?.player(self, valueDidChangeForKey: key)
+        
     }
     
+    private func ry_stateDidChange() {
+        DispatchQueue.main.async { [weak self] in
+            guard let `self` = self else { return }
+            self.ry_valueDidChangeForKey(.ry_state)
+        }
+    }
     
     /// -----------------------------------------------------------------------
     /// 修改 ry_state 区域
@@ -242,7 +271,10 @@ public class RongYaoTeamPlayer: NSObject {
         switch status {
         case .unknown: break
         case .readyToPlay:
-            play()
+            self.ry_state = .readyToPlay
+            if ( self.ry_autoplay ) {
+                ry_play()
+            }
         case .failed:
             ry_state = .stopped(reason: .playFailed)
         }
@@ -260,7 +292,6 @@ public class RongYaoTeamPlayer: NSObject {
         ry_asset?.ry_initializingAVPlayer { [weak self] (asset) in
             DispatchQueue.main.async {
                 guard let `self` = self else { return }
-                self.ry_state = .prepare
                 // 3. obseve properties
                 self.ry_assetProperties = RongYaoTeamPlayerAssetProperties.init(self.ry_asset!, delegate: self)
             }
@@ -544,10 +575,8 @@ fileprivate extension RongYaoTeamPlayerAsset {
     /// -----------------------------------------------------------------------
     
     
-    enum RongYaoPlayerAssetState {
-        case unknown
-        case prepare
-        case initialized
+    fileprivate enum RongYaoPlayerAssetState: Int {
+        case unknown = 0, prepare, initialized
     }
     
     
