@@ -82,10 +82,7 @@ extension RYTestViewController: SJSliderDelegate {
     
     func sliderDidEndDragging(_ slider: SJSlider) {
         guard let `ry_assetProperties` = player!.ry_assetProperties else { return }
-        player?.ry_pause()
-        player?.ry_seekToTime(TimeInterval(slider.value) * ry_assetProperties.ry_duration, completionHandler: { (player, _) in
-            player.ry_play()
-        })
+        player?.ry_seekToTime(TimeInterval(slider.value) * ry_assetProperties.ry_duration, completionHandler: { (player, _) in })
     }
 }
 

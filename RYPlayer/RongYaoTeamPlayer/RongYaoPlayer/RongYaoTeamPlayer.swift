@@ -37,9 +37,11 @@ public enum RongYaoTeamPlayerPlayStatus {
 ///
 /// - buffering: 正在缓冲
 /// - pause:     被暂停
+/// - seeking:   正在跳转(调用seekToTime:)
 public enum RongYaoTeamPlayerPausedReason {
     case buffering
     case pause
+    case seeking
 }
 /// 播放不活跃的原因
 ///
@@ -277,9 +279,11 @@ public class RongYaoTeamPlayer: NSObject {
             return
         }
         
+        _pause(.seeking)
         ry_asset?.ry_playerItem?.cancelPendingSeeks()
         ry_asset?.ry_playerItem?.seek(to: CMTimeMakeWithSeconds(Float64.init(time), Int32(NSEC_PER_SEC)), completionHandler: { [weak self] (finished) in
             guard let `self` = self else { return }
+            self.ry_play()
             completionHandler(self, finished)
         })
     }
@@ -387,7 +391,7 @@ public class RongYaoTeamPlayer: NSObject {
     /// -----------------------------------------------------------------------
 
     fileprivate func ry_currentTimeDidChange() {
-        if case RongYaoTeamPlayerPlayStatus.playing = ry_state {        
+        if case RongYaoTeamPlayerPlayStatus.playing = ry_state {
             ry_valueDidChangeForKey(.ry_currentTime)
         }
     }
