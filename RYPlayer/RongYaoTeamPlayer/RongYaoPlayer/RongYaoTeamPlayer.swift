@@ -151,6 +151,10 @@ public class RongYaoTeamPlayer: NSObject {
 
     /// 使播放
     public func ry_play() {
+        if ( self.ry_asset == nil ) {
+            return
+        }
+        
         // 播放失败
         if case RongYaoTeamPlayerPlayStatus.inactivity(reason: .playFailed) = ry_state {
             // 尝试重新播放
@@ -181,6 +185,10 @@ public class RongYaoTeamPlayer: NSObject {
     }
     
     private func _pause(_ reason: RongYaoTeamPlayerPausedReason) {
+        if ( self.ry_asset == nil ) {
+            return
+        }
+        
         // 播放失败
         if case RongYaoTeamPlayerPlayStatus.inactivity(reason: .playFailed) = ry_state {
             return
@@ -194,7 +202,7 @@ public class RongYaoTeamPlayer: NSObject {
         // 状态未知
         if case RongYaoTeamPlayerPlayStatus.unknown = ry_state {
             // 记录操作
-            ry_operationOfInitializing = self.ry_pause()
+            ry_operationOfInitializing = self.ry_replay()
             return
         }
         
@@ -205,14 +213,22 @@ public class RongYaoTeamPlayer: NSObject {
     
     /// 使停止
     public func ry_stop() {
+        if ( ry_asset?.ry_isOtherAsset == false ) { (ry_view as! RongYaoTeamPlayerView).avPlayer = nil }
         ry_operationOfInitializing = nil
         ry_assetProperties = nil
         ry_asset = nil
+        if case RongYaoTeamPlayerPlayStatus.unknown = ry_state {
+            return
+        }
         ry_state = .unknown
     }
     
     /// 使重新播放
     public func ry_replay() {
+        if ( self.ry_asset == nil ) {
+            return
+        }
+        
         guard let `ry_asset` = ry_asset else { return }
         // 播放失败
         if case RongYaoTeamPlayerPlayStatus.inactivity(reason: .playFailed) = ry_state {
@@ -308,8 +324,11 @@ public class RongYaoTeamPlayer: NSObject {
     }
     
     private func ry_needResetPlayer() {
-        ry_state = .unknown
         ry_assetProperties = nil
+        if case RongYaoTeamPlayerPlayStatus.unknown = ry_state {
+            return
+        }
+        ry_state = .unknown
     }
     
     /// -----------------------------------------------------------------------
