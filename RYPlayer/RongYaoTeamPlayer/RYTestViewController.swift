@@ -36,12 +36,13 @@ class RYTestViewController: UIViewController {
         slider = SJSlider.init()
         slider?.delegate = self
         slider?.enableBufferProgress = true
+        slider?.backgroundColor = UIColor.purple
         self.view.addSubview(slider!)
         slider?.snp.makeConstraints({ (make) in
             make.top.equalTo(player!.ry_view.snp.bottom).offset(20)
             make.leading.equalTo(self.view).offset(12)
             make.trailing.equalTo(self.view).offset(-12)
-            make.height.equalTo(20)
+            make.height.equalTo(40)
         })
 
         // Do any additional setup after loading the view, typically from a nib.
@@ -81,7 +82,10 @@ extension RYTestViewController: SJSliderDelegate {
     
     func sliderDidEndDragging(_ slider: SJSlider) {
         guard let `ry_assetProperties` = player!.ry_assetProperties else { return }
-        player?.ry_seekToTime(TimeInterval(slider.value) * ry_assetProperties.ry_duration, completionHandler: { (_, _) in })
+        player?.ry_pause()
+        player?.ry_seekToTime(TimeInterval(slider.value) * ry_assetProperties.ry_duration, completionHandler: { (player, _) in
+            player.ry_play()
+        })
     }
 }
 
@@ -90,6 +94,7 @@ extension RYTestViewController: RongYaoTeamPlayerDelegate {
         if ( key == RongYaoTeamPlayerPropertyKey.ry_currentTime ) {
             if ( slider!.isDragging ) { return }
             slider!.value = CGFloat(player.ry_assetProperties!.ry_currentTime / player.ry_assetProperties!.ry_duration)
+            print("--")
         }
         else if ( key == RongYaoTeamPlayerPropertyKey.ry_bufferLoadedTime ) {
             slider?.bufferProgress = CGFloat(player.ry_assetProperties!.ry_bufferLoadedTime / player.ry_assetProperties!.ry_duration)

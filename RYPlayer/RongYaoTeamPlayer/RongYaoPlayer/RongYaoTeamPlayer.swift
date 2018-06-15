@@ -382,35 +382,44 @@ public class RongYaoTeamPlayer: NSObject {
         ry_valueDidChangeForKey(.ry_bufferStatus)
         print("bufferState: ", buffer)
     }
+    
+    
+    /// -----------------------------------------------------------------------
+
+    fileprivate func ry_currentTimeDidChange() {
+        if case RongYaoTeamPlayerPlayStatus.playing = ry_state {        
+            ry_valueDidChangeForKey(.ry_currentTime)
+        }
+    }
 }
 
 extension RongYaoTeamPlayer: RongYaoTeamPlayerAssetPropertiesDelegate {
     fileprivate func properties(_ p: RongYaoTeamPlayerAssetProperties, durationDidChange duration: TimeInterval) {
-        self.ry_valueDidChangeForKey(.ry_duration)
+        ry_valueDidChangeForKey(.ry_duration)
     }
     
     fileprivate func properties(_ p: RongYaoTeamPlayerAssetProperties, currentTimeDidChange currentTime: TimeInterval) {
-        self.ry_valueDidChangeForKey(.ry_currentTime)
+        ry_currentTimeDidChange()
     }
     
     fileprivate func properties(_ p: RongYaoTeamPlayerAssetProperties, bufferLoadedTimeDidChange bufferLoadedTime: TimeInterval) {
-        self.ry_valueDidChangeForKey(.ry_bufferLoadedTime)
+        ry_valueDidChangeForKey(.ry_bufferLoadedTime)
     }
     
     fileprivate func properties(_ p: RongYaoTeamPlayerAssetProperties, bufferStatusDidChange bufferStatus: RongYaoTeamPlayerBufferStatus) {
-        self.ry_bufferStatusDidChange(bufferStatus)
+        ry_bufferStatusDidChange(bufferStatus)
     }
     
     fileprivate func properties(_ p: RongYaoTeamPlayerAssetProperties, presentationSizeDidChange presentationSize: CGSize) {
-        self.ry_valueDidChangeForKey(.ry_presentationSize)
+        ry_valueDidChangeForKey(.ry_presentationSize)
     }
     
     fileprivate func playerItemDidPlayToEnd(_ p: RongYaoTeamPlayerAssetProperties) {
-        self.ry_playerItemDidPlayToEnd()
+        ry_playerItemDidPlayToEnd()
     }
     
     fileprivate func properties(_ p: RongYaoTeamPlayerAssetProperties, playerItemStatusDidChange status: AVPlayerItemStatus) {
-        self.ry_playerItemStatusDidChange(status)
+        ry_playerItemStatusDidChange(status)
     }
 }
 
