@@ -25,13 +25,13 @@ public protocol RongYaoTeamPlayerDelegate: NSObjectProtocol {
 /// - readyToPlay: 资源准备就绪
 /// - playing: 播放中
 /// - paused:  暂停状态
-/// - stopped: 停止状态
+/// - inactivity: 不活跃状态
 public enum RongYaoTeamPlayerPlayState {
     case unknown
     case readyToPlay
     case playing
     case paused(reason: RongYaoTeamPlayerPausedReason)
-    case stopped(reason: RongYaoTeamPlayerStoppedReason)
+    case inactivity(reason: RongYaoTeamPlayerInactivityReason)
 }
 /// 播放暂停的理由
 ///
@@ -41,11 +41,11 @@ public enum RongYaoTeamPlayerPausedReason {
     case buffering
     case pause
 }
-/// 播放停止的原因
+/// 播放不活跃的原因
 ///
 /// - playEnd:    播放完毕
 /// - playFailed: 操作失败
-public enum RongYaoTeamPlayerStoppedReason {
+public enum RongYaoTeamPlayerInactivityReason {
     case playEnd
     case playFailed
 }
@@ -142,7 +142,7 @@ public class RongYaoTeamPlayer: NSObject {
     /// 使播放
     public func ry_play() {
         // 播放失败
-        if case RongYaoTeamPlayerPlayState.stopped(reason: .playFailed) = ry_state {
+        if case RongYaoTeamPlayerPlayState.inactivity(reason: .playFailed) = ry_state {
             // 尝试重新播放
             ry_replay()
             return
@@ -168,7 +168,7 @@ public class RongYaoTeamPlayer: NSObject {
     /// 使暂停
     public func ry_pause() {
         // 播放失败
-        if case RongYaoTeamPlayerPlayState.stopped(reason: .playFailed) = ry_state {
+        if case RongYaoTeamPlayerPlayState.inactivity(reason: .playFailed) = ry_state {
             return
         }
         
@@ -191,12 +191,21 @@ public class RongYaoTeamPlayer: NSObject {
     
     /// 使停止
     public func ry_stop() {
-        
+        ry_operationOfInitializing = nil
+        ry_assetProperties = nil
+        ry_asset = nil
+        ry_state = .unknown
     }
     
     /// 使重新播放
     public func ry_replay() {
-
+        guard let `ry_asset` = ry_asset else { return }
+        // 播放失败
+        if case RongYaoTeamPlayerPlayState.inactivity(reason: .playFailed) = ry_state {
+            self.ry_asset = RongYaoTeamPlayerAsset.init(ry_asset.ry_URL, specifyStartTime: ry_asset.ry_specifyStartTime)
+            return
+        }
+        ry_seekToTime(0) { (_, _) in }
     }
     
     /// 跳转到指定时间
@@ -205,12 +214,15 @@ public class RongYaoTeamPlayer: NSObject {
     ///   - time:              将要跳转的时间
     ///   - completionHandler: 操作完成/失败 后的回调
     public func ry_seekToTime(_ time: TimeInterval, completionHandler: @escaping (_ player: RongYaoTeamPlayer, _ finished: Bool)->Void) {
-        guard let `ry_assetProperties` = ry_assetProperties else {
+        switch ry_state {
+        case .unknown, .inactivity(reason: .playFailed):
             completionHandler(self, false)
             return
+        default:
+            break
         }
         
-        if ( ry_assetProperties.ry_playerItemStatus != AVPlayerItemStatus.readyToPlay ) {
+        guard let `ry_assetProperties` = ry_assetProperties else {
             completionHandler(self, false)
             return
         }
@@ -225,21 +237,14 @@ public class RongYaoTeamPlayer: NSObject {
             return
         }
         
-        self.ry_asset?.ry_playerItem?.cancelPendingSeeks()
-        self.ry_asset?.ry_playerItem?.seek(to: CMTimeMakeWithSeconds(Float64.init(time), Int32(NSEC_PER_SEC)), completionHandler: { [weak self] (finished) in
+        ry_asset?.ry_playerItem?.cancelPendingSeeks()
+        ry_asset?.ry_playerItem?.seek(to: CMTimeMakeWithSeconds(Float64.init(time), Int32(NSEC_PER_SEC)), completionHandler: { [weak self] (finished) in
             guard let `self` = self else { return }
+            self.ry_play()
             completionHandler(self, finished)
         })
     }
-    
-    private enum RongYaoTeamPlayerOperation: String {
-        case play = "play"
-        case pause = "pause"
-        case stop = "stop"
-        case replay = "replay"
-    }
-    
-    
+
     /// -----------------------------------------------------------------------
     /// 分割线 分割线 分割线 分割线 分割线 分割线 分割线 分割线 分割线 分割线 分割线 分割线
     /// -----------------------------------------------------------------------
@@ -252,16 +257,9 @@ public class RongYaoTeamPlayer: NSObject {
     }
     
     private func ry_stateDidChange() {
-        DispatchQueue.main.async { [weak self] in
-            guard let `self` = self else { return }
-            self.ry_valueDidChangeForKey(.ry_state)
-        }
+        self.ry_valueDidChangeForKey(.ry_state)
+        print("state: ", ry_state)
     }
-    
-    /// -----------------------------------------------------------------------
-    /// 修改 ry_state 区域
-    /// -----------------------------------------------------------------------
-    
     
     /// 初始化一个新的asset
     private func ry_assetDidChange() {
@@ -269,7 +267,7 @@ public class RongYaoTeamPlayer: NSObject {
             ry_needPlayNewAsset()
         }
         else {
-            ry_needResetPlayer(false)
+            ry_needResetPlayer()
         }
     }
     
@@ -282,16 +280,16 @@ public class RongYaoTeamPlayer: NSObject {
                 ry_play()
             }
         case .failed:
-            ry_state = .stopped(reason: .playFailed)
+            ry_state = .inactivity(reason: .playFailed)
         }
     }
     
     private func ry_playerItemDidPlayToEnd() {
-        ry_state = .stopped(reason: .playEnd)
+        ry_state = .inactivity(reason: .playEnd)
     }
     
     private func ry_needPlayNewAsset() {
-        ry_needResetPlayer(false)
+        ry_needResetPlayer()
         // 2. prepare
         // - 初始化AVPlayer
         // - 初始化完成后, 创建记录员
@@ -304,11 +302,9 @@ public class RongYaoTeamPlayer: NSObject {
         }
     }
     
-    
-    private func ry_needResetPlayer(_ cleanAsset: Bool) {
+    private func ry_needResetPlayer() {
         ry_state = .unknown
         ry_assetProperties = nil
-        if ( cleanAsset && ry_asset != nil ) { ry_asset = nil }
     }
 }
 
