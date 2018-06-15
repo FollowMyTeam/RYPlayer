@@ -324,8 +324,18 @@ public class RongYaoTeamPlayer: NSObject {
     /// -----------------------------------------------------------------------
     
     fileprivate func ry_bufferStatusDidChange(_ buffer: RongYaoTeamPlayerBufferStatus) {
-        _pause(.buffering)
         ry_valueDidChangeForKey(.ry_bufferStatus)
+        switch buffer {
+        case .unknown: break
+        case .empty:
+            _pause(.buffering)
+        case .full:
+            // 如果已暂停, return
+            if case RongYaoTeamPlayerPlayStatus.paused(reason: .pause) = ry_state {
+                return
+            }
+            ry_play()
+        }
         
         print("bufferState: ", buffer)
     }
