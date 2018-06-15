@@ -63,12 +63,12 @@ public enum RongYaoTeamPlayerBufferStatus {
 }
 /// 播放器的属性key
 ///
-/// - ry_state: 同 RongYaoTeamPlayer.ry_state
-/// - ry_duration: 同 RongYaoTeamPlayer.ry_duration
-/// - ry_currentTime: 同 RongYaoTeamPlayer.ry_currentTime
-/// - ry_bufferLoadedTime: 同 RongYaoTeamPlayer.ry_bufferLoadedTime
-/// - ry_bufferStatus: 同 RongYaoTeamPlayer.ry_bufferStatus
-/// - ry_presentationSize: 同 RongYaoTeamPlayer.ry_presentationSize
+/// - ry_state:             同 player.ry_assetProperties.ry_state
+/// - ry_duration:          同 player.ry_assetProperties.ry_duration
+/// - ry_currentTime:       同 player.ry_assetProperties.ry_currentTime
+/// - ry_bufferLoadedTime:  同 player.ry_assetProperties.ry_bufferLoadedTime
+/// - ry_bufferStatus:      同 player.ry_assetProperties.ry_bufferStatus
+/// - ry_presentationSize:  同 player.ry_assetProperties.ry_presentationSize
 public enum RongYaoTeamPlayerPropertyKey {
     case ry_state
     case ry_duration
@@ -157,7 +157,7 @@ public class RongYaoTeamPlayer: NSObject {
         if ( self.ry_asset == nil ) {
             return
         }
-        
+
         if case RongYaoTeamPlayerPlayStatus.inactivity(reason: .playEnd) = ry_state {
             ry_replay()
             return
@@ -196,14 +196,20 @@ public class RongYaoTeamPlayer: NSObject {
             return
         }
         
-        // 播放失败
-        if case RongYaoTeamPlayerPlayStatus.inactivity(reason: .playFailed) = ry_state {
-            return
-        }
-        
         switch ry_state {
         case .paused(reason: reason): return
         default: break
+        }
+        
+        if case RongYaoTeamPlayerPlayStatus.inactivity(reason: .playEnd) = ry_state {
+            if ( reason == .pause ) {
+                return
+            }
+        }
+        
+        // 播放失败
+        if case RongYaoTeamPlayerPlayStatus.inactivity(reason: .playFailed) = ry_state {
+            return
         }
         
         // 状态未知
@@ -244,10 +250,7 @@ public class RongYaoTeamPlayer: NSObject {
             return
         }
         
-        ry_seekToTime(0) { (player, _) in
-            player.ry_asset?.ry_avPlayer?.play()
-            player.ry_state = .playing
-        }
+        ry_seekToTime(0) { (player, _) in }
     }
     
     /// 跳转到指定时间
@@ -274,7 +277,12 @@ public class RongYaoTeamPlayer: NSObject {
             return
         }
         
-        if ( floor(ry_assetProperties.ry_currentTime) == floor(time) ) {
+        let current = floor(ry_assetProperties.ry_currentTime)
+        let seek = floor(time)
+        if case RongYaoTeamPlayerPlayStatus.inactivity(reason: .playEnd) = ry_state {
+            // .... nothing ....
+        }
+        else if ( current == seek ) {
             completionHandler(self, true)
             return
         }
@@ -675,36 +683,7 @@ fileprivate extension RongYaoTeamPlayerAsset {
     /// -----------------------------------------------------------------------
     /// 不好看 不好看 不好看 不好看 不好看 不好看 不好看 不好看 不好看 不好看 不好看 不好看
     /// -----------------------------------------------------------------------
-    
-    
-    fileprivate enum RongYaoPlayerAssetState: Int {
-        case unknown = 0, prepare, initialized
-    }
-    
-    
-    fileprivate var ry_avPlayer: AVPlayer? {
-        set {
-            objc_setAssociatedObject(self, &RongYaoTeamPlayerInitPlayerAssociatedKeys.kry_player, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
-        
-        get {
-            return objc_getAssociatedObject(self, &RongYaoTeamPlayerInitPlayerAssociatedKeys.kry_player) as? AVPlayer
-        }
-    }
-    fileprivate var ry_asset: AVURLAsset? { return self.ry_playerItem?.asset as? AVURLAsset }
-    fileprivate var ry_playerItem: AVPlayerItem? { return self.ry_avPlayer?.currentItem }
-    fileprivate var ry_state: RongYaoPlayerAssetState {
-        set {
-            objc_setAssociatedObject(self, &RongYaoTeamPlayerInitPlayerAssociatedKeys.kry_state, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
-        
-        get {
-            if ( ry_isOtherAsset == true ) { return .initialized }
-            let b = objc_getAssociatedObject(self, &RongYaoTeamPlayerInitPlayerAssociatedKeys.kry_state)
-            if ( b != nil ) { return b! as! RongYaoPlayerAssetState }
-            return .unknown
-        }
-    }
+  
     
     /// 初始化 AVPlayer
     /// - 将操作任务添加到队列中
@@ -757,6 +736,37 @@ fileprivate extension RongYaoTeamPlayerAsset {
             // retain
             self.ry_avPlayer = player
             completionBlock()
+        }
+    }
+    
+    
+    
+    fileprivate enum RongYaoPlayerAssetState: Int {
+        case unknown = 0, prepare, initialized
+    }
+    
+    
+    fileprivate var ry_avPlayer: AVPlayer? {
+        set {
+            objc_setAssociatedObject(self, &RongYaoTeamPlayerInitPlayerAssociatedKeys.kry_player, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+        
+        get {
+            return objc_getAssociatedObject(self, &RongYaoTeamPlayerInitPlayerAssociatedKeys.kry_player) as? AVPlayer
+        }
+    }
+    fileprivate var ry_asset: AVURLAsset? { return self.ry_playerItem?.asset as? AVURLAsset }
+    fileprivate var ry_playerItem: AVPlayerItem? { return self.ry_avPlayer?.currentItem }
+    fileprivate var ry_state: RongYaoPlayerAssetState {
+        set {
+            objc_setAssociatedObject(self, &RongYaoTeamPlayerInitPlayerAssociatedKeys.kry_state, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+        
+        get {
+            if ( ry_isOtherAsset == true ) { return .initialized }
+            let b = objc_getAssociatedObject(self, &RongYaoTeamPlayerInitPlayerAssociatedKeys.kry_state)
+            if ( b != nil ) { return b! as! RongYaoPlayerAssetState }
+            return .unknown
         }
     }
     
