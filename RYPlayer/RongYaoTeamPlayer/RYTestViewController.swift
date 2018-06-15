@@ -8,6 +8,7 @@
 
 import UIKit
 import AVFoundation
+import SnapKit
 
 class RYTestViewController: UIViewController {
     
@@ -22,6 +23,14 @@ class RYTestViewController: UIViewController {
         player?.ry_asset = RongYaoTeamPlayerAsset.init(videoURL!)
         player?.ry_delegate = self
 
+        
+        self.edgesForExtendedLayout = UIRectEdge.init(rawValue: 0)
+        
+        self.view.addSubview(player!.ry_view)
+        player!.ry_view.snp.makeConstraints { (make) in
+            make.top.leading.trailing.equalTo(self.view)
+            make.height.equalTo(player!.ry_view.snp.width).multipliedBy(9/16.0)
+        }
 
         // Do any additional setup after loading the view, typically from a nib.
     }

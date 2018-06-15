@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4311539AAE05C781EA2AF1B7 /* Pods_RongYaoTeamPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5C898A3DAF5A2087BF75381 /* Pods_RongYaoTeamPlayer.framework */; };
 		771C27A720CBE1D900C17E34 /* RongYaoTeamPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771C27A620CBE1D900C17E34 /* RongYaoTeamPlayer.swift */; };
 		7790D18A20CABA2C00F7CAF5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7790D18920CABA2C00F7CAF5 /* AppDelegate.swift */; };
 		7790D18C20CABA2C00F7CAF5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7790D18B20CABA2C00F7CAF5 /* ViewController.swift */; };
@@ -20,6 +21,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6106DEEF81896DA0859A4508 /* Pods-RongYaoTeamPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RongYaoTeamPlayer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RongYaoTeamPlayer/Pods-RongYaoTeamPlayer.debug.xcconfig"; sourceTree = "<group>"; };
+		6EB0C4A2BDB68892BD77B491 /* Pods-RongYaoTeamPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RongYaoTeamPlayer.release.xcconfig"; path = "Pods/Target Support Files/Pods-RongYaoTeamPlayer/Pods-RongYaoTeamPlayer.release.xcconfig"; sourceTree = "<group>"; };
 		771C27A620CBE1D900C17E34 /* RongYaoTeamPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoTeamPlayer.swift; sourceTree = "<group>"; };
 		7790D18620CABA2C00F7CAF5 /* RongYaoTeamPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RongYaoTeamPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7790D18920CABA2C00F7CAF5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -32,6 +35,7 @@
 		7790D1A720CADC6F00F7CAF5 /* RYTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYTestViewController.swift; sourceTree = "<group>"; };
 		7790D1A920CBB22900F7CAF5 /* RYObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYObserver.swift; sourceTree = "<group>"; };
 		A658746120CB8E0500611B72 /* sample.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample.mp4; sourceTree = "<group>"; };
+		F5C898A3DAF5A2087BF75381 /* Pods_RongYaoTeamPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RongYaoTeamPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,18 +44,29 @@
 			buildActionMask = 2147483647;
 			files = (
 				7790D1A220CABA7300F7CAF5 /* AVFoundation.framework in Frameworks */,
+				4311539AAE05C781EA2AF1B7 /* Pods_RongYaoTeamPlayer.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5E0BA799AD5D39D77A75EEF6 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				6106DEEF81896DA0859A4508 /* Pods-RongYaoTeamPlayer.debug.xcconfig */,
+				6EB0C4A2BDB68892BD77B491 /* Pods-RongYaoTeamPlayer.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		7790D17D20CABA2C00F7CAF5 = {
 			isa = PBXGroup;
 			children = (
 				7790D18820CABA2C00F7CAF5 /* RongYaoTeamPlayer */,
 				7790D18720CABA2C00F7CAF5 /* Products */,
 				7790D1A020CABA7200F7CAF5 /* Frameworks */,
+				5E0BA799AD5D39D77A75EEF6 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -92,6 +107,7 @@
 			isa = PBXGroup;
 			children = (
 				7790D1A120CABA7300F7CAF5 /* AVFoundation.framework */,
+				F5C898A3DAF5A2087BF75381 /* Pods_RongYaoTeamPlayer.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -103,9 +119,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7790D19820CABA2D00F7CAF5 /* Build configuration list for PBXNativeTarget "RongYaoTeamPlayer" */;
 			buildPhases = (
+				80EFC4EC229599D679A5AFF6 /* [CP] Check Pods Manifest.lock */,
 				7790D18220CABA2C00F7CAF5 /* Sources */,
 				7790D18320CABA2C00F7CAF5 /* Frameworks */,
 				7790D18420CABA2C00F7CAF5 /* Resources */,
+				88F5E0DD742747B9FECEE082 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -163,6 +181,45 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		80EFC4EC229599D679A5AFF6 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RongYaoTeamPlayer-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		88F5E0DD742747B9FECEE082 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-RongYaoTeamPlayer/Pods-RongYaoTeamPlayer-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-RongYaoTeamPlayer/Pods-RongYaoTeamPlayer-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		7790D18220CABA2C00F7CAF5 /* Sources */ = {
@@ -315,16 +372,14 @@
 		};
 		7790D19920CABA2D00F7CAF5 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6106DEEF81896DA0859A4508 /* Pods-RongYaoTeamPlayer.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = DB5B5F2RH5;
 				INFOPLIST_FILE = RongYaoTeamPlayer/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.bluedancer.RongYaoTeamPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "ae73dc69-dfb3-498f-914b-b86d97fd9950";
@@ -336,16 +391,14 @@
 		};
 		7790D19A20CABA2D00F7CAF5 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6EB0C4A2BDB68892BD77B491 /* Pods-RongYaoTeamPlayer.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = RongYaoTeamPlayer/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.bluedancer.RongYaoTeamPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

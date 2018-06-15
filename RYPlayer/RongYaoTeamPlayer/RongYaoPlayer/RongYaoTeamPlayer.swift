@@ -381,7 +381,7 @@ extension RongYaoTeamPlayer: RongYaoTeamPlayerAssetPropertiesDelegate {
     }
 }
 
-fileprivate protocol RongYaoTeamPlayerAssetPropertiesDelegate {
+fileprivate protocol RongYaoTeamPlayerAssetPropertiesDelegate: NSObjectProtocol {
     func properties(_ p: RongYaoTeamPlayerAssetProperties, durationDidChange duration: TimeInterval)
     func properties(_ p: RongYaoTeamPlayerAssetProperties, currentTimeDidChange currentTime: TimeInterval)
     func properties(_ p: RongYaoTeamPlayerAssetProperties, bufferLoadedTimeDidChange bufferLoadedTime: TimeInterval)
@@ -396,20 +396,20 @@ fileprivate protocol RongYaoTeamPlayerAssetPropertiesDelegate {
 public class RongYaoTeamPlayerAssetProperties {
     
     /// 播放时长
-    public private(set) var ry_duration: TimeInterval = 0 { didSet{ self.ry_delegate.properties(self, durationDidChange: self.ry_duration) } }
+    public private(set) var ry_duration: TimeInterval = 0 { didSet{ self.ry_delegate!.properties(self, durationDidChange: self.ry_duration) } }
     
     /// 当前时间
-    public private(set) var ry_currentTime: TimeInterval = 0 { didSet{ self.ry_delegate.properties(self, currentTimeDidChange: self.ry_currentTime) } }
+    public private(set) var ry_currentTime: TimeInterval = 0 { didSet{ self.ry_delegate!.properties(self, currentTimeDidChange: self.ry_currentTime) } }
     
     /// 已缓冲到的时间
-    public private(set) var ry_bufferLoadedTime: TimeInterval = 0 { didSet{ self.ry_delegate.properties(self, bufferLoadedTimeDidChange: ry_bufferLoadedTime) } }
+    public private(set) var ry_bufferLoadedTime: TimeInterval = 0 { didSet{ self.ry_delegate!.properties(self, bufferLoadedTimeDidChange: ry_bufferLoadedTime) } }
     
     /// 缓冲状态
-    public private(set) var ry_bufferStatus: RongYaoTeamPlayerBufferStatus = .unknown { didSet{ self.ry_delegate.properties(self, bufferStatusDidChange: ry_bufferStatus) } }
+    public private(set) var ry_bufferStatus: RongYaoTeamPlayerBufferStatus = .unknown { didSet{ self.ry_delegate!.properties(self, bufferStatusDidChange: ry_bufferStatus) } }
 
     /// 视频宽高
     /// - 资源初始化未完成之前, 该值为 .zero
-    public private(set) var ry_presentationSize: CGSize = CGSize.zero { didSet{ self.ry_delegate.properties(self, presentationSizeDidChange: ry_presentationSize) } }
+    public private(set) var ry_presentationSize: CGSize = CGSize.zero { didSet{ self.ry_delegate!.properties(self, presentationSizeDidChange: ry_presentationSize) } }
     
     
     
@@ -424,10 +424,10 @@ public class RongYaoTeamPlayerAssetProperties {
     /// -----------------------------------------------------------------------
     /// 不好看 不好看 不好看 不好看 不好看 不好看 不好看 不好看 不好看 不好看 不好看 不好看
     /// -----------------------------------------------------------------------
-    private var ry_delegate: RongYaoTeamPlayerAssetPropertiesDelegate
+    private weak var ry_delegate: RongYaoTeamPlayerAssetPropertiesDelegate?
     
     /// 当前 player item 的状态
-    fileprivate var ry_playerItemStatus: AVPlayerItemStatus = .unknown { didSet{ self.ry_delegate.properties(self, playerItemStatusDidChange: ry_playerItemStatus) } }
+    fileprivate var ry_playerItemStatus: AVPlayerItemStatus = .unknown { didSet{ self.ry_delegate!.properties(self, playerItemStatusDidChange: ry_playerItemStatus) } }
 
     fileprivate init(_ asset: RongYaoTeamPlayerAsset, delegate: RongYaoTeamPlayerAssetPropertiesDelegate) {
         ry_asset = asset
@@ -506,7 +506,7 @@ public class RongYaoTeamPlayerAssetProperties {
                 return
             }
             
-            self.ry_delegate.playerItemDidPlayToEnd(self)
+            self.ry_delegate!.playerItemDidPlayToEnd(self)
         }))
     }
     
@@ -731,7 +731,7 @@ fileprivate class RongYaoTeamPlayerView: UIView {
         return self.layer as! AVPlayerLayer
     }
     
-    fileprivate var avPlayer: AVPlayer?
+    fileprivate var avPlayer: AVPlayer? { didSet{ avPlayerDidChange() } }
     
     fileprivate var videoGravity: AVLayerVideoGravity = AVLayerVideoGravity.resizeAspect
     
