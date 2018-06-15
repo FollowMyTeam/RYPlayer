@@ -147,6 +147,13 @@ public class RongYaoTeamPlayer: NSObject {
     /// - 当资源初始化完成后, 是否自动播放
     /// - 默认为 true
     public var ry_autoplay: Bool = true
+    
+    /// 关于后台播放视频, 引用自: https://juejin.im/post/5a38e1a0f265da4327185a26
+    ///
+    /// 当您想在后台播放视频时:
+    /// 1. 需要设置 player.pauseWhenAppDidEnterBackground = NO; (该值默认为YES, 即App进入后台默认暂停).
+    /// 2. 前往 `TARGETS` -> `Capability` -> enable `Background Modes` -> select this mode `Audio, AirPlay, and Picture in Picture`
+    public var ry_pauseWhenAppDidEndEnterBackground: Bool = false
 
     /// 资源初始化期间, 开发者进行的操作
     /// 将在初始化完成时调用, 并置空
