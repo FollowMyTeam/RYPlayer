@@ -159,28 +159,34 @@ public class RongYaoTeamPlayer: NSObject {
             ry_operationOfInitializing = self.ry_replay()
             return
         }
-        
+
         ry_asset?.ry_avPlayer?.play()
         ry_state = .playing
+        ry_operationOfInitializing = nil
     }
     
     /// 使暂停
     public func ry_pause() {
+        // 播放失败
         if case RongYaoTeamPlayerPlayState.stopped(reason: .playFailed) = ry_state {
             return
         }
         
+        // 暂停
         if case RongYaoTeamPlayerPlayState.paused(reason: .pause) = ry_state {
             return
         }
         
-//        if ( ry_initialized ) {
-//            ry_asset?.ry_avPlayer?.pause()
-//            ry_state = .paused(reason: .pause)
-//        }
-//        else {
-//            ry_operationOfInitializing = self.ry_pause()
-//        }
+        // 状态未知
+        if case RongYaoTeamPlayerPlayState.unknown = ry_state {
+            // 记录操作
+            ry_operationOfInitializing = self.ry_pause()
+            return
+        }
+        
+        ry_asset?.ry_avPlayer?.pause()
+        ry_state = .paused(reason: .pause)
+        ry_operationOfInitializing = nil
     }
     
     /// 使停止
