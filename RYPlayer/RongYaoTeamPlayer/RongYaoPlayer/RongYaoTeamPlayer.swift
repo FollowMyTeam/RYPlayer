@@ -21,11 +21,11 @@ public protocol RongYaoTeamPlayerDelegate: NSObjectProtocol {
 }
 /// 播放器当前的状态
 ///
-/// - unknown: 未播放任何资源时的状态
-/// - readyToPlay: 资源准备就绪
-/// - playing: 播放中
-/// - paused:  暂停状态
-/// - inactivity: 不活跃状态
+/// - unknown:      未播放任何资源时的状态
+/// - readyToPlay:  资源准备就绪
+/// - playing:      播放中
+/// - paused:       暂停状态
+/// - inactivity:   不活跃状态
 public enum RongYaoTeamPlayerPlayStatus {
     case unknown
     case readyToPlay
@@ -37,7 +37,7 @@ public enum RongYaoTeamPlayerPlayStatus {
 ///
 /// - buffering: 正在缓冲
 /// - pause:     被暂停
-/// - seeking:   正在跳转(调用seekToTime:)
+/// - seeking:   正在跳转(调用seekToTime:时)
 public enum RongYaoTeamPlayerPausedReason {
     case buffering
     case pause
@@ -149,6 +149,7 @@ public class RongYaoTeamPlayer: NSObject {
     public var ry_autoplay: Bool = true
 
     /// 资源初始化期间, 开发者进行的操作
+    /// 将在初始化完成时调用, 并置空
     private var ry_operationOfInitializing: ()?
 
     /// 使播放
@@ -183,7 +184,6 @@ public class RongYaoTeamPlayer: NSObject {
 
         ry_asset?.ry_avPlayer?.play()
         ry_state = .playing
-        ry_operationOfInitializing = nil
     }
     
     /// 使暂停
@@ -209,13 +209,14 @@ public class RongYaoTeamPlayer: NSObject {
         // 状态未知
         if case RongYaoTeamPlayerPlayStatus.unknown = ry_state {
             // 记录操作
-            ry_operationOfInitializing = self.ry_replay()
+            if case RongYaoTeamPlayerPausedReason.pause = reason {
+                ry_operationOfInitializing = self.ry_replay()
+            }
             return
         }
         
         ry_asset?.ry_avPlayer?.pause()
         ry_state = .paused(reason: reason)
-        ry_operationOfInitializing = nil
     }
     
     /// 使停止
@@ -246,7 +247,6 @@ public class RongYaoTeamPlayer: NSObject {
         ry_seekToTime(0) { (player, _) in
             player.ry_asset?.ry_avPlayer?.play()
             player.ry_state = .playing
-            player.ry_operationOfInitializing = nil
         }
     }
     
@@ -354,6 +354,7 @@ public class RongYaoTeamPlayer: NSObject {
             self.ry_state = .readyToPlay
             if let `ry_operationOfInitializing` = ry_operationOfInitializing {
                 ry_operationOfInitializing
+                self.ry_operationOfInitializing = nil
             }
             else if ( self.ry_autoplay ) {
                 ry_play()
@@ -493,8 +494,9 @@ public class RongYaoTeamPlayerAssetProperties {
     }
     
     fileprivate private(set) var ry_asset: RongYaoTeamPlayerAsset
-
+    
     private var ry_playerItemObservers = [RYObserver]()
+    private var ry_sought: Bool = false
     
     /// - player item observers
     private func ry_addObserverOfPlayerItem(_ playerItem: AVPlayerItem?, observerCotainer: inout [RYObserver]) {
@@ -530,7 +532,16 @@ public class RongYaoTeamPlayerAssetProperties {
             guard let `self` = self else {
                 return
             }
-            self.ry_playerItemStatus = playerItem.status
+            if ( self.ry_asset.ry_specifyStartTime != 0 && self.ry_sought == false ) {
+                self.ry_asset.ry_playerItem?.seek(to: CMTimeMakeWithSeconds(self.ry_asset.ry_specifyStartTime, Int32(NSEC_PER_SEC)), completionHandler: { [weak self] (_) in
+                    guard let `self` = self else { return }
+                    self.ry_sought = true
+                    self.ry_playerItemStatus = playerItem.status
+                })
+            }
+            else {            
+                self.ry_playerItemStatus = playerItem.status
+            }
         }))
         
         observerCotainer.append(RYObserver.init(owner: playerItem, observeKey: "playbackBufferEmpty", exeBlock: { [weak self] (helper) in
