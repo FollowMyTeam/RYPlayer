@@ -121,7 +121,7 @@ public class RongYaoTeamPlayer {
         #endif
     }
     
-    init() {
+    public init() {
         registrar.delegate = self
     }
 
@@ -146,7 +146,7 @@ public class RongYaoTeamPlayer {
     public weak var ry_delegate: RongYaoTeamPlayerDelegate?
     
     /// 播放状态
-    public fileprivate(set) var ry_state: RongYaoTeamPlayerPlayStatus = .unknown { didSet { ry_stateDidChange() } }
+    public private(set) var ry_state: RongYaoTeamPlayerPlayStatus = .unknown { didSet { ry_stateDidChange() } }
     
     /// 是否自动播放
     /// - 当资源初始化完成后, 是否自动播放
@@ -466,11 +466,18 @@ fileprivate protocol RongYaoTeamPlayerAssetPropertiesDelegate {
 
 extension RongYaoTeamPlayer: RongYaoTeamRegistrarDelegate {
     fileprivate func appWillEnterForeground() {
-        
+        let view = self.ry_view as? RongYaoTeamPlayerView
+        view?.avPlayer = self.ry_asset?.ry_avPlayer
     }
     
     fileprivate func appDidEnterBackground() {
-        
+        let view = self.ry_view as? RongYaoTeamPlayerView
+        if ( self.ry_pauseWhenAppDidEndEnterBackground ) {
+            self.ry_pause()
+        }
+        else {
+            view?.avPlayer = nil
+        }
     }
     
     fileprivate func oldDeviceUnavailable() {
@@ -865,6 +872,10 @@ fileprivate protocol RongYaoTeamRegistrarDelegate {
 fileprivate class RongYaoTeamRegistrar {
     deinit {
         NotificationCenter.default.removeObserver(self)
+    }
+    
+    init() {
+        installNotifiactions()
     }
     
     fileprivate weak var delegate: (AnyObject & RongYaoTeamRegistrarDelegate)?

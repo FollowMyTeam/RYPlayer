@@ -147,6 +147,11 @@
 				TargetAttributes = {
 					7790D18520CABA2C00F7CAF5 = {
 						CreatedOnToolsVersion = 9.4;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -383,7 +388,10 @@
 				DEVELOPMENT_TEAM = DB5B5F2RH5;
 				INFOPLIST_FILE = RongYaoTeamPlayer/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.bluedancer.RongYaoTeamPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "ae73dc69-dfb3-498f-914b-b86d97fd9950";
@@ -402,7 +410,10 @@
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = RongYaoTeamPlayer/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.bluedancer.RongYaoTeamPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
