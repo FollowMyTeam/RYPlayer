@@ -507,7 +507,7 @@ extension RongYaoTeamPlayer: RongYaoTeamRegistrarDelegate {
     }
     
     fileprivate func audioSessionInterruption() {
-        
+        ry_pause()
     }
 }
 
