@@ -162,7 +162,7 @@ public class RongYaoTeamPlayer {
 
     /// 资源初始化期间, 开发者进行的操作
     /// 将在初始化完成时调用, 并置空
-    private var ry_operationOfInitializing: ()?
+    private var ry_operationOfInitializing: (()->())?
 
     /// 使播放
     public func ry_play() {
@@ -190,7 +190,7 @@ public class RongYaoTeamPlayer {
         // 状态未知
         if case RongYaoTeamPlayerPlayStatus.unknown = ry_state {
             // 记录操作
-            ry_operationOfInitializing = self.ry_replay()
+            ry_operationOfInitializing = self.ry_replay
             return
         }
 
@@ -228,7 +228,7 @@ public class RongYaoTeamPlayer {
         if case RongYaoTeamPlayerPlayStatus.unknown = ry_state {
             // 记录操作
             if case RongYaoTeamPlayerPausedReason.pause = reason {
-                ry_operationOfInitializing = self.ry_replay()
+                ry_operationOfInitializing = self.ry_pause
             }
             return
         }
@@ -371,12 +371,12 @@ public class RongYaoTeamPlayer {
         switch status {
         case .unknown: break
         case .readyToPlay:
-            self.ry_state = .readyToPlay
+            ry_state = .readyToPlay
             if let `ry_operationOfInitializing` = ry_operationOfInitializing {
-                ry_operationOfInitializing
+                ry_operationOfInitializing()
                 self.ry_operationOfInitializing = nil
             }
-            else if ( self.ry_autoplay ) {
+            else if ( ry_autoplay ) {
                 ry_play()
             }
         case .failed:
@@ -466,14 +466,14 @@ fileprivate protocol RongYaoTeamPlayerAssetPropertiesDelegate {
 
 extension RongYaoTeamPlayer: RongYaoTeamRegistrarDelegate {
     fileprivate func appWillEnterForeground() {
-        let view = self.ry_view as? RongYaoTeamPlayerView
-        view?.avPlayer = self.ry_asset?.ry_avPlayer
+        let view = ry_view as? RongYaoTeamPlayerView
+        view?.avPlayer = ry_asset?.ry_avPlayer
     }
     
     fileprivate func appDidEnterBackground() {
-        let view = self.ry_view as? RongYaoTeamPlayerView
-        if ( self.ry_pauseWhenAppDidEndEnterBackground ) {
-            self.ry_pause()
+        let view = ry_view as? RongYaoTeamPlayerView
+        if ( ry_pauseWhenAppDidEndEnterBackground ) {
+            ry_pause()
         }
         else {
             view?.avPlayer = nil
@@ -481,7 +481,12 @@ extension RongYaoTeamPlayer: RongYaoTeamRegistrarDelegate {
     }
     
     fileprivate func oldDeviceUnavailable() {
-        
+        if case RongYaoTeamPlayerPlayStatus.playing = ry_state {
+            ry_pause()
+        }
+        else if case RongYaoTeamPlayerPlayStatus.paused(reason: .seeking) = ry_state {
+            ry_pause()
+        }
     }
     
     fileprivate func audioSessionInterruption() {
