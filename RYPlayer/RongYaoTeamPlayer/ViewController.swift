@@ -9,14 +9,8 @@
 import UIKit
 
 class ViewController: UIViewController {
-
-    var function: (()->())?
     
     override func viewDidLoad() {
-        function = self.test as ()->()
-        function!()
-        function!()
-        function!()
         
     }
     

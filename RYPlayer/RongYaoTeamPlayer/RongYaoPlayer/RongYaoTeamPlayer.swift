@@ -136,10 +136,10 @@ public class RongYaoTeamPlayer {
         return view
     }()
     
-    /// 资源播放的一些属性
-    /// - 如: ry_assetProperties.duration
+    /// 资源的一些属性
+    /// - 如: 视频时长
     /// - .....
-    /// - 如: ry_assetProperties.currentTime
+    /// - 如: 当前播放到的时间
     public var ry_assetProperties: RongYaoTeamPlayerAssetProperties?
     
     /// 代理
@@ -156,12 +156,12 @@ public class RongYaoTeamPlayer {
     /// 关于后台播放视频, 引用自: https://juejin.im/post/5a38e1a0f265da4327185a26
     ///
     /// 当您想在后台播放视频时:
-    /// 1. 需要设置 player.pauseWhenAppDidEnterBackground = NO; (该值默认为YES, 即App进入后台默认暂停).
-    /// 2. 前往 `TARGETS` -> `Capability` -> enable `Background Modes` -> select this mode `Audio, AirPlay, and Picture in Picture`
+    /// 1. 前往 `TARGETS` -> `Capability` -> enable `Background Modes` -> select this mode `Audio, AirPlay, and Picture in Picture`
+    /// 2. 需要设置 player.pauseWhenAppDidEnterBackground = NO; (该值默认为YES, 即App进入后台默认暂停).
     public var ry_pauseWhenAppDidEndEnterBackground: Bool = false
 
     /// 资源初始化期间, 开发者进行的操作
-    /// 将在初始化完成时调用, 并置空
+    /// 将在初始化完成时调用, 并置为nil
     private var ry_operationOfInitializing: (()->())?
 
     /// 使播放
@@ -190,7 +190,7 @@ public class RongYaoTeamPlayer {
         // 状态未知
         if case RongYaoTeamPlayerPlayStatus.unknown = ry_state {
             // 记录操作
-            ry_operationOfInitializing = self.ry_replay
+            ry_operationOfInitializing = self.ry_play
             return
         }
 
@@ -238,6 +238,9 @@ public class RongYaoTeamPlayer {
     }
     
     /// 使停止
+    /// - 清除相关资源
+    /// - 由于相关资源已清除, 所以需重新创建资源进行播放
+    /// - 将会把`ry_state`置为`unknown`
     public func ry_stop() {
         if ( ry_asset?.ry_isOtherAsset == false ) { (ry_view as! RongYaoTeamPlayerView).avPlayer = nil }
         ry_operationOfInitializing = nil
@@ -250,12 +253,15 @@ public class RongYaoTeamPlayer {
     }
     
     /// 使重新播放
+    /// - 跳转到开头, 重新播放
+    /// - 如果`ry_state`状态为`playFailed`, 将会尝试重新初始化
     public func ry_replay() {
         if ( self.ry_asset == nil ) {
             return
         }
         
         guard let `ry_asset` = ry_asset else { return }
+        
         // 播放失败
         if case RongYaoTeamPlayerPlayStatus.inactivity(reason: .playFailed) = ry_state {
             self.ry_asset = RongYaoTeamPlayerAsset.init(ry_asset.ry_URL, specifyStartTime: ry_asset.ry_specifyStartTime)
@@ -299,8 +305,12 @@ public class RongYaoTeamPlayer {
             return
         }
         
-        _pause(.seeking)
-        ry_asset?.ry_playerItem?.cancelPendingSeeks()
+        if case RongYaoTeamPlayerPlayStatus.paused(reason: .seeking) = ry_state {
+            ry_asset?.ry_playerItem?.cancelPendingSeeks()
+        }
+        else {
+            _pause(.seeking)
+        }
         ry_asset?.ry_playerItem?.seek(to: CMTimeMakeWithSeconds(Float64.init(time), Int32(NSEC_PER_SEC)), completionHandler: { [weak self] (finished) in
             guard let `self` = self else { return }
             self.ry_play()
@@ -308,6 +318,13 @@ public class RongYaoTeamPlayer {
         })
     }
 
+    
+    
+    
+    
+    
+    
+    
     /// -----------------------------------------------------------------------
     /// 分割线 分割线 分割线 分割线 分割线 分割线 分割线 分割线 分割线 分割线 分割线 分割线
     /// -----------------------------------------------------------------------
