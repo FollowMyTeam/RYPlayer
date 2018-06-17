@@ -10,7 +10,7 @@ import UIKit
 
 
 
-public enum RongYaoTeamViewAutorotationOrientation: UInt {
+public enum RongYaoTeamViewOrientation: UInt {
     case portrait = 0
     case landscapeLeft = 1
     case landscapeRight = 2
@@ -31,15 +31,42 @@ public struct RongYaoTeamViewAutorotationOrientationMask: OptionSet {
     public static var all: RongYaoTeamViewAutorotationOrientationMask { return RongYaoTeamViewAutorotationOrientationMask(rawValue: 4) }
 }
 
-public protocol RongYaoTeamViewRotationManagerDelegate {
-
-}
-
 public class RongYaoTeamViewRotationManager {
 
-    public init(target: UIView, superview: UIView, delegate: (AnyObject & RongYaoTeamViewRotationManagerDelegate) ) {
+    public var orientation: RongYaoTeamViewOrientation = .portrait
+
+    public var duration: TimeInterval = 0.25
+    
+    public init(target: UIView, superview: UIView ) {
+        self.target = target
+        self.superview = superview
+    }
+    
+    deinit {
+        #if DEBUG
+        print("\(#function) - \(#line) - RongYaoTeamViewRotationManager")
+        #endif
+        self.removeDeviceOrientationObserver()
+    }
+    
+    private var deviceOrientation: UIDeviceOrientation = .portrait
+    private var superview: UIView
+    private var target: UIView
+    
+    private func observeDeviceOrientation() {
+        if ( UIDevice.current.isGeneratingDeviceOrientationNotifications == false ) {
+            UIDevice.current.beginGeneratingDeviceOrientationNotifications()
+        }
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleDeviceOrientationChange)
+//            name:UIDeviceOrientationDidChangeNotification object:nil];
+//        NotificationCenter.default.addObserver(self, selector: #selector(handleDeviceOrientationChange), name: .UIDeviceOrientationDidChange, object: nil)
+    }
+    
+    @objc private func handleDeviceOrientationChange() {
         
     }
     
-    
+    private func removeDeviceOrientationObserver() {
+        
+    }
 }

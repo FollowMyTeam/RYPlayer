@@ -8,11 +8,23 @@
 
 import UIKit
 
+class Text: NSObject {
+    
+}
+
+class Tettt: Text {
+    
+}
+
 class ViewController: UIViewController {
     
     override func viewDidLoad() {
         
-        print(UIInterfaceOrientationMask.all)
+        let te = Tettt.init()
+        
+        print(te as Tettt)
+        
+
     }
     
     func test() {

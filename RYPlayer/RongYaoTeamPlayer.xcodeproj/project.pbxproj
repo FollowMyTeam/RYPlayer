@@ -9,13 +9,15 @@
 /* Begin PBXBuildFile section */
 		4311539AAE05C781EA2AF1B7 /* Pods_RongYaoTeamPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5C898A3DAF5A2087BF75381 /* Pods_RongYaoTeamPlayer.framework */; };
 		771C27A720CBE1D900C17E34 /* RongYaoTeamPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771C27A620CBE1D900C17E34 /* RongYaoTeamPlayer.swift */; };
+		773DD2C420D66761008113CD /* RYTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 773DD2C320D66761008113CD /* RYTabBarController.swift */; };
+		773DD2C620D6676D008113CD /* RYNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 773DD2C520D6676D008113CD /* RYNavigationController.swift */; };
 		7790D18A20CABA2C00F7CAF5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7790D18920CABA2C00F7CAF5 /* AppDelegate.swift */; };
 		7790D18C20CABA2C00F7CAF5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7790D18B20CABA2C00F7CAF5 /* ViewController.swift */; };
 		7790D18F20CABA2C00F7CAF5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7790D18D20CABA2C00F7CAF5 /* Main.storyboard */; };
 		7790D19120CABA2D00F7CAF5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7790D19020CABA2D00F7CAF5 /* Assets.xcassets */; };
 		7790D19420CABA2D00F7CAF5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7790D19220CABA2D00F7CAF5 /* LaunchScreen.storyboard */; };
 		7790D1A220CABA7300F7CAF5 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7790D1A120CABA7300F7CAF5 /* AVFoundation.framework */; };
-		7790D1A820CADC6F00F7CAF5 /* RYTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7790D1A720CADC6F00F7CAF5 /* RYTestViewController.swift */; };
+		7790D1A820CADC6F00F7CAF5 /* RYViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7790D1A720CADC6F00F7CAF5 /* RYViewController.swift */; };
 		7790D1AA20CBB22900F7CAF5 /* RYObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7790D1A920CBB22900F7CAF5 /* RYObserver.swift */; };
 		A64B9C6C20D5006E006A97A9 /* RongYaoTeamViewRotationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A64B9C6B20D5006E006A97A9 /* RongYaoTeamViewRotationManager.swift */; };
 		A658746220CB8E0500611B72 /* sample.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = A658746120CB8E0500611B72 /* sample.mp4 */; };
@@ -25,6 +27,8 @@
 		6106DEEF81896DA0859A4508 /* Pods-RongYaoTeamPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RongYaoTeamPlayer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RongYaoTeamPlayer/Pods-RongYaoTeamPlayer.debug.xcconfig"; sourceTree = "<group>"; };
 		6EB0C4A2BDB68892BD77B491 /* Pods-RongYaoTeamPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RongYaoTeamPlayer.release.xcconfig"; path = "Pods/Target Support Files/Pods-RongYaoTeamPlayer/Pods-RongYaoTeamPlayer.release.xcconfig"; sourceTree = "<group>"; };
 		771C27A620CBE1D900C17E34 /* RongYaoTeamPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoTeamPlayer.swift; sourceTree = "<group>"; };
+		773DD2C320D66761008113CD /* RYTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYTabBarController.swift; sourceTree = "<group>"; };
+		773DD2C520D6676D008113CD /* RYNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYNavigationController.swift; sourceTree = "<group>"; };
 		7790D18620CABA2C00F7CAF5 /* RongYaoTeamPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RongYaoTeamPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7790D18920CABA2C00F7CAF5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7790D18B20CABA2C00F7CAF5 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -33,7 +37,7 @@
 		7790D19320CABA2D00F7CAF5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7790D19520CABA2D00F7CAF5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7790D1A120CABA7300F7CAF5 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		7790D1A720CADC6F00F7CAF5 /* RYTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYTestViewController.swift; sourceTree = "<group>"; };
+		7790D1A720CADC6F00F7CAF5 /* RYViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYViewController.swift; sourceTree = "<group>"; };
 		7790D1A920CBB22900F7CAF5 /* RYObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYObserver.swift; sourceTree = "<group>"; };
 		A64B9C6B20D5006E006A97A9 /* RongYaoTeamViewRotationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoTeamViewRotationManager.swift; sourceTree = "<group>"; };
 		A658746120CB8E0500611B72 /* sample.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample.mp4; sourceTree = "<group>"; };
@@ -85,7 +89,9 @@
 			children = (
 				7790D18920CABA2C00F7CAF5 /* AppDelegate.swift */,
 				7790D18B20CABA2C00F7CAF5 /* ViewController.swift */,
-				7790D1A720CADC6F00F7CAF5 /* RYTestViewController.swift */,
+				773DD2C320D66761008113CD /* RYTabBarController.swift */,
+				773DD2C520D6676D008113CD /* RYNavigationController.swift */,
+				7790D1A720CADC6F00F7CAF5 /* RYViewController.swift */,
 				A64B9C6A20D50040006A97A9 /* RongYaoTeamViewRotationManager */,
 				7790D19B20CABA4300F7CAF5 /* RongYaoPlayer */,
 				7790D18D20CABA2C00F7CAF5 /* Main.storyboard */,
@@ -248,9 +254,11 @@
 			files = (
 				A64B9C6C20D5006E006A97A9 /* RongYaoTeamViewRotationManager.swift in Sources */,
 				7790D18C20CABA2C00F7CAF5 /* ViewController.swift in Sources */,
+				773DD2C420D66761008113CD /* RYTabBarController.swift in Sources */,
 				771C27A720CBE1D900C17E34 /* RongYaoTeamPlayer.swift in Sources */,
 				7790D18A20CABA2C00F7CAF5 /* AppDelegate.swift in Sources */,
-				7790D1A820CADC6F00F7CAF5 /* RYTestViewController.swift in Sources */,
+				7790D1A820CADC6F00F7CAF5 /* RYViewController.swift in Sources */,
+				773DD2C620D6676D008113CD /* RYNavigationController.swift in Sources */,
 				7790D1AA20CBB22900F7CAF5 /* RYObserver.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

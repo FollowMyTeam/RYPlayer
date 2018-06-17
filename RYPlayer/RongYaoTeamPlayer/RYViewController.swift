@@ -1,5 +1,5 @@
 //
-//  RYTestViewController.swift
+//  RYViewController.swift
 //  RongYaoTeamPlayer
 //
 //  Created by BlueDancer on 2018/6/8.
@@ -11,7 +11,7 @@ import AVFoundation
 import SnapKit
 import SJSlider
 
-class RYTestViewController: UIViewController {
+class RYViewController: UIViewController {
     
     var player: RongYaoTeamPlayer?
     
@@ -22,15 +22,15 @@ class RYTestViewController: UIViewController {
 
 //        let videoURL = Bundle.main.url(forResource: "sample", withExtension: "mp4")!
         player = RongYaoTeamPlayer.init()
-        player?.ry_delegate = self
+        player?.delegate = self
 
         
         self.edgesForExtendedLayout = UIRectEdge.init(rawValue: 0)
         
-        self.view.addSubview(player!.ry_view)
-        player!.ry_view.snp.makeConstraints { (make) in
+        self.view.addSubview(player!.view)
+        player!.view.snp.makeConstraints { (make) in
             make.top.leading.trailing.equalTo(self.view)
-            make.height.equalTo(player!.ry_view.snp.width).multipliedBy(9/16.0)
+            make.height.equalTo(player!.view.snp.width).multipliedBy(9/16.0)
         }
         
         slider = SJSlider.init()
@@ -39,7 +39,7 @@ class RYTestViewController: UIViewController {
         slider?.backgroundColor = UIColor.purple
         self.view.addSubview(slider!)
         slider?.snp.makeConstraints({ (make) in
-            make.top.equalTo(player!.ry_view.snp.bottom).offset(20)
+            make.top.equalTo(player!.view.snp.bottom).offset(20)
             make.leading.equalTo(self.view).offset(12)
             make.trailing.equalTo(self.view).offset(-12)
             make.height.equalTo(40)
@@ -49,30 +49,45 @@ class RYTestViewController: UIViewController {
     }
 
     
+    override var shouldAutorotate: Bool {
+        return false
+    }
+    
+    
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .portrait
+    }
+    
+    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
+        return .portrait
+    }
+    
+    
     @IBAction func initalize(_ sender: Any) {
         let videoURL = URL.init(string: "https://www.apple.com/105/media/us/iphone-x/2017/01df5b43-28e4-4848-bf20-490c34a926a7/films/feature/iphone-x-feature-tpl-cc-us-20170912_1280x720h.mp4")
-//        player?.ry_asset = RongYaoTeamPlayerAsset.init(videoURL!)
-        player?.ry_asset = RongYaoTeamPlayerAsset.init(videoURL!, specifyStartTime: 20)
+//        player?.asset = RongYaoTeamPlayerAsset.init(videoURL!)
+        player?.asset = RongYaoTeamPlayerAsset.init(videoURL!, specifyStartTime: 20)
     }
     
     @IBAction func play(_ sender: Any) {
-        player?.ry_play()
+        player?.play()
     }
     
     @IBAction func pause(_ sender: Any) {
-        player?.ry_pause()
+        player?.pause()
     }
     
     @IBAction func replay(_ sender: Any) {
-        player?.ry_replay()
+        player?.replay()
     }
     
     @IBAction func stop(_ sender: Any) {
-        player?.ry_stop()
+        player?.stop()
+        
     }
 }
 
-extension RYTestViewController: SJSliderDelegate {
+extension RYViewController: SJSliderDelegate {
     func sliderWillBeginDragging(_ slider: SJSlider) {
         
     }
@@ -82,20 +97,20 @@ extension RYTestViewController: SJSliderDelegate {
     }
     
     func sliderDidEndDragging(_ slider: SJSlider) {
-        guard let `ry_assetProperties` = player!.ry_assetProperties else { return }
-        player?.ry_seekToTime(TimeInterval(slider.value) * ry_assetProperties.ry_duration, completionHandler: { (player, _) in })
+        guard let `assetProperties` = player!.assetProperties else { return }
+        player?.seekToTime(TimeInterval(slider.value) * assetProperties.duration, completionHandler: { (player, _) in })
     }
 }
 
-extension RYTestViewController: RongYaoTeamPlayerDelegate {
+extension RYViewController: RongYaoTeamPlayerDelegate {
     func player(_ player: RongYaoTeamPlayer, valueDidChangeForKey key: RongYaoTeamPlayerPropertyKey) {
-        if ( key == RongYaoTeamPlayerPropertyKey.ry_currentTime ) {
+        if ( key == RongYaoTeamPlayerPropertyKey.currentTime ) {
             if ( slider!.isDragging ) { return }
-            slider!.value = CGFloat(player.ry_assetProperties!.ry_currentTime / player.ry_assetProperties!.ry_duration)
+            slider!.value = CGFloat(player.assetProperties!.currentTime / player.assetProperties!.duration)
             print("--")
         }
-        else if ( key == RongYaoTeamPlayerPropertyKey.ry_bufferLoadedTime ) {
-            slider?.bufferProgress = CGFloat(player.ry_assetProperties!.ry_bufferLoadedTime / player.ry_assetProperties!.ry_duration)
+        else if ( key == RongYaoTeamPlayerPropertyKey.bufferLoadedTime ) {
+            slider?.bufferProgress = CGFloat(player.assetProperties!.bufferLoadedTime / player.assetProperties!.duration)
         }
     }
 }
