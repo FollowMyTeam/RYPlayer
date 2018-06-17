@@ -12,10 +12,13 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         
+        print(UIInterfaceOrientationMask.all)
     }
     
     func test() {
         print("exe")
+        
+//        UIInterfaceOrientationMask
     }
 }
 
