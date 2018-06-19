@@ -8,7 +8,14 @@
 
 import UIKit
 import AVFoundation
+import MobileCoreServices
+import ImageIO
 
+
+/// 导出
+/// - 截屏
+/// - 导出片段视频
+/// - 导出片段GIF
 public class RongYaoTeamPlayerExport {
     public init(_ asset: AVAsset, _ player: AVPlayer) {
         self.asset = asset
@@ -24,9 +31,16 @@ public class RongYaoTeamPlayerExport {
 // MARK: private
     private var asset: AVAsset
     private var player: AVPlayer
+    
+    // screenshot
     private var screenshotGenerator: AVAssetImageGenerator?
+    
+    // export
     private var exportSession: AVAssetExportSession?
     private var exportProgressRefreshTimer: Timer?
+    
+    // GIF
+    private var GIFGenerator: AVAssetImageGenerator?
 }
 
 public extension RongYaoTeamPlayerExport {
@@ -101,12 +115,12 @@ public extension RongYaoTeamPlayerExport {
         let audioTrackM = compositionM.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid)
         let videoTrackM = compositionM.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid)
         let cutRange = CMTimeRangeMake(CMTimeMakeWithSeconds(Float64(start), Int32(NSEC_PER_SEC)), CMTimeMakeWithSeconds(Float64(start + duration), Int32(NSEC_PER_SEC)))
-        let ori_audioTrack = asset.tracks(withMediaType: .audio).first!
-        let ori_videoTrack = asset.tracks(withMediaType: .video).first!
+        let ori_audioTrack = asset.tracks(withMediaType: .audio).first
+        let ori_videoTrack = asset.tracks(withMediaType: .video).first
         let exportURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("export.mp4")
         do {
-            try audioTrackM?.insertTimeRange(cutRange, of: ori_audioTrack, at: kCMTimeZero)
-            try videoTrackM?.insertTimeRange(cutRange, of: ori_videoTrack, at: kCMTimeZero)
+            try audioTrackM?.insertTimeRange(cutRange, of: ori_audioTrack!, at: kCMTimeZero)
+            try videoTrackM?.insertTimeRange(cutRange, of: ori_videoTrack!, at: kCMTimeZero)
             try FileManager.default.removeItem(at: exportURL)
         } catch {
             failureHanlder(self, error)
@@ -151,4 +165,55 @@ public extension RongYaoTeamPlayerExport {
             }
         })
     }
+}
+
+public extension RongYaoTeamPlayerExport {
+    typealias RongYaoTeamFileURL = URL
+    /// @interval The interval at which the image is captured, Recommended setting 0.1f.
+    func generateGIF(start: TimeInterval,
+                     duration: TimeInterval,
+                     maximumSize: CGSize,
+                     interval: Double,
+                     savePath: RongYaoTeamFileURL,
+                     exportProgress: @escaping (_ progress: Float)->(),
+                     completionHandler: @escaping (_ export: RongYaoTeamPlayerExport, _ GIF: UIImage, _ thumbnailImage: UIImage?)->(),
+                     failureHanlder: @escaping (_ export: RongYaoTeamPlayerExport, _ error: Error?)->()) {
+        if ( GIFGenerator != nil ) {
+            GIFGenerator?.cancelAllCGImageGeneration()
+        }
+        
+        let count = Int(ceil(duration/interval))
+// TODO: Next .... 回家
+    }
+}
+
+// FIXME: CFRelease函数调不出来, 查看是否内存泄漏(待项目搭起来后)
+
+fileprivate class SJGIFCreator {
+    fileprivate var firstImage: UIImage?
+    init(_ savePath: URL, count: Int) {
+        self.savePath = savePath
+        self.count = count
+        try? FileManager.default.removeItem(at: savePath)
+        destination = CGImageDestinationCreateWithURL(savePath as CFURL, kUTTypeGIF, count, nil)!
+        let fileProperties: Dictionary = [kCGImagePropertyGIFDictionary:[kCGImagePropertyGIFLoopCount:0]]
+        CGImageDestinationSetProperties(destination, fileProperties as CFDictionary)
+        frameProperties = [kCGImagePropertyGIFDictionary:[kCGImagePropertyGIFDelayTime:0.25]]
+    }
+    
+    fileprivate func add(_ image: CGImage) {
+        if ( firstImage == nil ) {
+            firstImage = UIImage.init(cgImage: image)
+        }
+        CGImageDestinationAddImage(destination, image, frameProperties as CFDictionary)
+    }
+    
+    fileprivate func finalize() -> Bool {
+        return CGImageDestinationFinalize(destination)
+    }
+    
+    private let savePath: URL
+    private let count: Int
+    private var destination: CGImageDestination
+    private let frameProperties: [CFString:Any]
 }
