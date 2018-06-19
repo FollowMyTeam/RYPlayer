@@ -48,9 +48,10 @@ class RYTabBarController: UITabBarController {
     }
     
     private func ry_topViewController() -> UIViewController? {
+        guard let `selectedViewController` = self.selectedViewController else { return nil }
         if let viewControllers = self.viewControllers {
             if ( viewControllers.count <= 5 || self.selectedIndex < 4 ) {
-                if let vc = self.selectedViewController! as? UINavigationController {
+                if let vc = selectedViewController as? UINavigationController {
                     return vc.topViewController
                 }
                 else {
