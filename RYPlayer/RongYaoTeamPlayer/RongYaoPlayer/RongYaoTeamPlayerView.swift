@@ -57,10 +57,10 @@ public class RongYaoTeamPlayerView: UIView {
     }
     
     /// 旋转管理
-    /// - 是否禁止自动旋转
-    /// - 设置自动旋转所支持的方向
-    /// - 旋转动画持续时间
     /// - 手动旋转到指定方向
+    /// - 设置自动旋转支持的方向
+    /// - 设置旋转动画持续时间
+    /// - 是否禁止自动旋转
     public private(set) var rotationManager: RongYaoTeamViewRotationManager!
 
     public var avVideoGravity: AVLayerVideoGravity {
@@ -117,14 +117,7 @@ public class RongYaoTeamViewRotationManager {
     /// 动画持续的时间
     /// - 默认是 0.4
     public var duration: TimeInterval = 0.4
-    
-    /// 旋转视图
-    public fileprivate(set) var target: UIView
-    
-    /// 旋转视图的父视图
-    /// - 用于转回小屏时进行复位
-    public fileprivate(set) weak var superview: UIView?
-    
+
     /// 是否全屏
     public var isFullscreen: Bool { return ( orientation == .landscapeRight || orientation == .landscapeLeft ) }
     
@@ -143,7 +136,7 @@ public class RongYaoTeamViewRotationManager {
         /// 查看当前方向是否与设备方向一致
         /// 如果不一致, 当前设备朝哪个方向, 就旋转到那个方向
         if ( isCurrentOrientationAsDeviceOrientation == false ) {
-            switch deviceOrientation {
+            switch rec_deviceOrientation {
             case .landscapeLeft:
                 if ( self.isSupportedLandscapeLeft ) {
                     self.rotate(.landscapeLeft, animated: true)
@@ -159,7 +152,7 @@ public class RongYaoTeamViewRotationManager {
         }
         
         /// 如果方向一致, 就旋转到相反的方向
-        switch deviceOrientation {
+        switch rec_deviceOrientation {
         case .landscapeLeft:
             if ( self.isSupportedLandscapeRight ) {
                 self.rotate(.landscapeRight, animated: true)
@@ -172,19 +165,28 @@ public class RongYaoTeamViewRotationManager {
         }
     }
     
+    /// 转回小屏时, 需进行修正
     public var reviser: (AnyObject & RongYaoTeamViewRotationManagerReviser)?
-
+    
+    /// 旋转视图
+    public fileprivate(set) var target: UIView
+    
+    /// 旋转视图的父视图
+    public fileprivate(set) weak var superview: UIView?
+    
 // MARK: Private
     
     /// 记录的设备方向
     /// - 只记录三种设备方向 `.portrait, .landscapeLeft, .landscapeRight`
-    private var deviceOrientation: UIDeviceOrientation = .portrait
+    private var rec_deviceOrientation: UIDeviceOrientation = .portrait
     
     /// - Any value of `RongYaoTeamViewOrientation`
     private var orientation: RongYaoTeamViewOrientation = .portrait
     
+    /// 转换过的坐标
     private var con_portraitRect: CGRect = .zero
     
+    /// 全屏时的背景视图
     private var blackView: UIView = {
         let blackView = UIView.init()
         blackView.backgroundColor = UIColor.black
@@ -281,7 +283,7 @@ public class RongYaoTeamViewRotationManager {
         let de_orientation = UIDevice.current.orientation
         switch de_orientation {
         case .portrait, .landscapeLeft, .landscapeRight:
-            deviceOrientation = de_orientation
+            rec_deviceOrientation = de_orientation
         default:
             break
         }
@@ -320,7 +322,7 @@ public class RongYaoTeamViewRotationManager {
     
     /// 当前方向是否与设备方向一致
     private var isCurrentOrientationAsDeviceOrientation: Bool {
-        switch deviceOrientation {
+        switch rec_deviceOrientation {
         case .portrait:
             if ( self.orientation == .portrait ) { return true }
         case .landscapeLeft:

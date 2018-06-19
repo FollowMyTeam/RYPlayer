@@ -601,7 +601,7 @@ public class RongYaoTeamPlayerAssetProperties {
             guard let `self` = self else {
                 return
             }
-            if ( self.asset.specifyStartTime != 0 && self.sought == false ) {
+            if ( playerItem.status == .readyToPlay && self.asset.specifyStartTime != 0 && self.sought == false ) {
                 self.asset.playerItem?.seek(to: CMTimeMakeWithSeconds(self.asset.specifyStartTime, Int32(NSEC_PER_SEC)), completionHandler: { [weak self] (_) in
                     guard let `self` = self else { return }
                     self.sought = true
