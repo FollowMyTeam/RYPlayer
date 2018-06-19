@@ -15,6 +15,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        application.statusBarStyle = .default
+        application.statusBarOrientation = .portrait
+        window = UIWindow.init(frame: UIScreen.main.bounds)
+        window?.rootViewController = UIStoryboard.init(name: "Main", bundle: nil).instantiateInitialViewController()
+        window?.backgroundColor = .white
+        window?.makeKeyAndVisible()
         // Override point for customization after application launch.
         return true
     }

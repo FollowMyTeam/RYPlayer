@@ -19,7 +19,7 @@
 		7790D1A220CABA7300F7CAF5 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7790D1A120CABA7300F7CAF5 /* AVFoundation.framework */; };
 		7790D1A820CADC6F00F7CAF5 /* RYViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7790D1A720CADC6F00F7CAF5 /* RYViewController.swift */; };
 		7790D1AA20CBB22900F7CAF5 /* RYObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7790D1A920CBB22900F7CAF5 /* RYObserver.swift */; };
-		A64B9C6C20D5006E006A97A9 /* RongYaoTeamViewRotationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A64B9C6B20D5006E006A97A9 /* RongYaoTeamViewRotationManager.swift */; };
+		77B8815420D8EED00054DDE2 /* RongYaoTeamPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B8815320D8EED00054DDE2 /* RongYaoTeamPlayerView.swift */; };
 		A658746220CB8E0500611B72 /* sample.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = A658746120CB8E0500611B72 /* sample.mp4 */; };
 /* End PBXBuildFile section */
 
@@ -39,7 +39,7 @@
 		7790D1A120CABA7300F7CAF5 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		7790D1A720CADC6F00F7CAF5 /* RYViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYViewController.swift; sourceTree = "<group>"; };
 		7790D1A920CBB22900F7CAF5 /* RYObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYObserver.swift; sourceTree = "<group>"; };
-		A64B9C6B20D5006E006A97A9 /* RongYaoTeamViewRotationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoTeamViewRotationManager.swift; sourceTree = "<group>"; };
+		77B8815320D8EED00054DDE2 /* RongYaoTeamPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoTeamPlayerView.swift; sourceTree = "<group>"; };
 		A658746120CB8E0500611B72 /* sample.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample.mp4; sourceTree = "<group>"; };
 		F5C898A3DAF5A2087BF75381 /* Pods_RongYaoTeamPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RongYaoTeamPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -92,7 +92,6 @@
 				773DD2C320D66761008113CD /* RYTabBarController.swift */,
 				773DD2C520D6676D008113CD /* RYNavigationController.swift */,
 				7790D1A720CADC6F00F7CAF5 /* RYViewController.swift */,
-				A64B9C6A20D50040006A97A9 /* RongYaoTeamViewRotationManager */,
 				7790D19B20CABA4300F7CAF5 /* RongYaoPlayer */,
 				7790D18D20CABA2C00F7CAF5 /* Main.storyboard */,
 				7790D19020CABA2D00F7CAF5 /* Assets.xcassets */,
@@ -107,6 +106,7 @@
 			isa = PBXGroup;
 			children = (
 				771C27A620CBE1D900C17E34 /* RongYaoTeamPlayer.swift */,
+				77B8815320D8EED00054DDE2 /* RongYaoTeamPlayerView.swift */,
 				7790D1A920CBB22900F7CAF5 /* RYObserver.swift */,
 			);
 			path = RongYaoPlayer;
@@ -119,14 +119,6 @@
 				F5C898A3DAF5A2087BF75381 /* Pods_RongYaoTeamPlayer.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		A64B9C6A20D50040006A97A9 /* RongYaoTeamViewRotationManager */ = {
-			isa = PBXGroup;
-			children = (
-				A64B9C6B20D5006E006A97A9 /* RongYaoTeamViewRotationManager.swift */,
-			);
-			path = RongYaoTeamViewRotationManager;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -252,7 +244,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A64B9C6C20D5006E006A97A9 /* RongYaoTeamViewRotationManager.swift in Sources */,
+				77B8815420D8EED00054DDE2 /* RongYaoTeamPlayerView.swift in Sources */,
 				7790D18C20CABA2C00F7CAF5 /* ViewController.swift in Sources */,
 				773DD2C420D66761008113CD /* RYTabBarController.swift in Sources */,
 				771C27A720CBE1D900C17E34 /* RongYaoTeamPlayer.swift in Sources */,

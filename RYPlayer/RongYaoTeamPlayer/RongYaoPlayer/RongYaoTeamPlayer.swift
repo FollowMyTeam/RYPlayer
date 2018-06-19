@@ -129,9 +129,8 @@ public class RongYaoTeamPlayer {
     /// - 使用URL进行初始化
     public var asset: RongYaoTeamPlayerAsset? { didSet { assetDidChange() } }
     
-    /// player view
-    public var view: UIView = {
-       let view = RongYaoTeamPlayerView.init(frame: .zero)
+    public private(set) var view: RongYaoTeamPlayerView = {
+        let view = RongYaoTeamPlayerView.init(frame: .zero)
         view.backgroundColor = .black
         return view
     }()
@@ -140,7 +139,7 @@ public class RongYaoTeamPlayer {
     /// - 如: 视频时长
     /// - .....
     /// - 如: 当前播放到的时间
-    public var assetProperties: RongYaoTeamPlayerAssetProperties?
+    public private(set) var assetProperties: RongYaoTeamPlayerAssetProperties?
     
     /// 代理
     public weak var delegate: RongYaoTeamPlayerDelegate?
@@ -242,7 +241,7 @@ public class RongYaoTeamPlayer {
     /// - 由于相关资源已清除, 所以需重新创建资源进行播放
     /// - 将会把`state`置为`unknown`
     public func stop() {
-        if ( asset?.isOtherAsset == false ) { (view as! RongYaoTeamPlayerView).avPlayer = nil }
+        if ( asset?.isOtherAsset == false ) { self.view.playerLayerView.avPlayer = nil }
         operationOfInitializing = nil
         assetProperties = nil
         asset = nil
@@ -366,7 +365,7 @@ public class RongYaoTeamPlayer {
                     self.state = .inactivity(reason: .playFailed)
                     return
                 }
-                (self.view as! RongYaoTeamPlayerView).avPlayer = avplayer
+                self.view.playerLayerView.avPlayer = avplayer
                 // 3. obseve properties
                 self.assetProperties = RongYaoTeamPlayerAssetProperties.init(self.asset!, delegate: self)
             }
@@ -483,17 +482,15 @@ fileprivate protocol RongYaoTeamPlayerAssetPropertiesDelegate {
 
 extension RongYaoTeamPlayer: RongYaoTeamRegistrarDelegate {
     fileprivate func appWillEnterForeground() {
-        let view = self.view as? RongYaoTeamPlayerView
-        view?.avPlayer = asset?.avPlayer
+        self.view.playerLayerView.avPlayer = asset?.avPlayer
     }
     
     fileprivate func appDidEnterBackground() {
-        let view = self.view as? RongYaoTeamPlayerView
         if ( pauseWhenAppDidEndEnterBackground ) {
             pause()
         }
         else {
-            view?.avPlayer = nil
+            self.view.playerLayerView.avPlayer = nil
         }
     }
     
@@ -863,32 +860,6 @@ fileprivate extension Timer {
         }
     }
 }
-
-fileprivate class RongYaoTeamPlayerView: UIView {
-    
-    deinit {
-        #if DEBUG
-        print("\(#function) - \(#line) - \(NSStringFromClass(self.classForCoder))")
-        #endif
-    }
-    
-    override class var layerClass: Swift.AnyClass {
-        return AVPlayerLayer.self
-    }
-    
-    private var playerLayer: AVPlayerLayer {
-        return self.layer as! AVPlayerLayer
-    }
-    
-    fileprivate var avPlayer: AVPlayer? { didSet{ avPlayerDidChange() } }
-    
-    fileprivate var videoGravity: AVLayerVideoGravity = AVLayerVideoGravity.resizeAspect
-    
-    private func avPlayerDidChange() {
-        self.playerLayer.player = self.avPlayer
-    }
-}
-
 
 fileprivate protocol RongYaoTeamRegistrarDelegate {
     func appWillEnterForeground()
