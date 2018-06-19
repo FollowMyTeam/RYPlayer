@@ -165,14 +165,15 @@ public class RongYaoTeamViewRotationManager {
         }
     }
     
-    /// 转回小屏时, 需进行修正
-    public var reviser: (AnyObject & RongYaoTeamViewRotationManagerReviser)?
-    
     /// 旋转视图
     public fileprivate(set) var target: UIView
     
     /// 旋转视图的父视图
     public fileprivate(set) weak var superview: UIView?
+    
+    /// 转回小屏时, 需进行修正
+    public var reviser: (AnyObject & RongYaoTeamViewRotationManagerReviser)?
+    
     
 // MARK: Private
     
@@ -201,7 +202,6 @@ public class RongYaoTeamViewRotationManager {
         if ( ori_new == ori_old ) { completionHandler(self); return }
         guard let `window` = UIApplication.shared.keyWindow else { return }
         guard let `superview` = superview else { return }
-        
         
         var transform = CGAffineTransform.identity
         var statusBarOrientation = UIInterfaceOrientation.unknown
@@ -274,9 +274,6 @@ public class RongYaoTeamViewRotationManager {
     }
     
     @objc private func deviceOrientationDidChange() {
-        #if DEBUG
-        print("\(#function) - \(#line) - RongYaoTeamViewRotationManager")
-        #endif
         
         if ( self.disableAutorotation ) { return }
         

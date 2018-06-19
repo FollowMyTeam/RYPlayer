@@ -36,6 +36,7 @@ class RYViewController: UIViewController {
         slider = SJSlider.init()
         slider?.delegate = self
         slider?.enableBufferProgress = true
+        slider?.bufferProgressColor = UIColor.white
         slider?.backgroundColor = UIColor.purple
         self.view.addSubview(slider!)
         slider?.snp.makeConstraints({ (make) in
@@ -107,7 +108,6 @@ extension RYViewController: RongYaoTeamPlayerDelegate {
         if ( key == RongYaoTeamPlayerPropertyKey.currentTime ) {
             if ( slider!.isDragging ) { return }
             slider!.value = CGFloat(player.assetProperties!.currentTime / player.assetProperties!.duration)
-            print("--")
         }
         else if ( key == RongYaoTeamPlayerPropertyKey.bufferLoadedTime ) {
             slider?.bufferProgress = CGFloat(player.assetProperties!.bufferLoadedTime / player.assetProperties!.duration)
