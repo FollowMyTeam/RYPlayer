@@ -241,7 +241,7 @@ public class RongYaoTeamPlayer {
     /// - 由于相关资源已清除, 所以需重新创建资源进行播放
     /// - 将会把`state`置为`unknown`
     public func stop() {
-        if ( asset?.isOtherAsset == false ) { self.view.playerLayerView.avPlayer = nil }
+        if ( asset?.isOtherAsset == false ) { self.view.setAVPlayer(nil) }
         operationOfInitializing = nil
         assetProperties = nil
         asset = nil
@@ -365,7 +365,7 @@ public class RongYaoTeamPlayer {
                     self.state = .inactivity(reason: .playFailed)
                     return
                 }
-                self.view.playerLayerView.avPlayer = avplayer
+                self.view.setAVPlayer(avplayer)
                 // 3. obseve properties
                 self.assetProperties = RongYaoTeamPlayerAssetProperties.init(self.asset!, delegate: self)
             }
@@ -482,7 +482,7 @@ fileprivate protocol RongYaoTeamPlayerAssetPropertiesDelegate {
 
 extension RongYaoTeamPlayer: RongYaoTeamRegistrarDelegate {
     fileprivate func appWillEnterForeground() {
-        self.view.playerLayerView.avPlayer = asset?.avPlayer
+        self.view.setAVPlayer(asset?.avPlayer)
     }
     
     fileprivate func appDidEnterBackground() {
@@ -490,7 +490,7 @@ extension RongYaoTeamPlayer: RongYaoTeamRegistrarDelegate {
             pause()
         }
         else {
-            self.view.playerLayerView.avPlayer = nil
+            self.view.setAVPlayer(nil)
         }
     }
     

@@ -16,7 +16,7 @@ public enum RongYaoTeamViewOrientation: UInt {
     case landscapeRight = 2
 }
 
-/// 视图自动旋转支持的方向
+/// 自动旋转支持的方向
 public struct RongYaoTeamViewAutorotationSupportedOrientation: OptionSet {
     
     public static var portrait: RongYaoTeamViewAutorotationSupportedOrientation { return RongYaoTeamViewAutorotationSupportedOrientation(rawValue: 1 << 0) }
@@ -36,22 +36,12 @@ public struct RongYaoTeamViewAutorotationSupportedOrientation: OptionSet {
     public var rawValue: UInt
 }
 
-public protocol RongYaoTeamPlayerViewDelegate {
-    func playerView(_ view: RongYaoTeamPlayerView, willBeRotated isFullscreen: Bool)
-    func playerView(_ view: RongYaoTeamPlayerView, DidRotate isFullscreen: Bool)
-}
-
-
 public class RongYaoTeamPlayerView: UIView {
-    public private(set) var playerLayerView: RongYaoTeamPlayerLayerView = RongYaoTeamPlayerLayerView.init(frame: .zero)
-    
-    public private(set) var rotationManager: RongYaoTeamViewRotationManager!
-    
+
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        addSubview(playerLayerView)
-        rotationManager = RongYaoTeamViewRotationManager.init(target: self.playerLayerView, superview: self)
-        rotationManager.delegate = self
+        addSubview(presentView)
+        rotationManager = RongYaoTeamViewRotationManager.init(target: self.presentView, superview: self)
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -60,67 +50,34 @@ public class RongYaoTeamPlayerView: UIView {
     
     override public func layoutSubviews() {
         super.layoutSubviews()
-        if ( self.playerLayerView.frame.isEmpty ) {
-            playerLayerView.frame = self.bounds
+        if ( self.presentView.frame.isEmpty ) {
+            presentView.frame = self.bounds
         }
     }
     
+    /// 旋转管理
+    /// - 是否禁止自动旋转
+    /// - 设置自动旋转所支持的方向
+    /// - 旋转动画持续时间
+    /// - 手动旋转到指定方向
+    public private(set) var rotationManager: RongYaoTeamViewRotationManager!
+
+    public var avVideoGravity: AVLayerVideoGravity {
+        get{ return self.presentView.avVideoGravity }
+        set{ self.presentView.avVideoGravity = newValue }
+    }
+    
+    public func setAVPlayer(_ avPlayer: AVPlayer?) { self.presentView.setAVPlayer(avPlayer) }
+    
+    private private(set) var presentView: RongYaoTeamPlayerPresentView = RongYaoTeamPlayerPresentView.init(frame: .zero)
 }
 
-public class RongYaoTeamPlayerLayerView: UIView {
-    deinit {
-        #if DEBUG
-        print("\(#function) - \(#line) - \(NSStringFromClass(self.classForCoder))")
-        #endif
-    }
-    
-    override public class var layerClass: Swift.AnyClass {
-        return AVPlayerLayer.self
-    }
-    
-    public var playerLayer: AVPlayerLayer {
-        return self.layer as! AVPlayerLayer
-    }
-    
-    public var avPlayer: AVPlayer? { didSet{ avPlayerDidChange() } }
-    
-    public var avVideoGravity: AVLayerVideoGravity = AVLayerVideoGravity.resizeAspect { didSet{ avLayerVideoGravityDidChange() } }
-    
-    private func avPlayerDidChange() {
-        self.playerLayer.player = self.avPlayer
-    }
-    
-    private func avLayerVideoGravityDidChange() {
-        self.playerLayer.videoGravity = self.avVideoGravity
-    }
-}
-
-extension RongYaoTeamPlayerView: RongYaoTeamViewRotationManagerDelegate {
-    /// 视图将要旋转时的回调
-    fileprivate func rotationManager(_ mgr: RongYaoTeamViewRotationManager, willRotateView isFullscreen: Bool) {
-        
-    }
-    
-    /// 视图旋转后的回调
-    fileprivate func rotationManager(_ mgr: RongYaoTeamViewRotationManager, didRotateView isFullscreen: Bool) {
-        
-    }
-    
-    /// 旋转视图需要复位
-    fileprivate func targetNeedRestFrame(_ mgr: RongYaoTeamViewRotationManager) {
-        self.playerLayerView.frame = self.bounds
-    }
-}
-
-fileprivate protocol RongYaoTeamViewRotationManagerDelegate {
+public protocol RongYaoTeamViewRotationManagerDelegate {
     /// 视图将要旋转时的回调
     func rotationManager(_ mgr: RongYaoTeamViewRotationManager, willRotateView isFullscreen: Bool)
     
     /// 视图旋转后的回调
     func rotationManager(_ mgr: RongYaoTeamViewRotationManager, didRotateView isFullscreen: Bool)
-    
-    /// 旋转视图需要复位
-    func targetNeedRestFrame(_ mgr: RongYaoTeamViewRotationManager)
 }
 
 /// 旋转管理
@@ -142,6 +99,8 @@ public class RongYaoTeamViewRotationManager {
         self.observeDeviceOrientation()
     }
     
+    public weak var delegate: (AnyObject & RongYaoTeamViewRotationManagerDelegate)?
+
     /// 是否禁止自动旋转
     /// - 默认为 false
     /// - 只禁止自动旋转, 当调用 rotate 等方法还是可以旋转的
@@ -212,9 +171,9 @@ public class RongYaoTeamViewRotationManager {
         }
     }
     
-    
+    public var reviser: (AnyObject & RongYaoTeamViewRotationManagerReviser)?
+
 // MARK: Private
-    fileprivate weak var delegate: (AnyObject & RongYaoTeamViewRotationManagerDelegate)?
     
     /// 记录的设备方向
     /// - 只记录三种设备方向 `.portrait, .landscapeLeft, .landscapeRight`
@@ -286,7 +245,7 @@ public class RongYaoTeamViewRotationManager {
         }) { (_) in
             if ( self.orientation == .portrait ) {
                 superview.addSubview(self.target)
-                self.delegate?.targetNeedRestFrame(self)
+                self.reviser?.targetNeedRestFrame(self)
             }
             else {
                 self.blackView.bounds = self.target.bounds
@@ -370,5 +329,40 @@ public class RongYaoTeamViewRotationManager {
         default: break
         }
         return false
+    }
+}
+
+public protocol RongYaoTeamViewRotationManagerReviser {
+    /// 旋转视图需要复位
+    func targetNeedRestFrame(_ mgr: RongYaoTeamViewRotationManager)
+}
+
+extension RongYaoTeamPlayerView: RongYaoTeamViewRotationManagerReviser {
+    public func targetNeedRestFrame(_ mgr: RongYaoTeamViewRotationManager) {
+        self.presentView.frame = self.bounds
+    }
+}
+
+/// class - 视频画面呈现视图
+fileprivate class RongYaoTeamPlayerPresentView: UIView {
+    deinit {
+        #if DEBUG
+        print("\(#function) - \(#line) - \(NSStringFromClass(self.classForCoder))")
+        #endif
+    }
+    
+    fileprivate var avVideoGravity: AVLayerVideoGravity = AVLayerVideoGravity.resizeAspect { didSet{ self.playerLayer.videoGravity = avVideoGravity } }
+    
+    fileprivate func setAVPlayer(_ avPlayer: AVPlayer?) {
+        if ( avPlayer == self.playerLayer.player ) { return }
+        self.playerLayer.player = avPlayer
+    }
+    
+    override public class var layerClass: Swift.AnyClass {
+        return AVPlayerLayer.self
+    }
+    
+    private var playerLayer: AVPlayerLayer {
+        return self.layer as! AVPlayerLayer
     }
 }
