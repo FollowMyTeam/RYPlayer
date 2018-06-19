@@ -42,6 +42,7 @@ public class RongYaoTeamPlayerView: UIView {
         super.init(frame: frame)
         addSubview(presentView)
         rotationManager = RongYaoTeamViewRotationManager.init(target: self.presentView, superview: self)
+        rotationManager.reviser = self
     }
     
     required public init?(coder aDecoder: NSCoder) {
