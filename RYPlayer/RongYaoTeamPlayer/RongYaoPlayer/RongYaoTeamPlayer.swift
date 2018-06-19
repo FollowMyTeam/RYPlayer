@@ -843,24 +843,6 @@ fileprivate extension RongYaoTeamPlayerAsset {
     }
 }
 
-fileprivate extension Timer {
-    
-    class func sj_timer(interval: TimeInterval, block: (Timer)->Void, repeats: Bool) -> Timer {
-        let timer = Timer.init(timeInterval: interval, target: self, selector: #selector(sj_exeBlock(timer:)), userInfo: block, repeats: repeats)
-        return timer
-    }
-    
-    @objc private class func sj_exeBlock(timer: Timer) -> Void {
-        let block = timer.userInfo as? (Timer)->Void
-        if ( block == nil ) {
-            timer.invalidate()
-        }
-        else {
-            block!(timer)
-        }
-    }
-}
-
 fileprivate protocol RongYaoTeamRegistrarDelegate {
     func appWillEnterForeground()
     func appDidEnterBackground()

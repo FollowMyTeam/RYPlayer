@@ -20,6 +20,7 @@
 		7790D1A820CADC6F00F7CAF5 /* RYViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7790D1A720CADC6F00F7CAF5 /* RYViewController.swift */; };
 		7790D1AA20CBB22900F7CAF5 /* RYObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7790D1A920CBB22900F7CAF5 /* RYObserver.swift */; };
 		77B8815420D8EED00054DDE2 /* RongYaoTeamPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B8815320D8EED00054DDE2 /* RongYaoTeamPlayerView.swift */; };
+		77B8815620D906070054DDE2 /* RongYaoTeamPlayerExport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B8815520D906070054DDE2 /* RongYaoTeamPlayerExport.swift */; };
 		A658746220CB8E0500611B72 /* sample.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = A658746120CB8E0500611B72 /* sample.mp4 */; };
 /* End PBXBuildFile section */
 
@@ -40,6 +41,7 @@
 		7790D1A720CADC6F00F7CAF5 /* RYViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYViewController.swift; sourceTree = "<group>"; };
 		7790D1A920CBB22900F7CAF5 /* RYObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYObserver.swift; sourceTree = "<group>"; };
 		77B8815320D8EED00054DDE2 /* RongYaoTeamPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoTeamPlayerView.swift; sourceTree = "<group>"; };
+		77B8815520D906070054DDE2 /* RongYaoTeamPlayerExport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoTeamPlayerExport.swift; sourceTree = "<group>"; };
 		A658746120CB8E0500611B72 /* sample.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample.mp4; sourceTree = "<group>"; };
 		F5C898A3DAF5A2087BF75381 /* Pods_RongYaoTeamPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RongYaoTeamPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -107,6 +109,7 @@
 			children = (
 				771C27A620CBE1D900C17E34 /* RongYaoTeamPlayer.swift */,
 				77B8815320D8EED00054DDE2 /* RongYaoTeamPlayerView.swift */,
+				77B8815520D906070054DDE2 /* RongYaoTeamPlayerExport.swift */,
 				7790D1A920CBB22900F7CAF5 /* RYObserver.swift */,
 			);
 			path = RongYaoPlayer;
@@ -250,6 +253,7 @@
 				771C27A720CBE1D900C17E34 /* RongYaoTeamPlayer.swift in Sources */,
 				7790D18A20CABA2C00F7CAF5 /* AppDelegate.swift in Sources */,
 				7790D1A820CADC6F00F7CAF5 /* RYViewController.swift in Sources */,
+				77B8815620D906070054DDE2 /* RongYaoTeamPlayerExport.swift in Sources */,
 				773DD2C620D6676D008113CD /* RYNavigationController.swift in Sources */,
 				7790D1AA20CBB22900F7CAF5 /* RYObserver.swift in Sources */,
 			);
