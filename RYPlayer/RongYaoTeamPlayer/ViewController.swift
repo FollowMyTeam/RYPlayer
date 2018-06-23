@@ -26,6 +26,10 @@ class ViewController: UIViewController {
         let te = Tettt.init()
         
         print(te as Tettt)
+        
+        let a: Int = 1
+        let b: Int = 3
+        print(Float(a) / Float(b))
     }
     
     override func viewWillDisappear(_ animated: Bool) {
