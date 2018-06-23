@@ -23,7 +23,6 @@ class RYViewController: UIViewController {
 //        let videoURL = Bundle.main.url(forResource: "sample", withExtension: "mp4")!
         player = RongYaoTeamPlayer.init()
         player?.delegate = self
-
         
         self.edgesForExtendedLayout = UIRectEdge.init(rawValue: 0)
         
@@ -87,7 +86,6 @@ class RYViewController: UIViewController {
     
     @IBAction func stop(_ sender: Any) {
         player?.stop()
-        
     }
 }
 
