@@ -119,6 +119,7 @@ public class RongYaoTeamPlayer {
         #if DEBUG
         print("\(#function) - \(#line) - RongYaoTeamPlayer")
         #endif
+        view.removeFromSuperview()
     }
     
     public init() {
@@ -156,8 +157,8 @@ public class RongYaoTeamPlayer {
     ///
     /// 当您想在后台播放视频时:
     /// 1. 前往 `TARGETS` -> `Capability` -> enable `Background Modes` -> select this mode `Audio, AirPlay, and Picture in Picture`
-    /// 2. 需要设置 player.pauseWhenAppDidEnterBackground = NO; (该值默认为YES, 即App进入后台默认暂停).
-    public var pauseWhenAppDidEndEnterBackground: Bool = false
+    /// 2. 需要设置 player.pauseWhenAppDidEnterBackground = false; (该值默认为YES, 即App进入后台默认暂停).
+    public var pauseWhenAppDidEndEnterBackground: Bool = true
 
     /// 资源初始化期间, 开发者进行的操作
     /// 将在初始化完成时调用, 并置为nil
@@ -890,8 +891,8 @@ fileprivate class RongYaoTeamRegistrar {
     
     @objc func audioSessionInterruption(_ notifi: Notification) {
         let info = notifi.userInfo!
-        let type = info[AVAudioSessionInterruptionTypeKey] as! AVAudioSessionInterruptionType
-        if ( type.rawValue == AVAudioSessionInterruptionType.began.rawValue ) {
+        let type = info[AVAudioSessionInterruptionTypeKey] as! NSNumber
+        if ( type.intValue == AVAudioSessionInterruptionType.began.rawValue ) {
             self.delegate?.audioSessionInterruption()
         }
     }

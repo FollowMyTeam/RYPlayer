@@ -9,22 +9,30 @@
 import UIKit
 import AVFoundation
 
-/// 视图方向
+/// `播放器视图`方向
+///
+/// - portrait:       竖屏
+/// - landscapeLeft:  全屏, Home键在右侧
+/// - landscapeRight: 全屏, Home键在左侧
 public enum RongYaoTeamViewOrientation: UInt {
     case portrait = 0
     case landscapeLeft = 1
     case landscapeRight = 2
 }
 
-/// 自动旋转支持的方向
+/// `播放器视图`自动旋转支持的方向
 public struct RongYaoTeamViewAutorotationSupportedOrientation: OptionSet {
     
+    /// 是否支持全屏
     public static var portrait: RongYaoTeamViewAutorotationSupportedOrientation { return RongYaoTeamViewAutorotationSupportedOrientation(rawValue: 1 << 0) }
     
+    /// 是否支持全屏, Home键在右侧
     public static var landscapeLeft: RongYaoTeamViewAutorotationSupportedOrientation { return RongYaoTeamViewAutorotationSupportedOrientation(rawValue: 1 << 1) }
     
+    /// 是否支持全屏, Home键在左侧
     public static var landscapeRight: RongYaoTeamViewAutorotationSupportedOrientation { return RongYaoTeamViewAutorotationSupportedOrientation(rawValue: 1 << 2) }
     
+    /// 是否支持全部方向
     public static var all: RongYaoTeamViewAutorotationSupportedOrientation { return RongYaoTeamViewAutorotationSupportedOrientation(rawValue: RongYaoTeamViewAutorotationSupportedOrientation.portrait.rawValue | RongYaoTeamViewAutorotationSupportedOrientation.landscapeLeft.rawValue | RongYaoTeamViewAutorotationSupportedOrientation.landscapeRight.rawValue) }
     
     /// init
@@ -36,13 +44,70 @@ public struct RongYaoTeamViewAutorotationSupportedOrientation: OptionSet {
     public var rawValue: UInt
 }
 
+/// `播放器视图`自带的手势类型
+///
+/// - singleTap: 单击
+/// - doubleTap: 双击
+/// - pan:       pan
+/// - pinch:     捏合
+public enum RongYaoTeamPlayerViewGestureType {
+    case singleTap
+    case doubleTap
+    case pan
+    case pinch
+}
+
+/// `播放器视图`默认支持的手势类型
+public struct RongYaoTeamPlayerViewSupportedGestureTypes: OptionSet {
+    
+    /// 没有任何默认手势
+    public static var none: RongYaoTeamPlayerViewSupportedGestureTypes { return RongYaoTeamPlayerViewSupportedGestureTypes.init(rawValue: 0) }
+    
+    /// 是否支持单击手势
+    public static var singleTap: RongYaoTeamPlayerViewSupportedGestureTypes { return RongYaoTeamPlayerViewSupportedGestureTypes.init(rawValue: 1 << 0) }
+    
+    /// 是否支持双击手势
+    public static var doubleTap: RongYaoTeamPlayerViewSupportedGestureTypes { return RongYaoTeamPlayerViewSupportedGestureTypes.init(rawValue: 1 << 1) }
+    
+    /// 是否支持pan手势
+    public static var pan: RongYaoTeamPlayerViewSupportedGestureTypes { return RongYaoTeamPlayerViewSupportedGestureTypes.init(rawValue: 1 << 2) }
+    
+    /// 是否支持捏合手势
+    public static var pinch: RongYaoTeamPlayerViewSupportedGestureTypes { return RongYaoTeamPlayerViewSupportedGestureTypes.init(rawValue: 1 << 3) }
+    
+    /// 是否支持全部手势
+    public static var all: RongYaoTeamPlayerViewSupportedGestureTypes {  return RongYaoTeamPlayerViewSupportedGestureTypes.init(rawValue: RongYaoTeamPlayerViewSupportedGestureTypes.singleTap.rawValue | RongYaoTeamPlayerViewSupportedGestureTypes.doubleTap.rawValue | RongYaoTeamPlayerViewSupportedGestureTypes.pan.rawValue | RongYaoTeamPlayerViewSupportedGestureTypes.pinch.rawValue ) }
+    
+    public init(rawValue: UInt) {
+        self.rawValue = rawValue
+    }
+    
+    public var rawValue: UInt
+}
+
+
+/// 播放器视图
+/// - 呈现视频
+/// - 视图旋转
+/// - 手势控制
+///     - 单击
+///     - 双击
+///     - 快进/音量/声音
+///     - 捏合
 public class RongYaoTeamPlayerView: UIView {
 
+    deinit {
+        #if DEBUG
+        print("\(#function) - \(#line) - RongYaoTeamPlayer")
+        #endif
+    }
+    
     public override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(presentView)
         rotationManager = RongYaoTeamViewRotationManager.init(target: self.presentView, superview: self)
         rotationManager.reviser = self
+        presentView.backgroundColor = UIColor.black
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -249,6 +314,7 @@ public class RongYaoTeamViewRotationManager {
             if ( self.orientation == .portrait ) {
                 superview.addSubview(self.target)
                 self.reviser?.targetNeedRestFrame(self)
+                self.delegate?.rotationManager( self, didRotateView:self.isFullscreen)
             }
             else {
                 self.blackView.bounds = self.target.bounds
@@ -364,5 +430,79 @@ fileprivate class RongYaoTeamPlayerPresentView: UIView {
     
     private var playerLayer: AVPlayerLayer {
         return self.layer as! AVPlayerLayer
+    }
+}
+
+fileprivate class RongYaoTeamGestureControl: NSObject {
+    init(_ container: UIView) {
+        super.init()
+        
+        self.container = container
+        singleTap = UITapGestureRecognizer.init(target: self, action: #selector(handleSingleTap))
+        configGesture(singleTap)
+        
+        doubleTap = UITapGestureRecognizer.init(target: self, action: #selector(handleDoubleTap))
+        doubleTap.numberOfTapsRequired = 2
+        configGesture(doubleTap)
+        
+        panGesture = UIPanGestureRecognizer.init(target: self, action: #selector(handlePan))
+        configGesture(panGesture)
+        
+        pinchGesture = UIPinchGestureRecognizer.init(target: self, action: #selector(handlePinch))
+        configGesture(pinchGesture)
+        
+        singleTap.require(toFail: doubleTap)
+        doubleTap.require(toFail: panGesture)
+        
+        container.addGestureRecognizer(singleTap)
+        container.addGestureRecognizer(doubleTap)
+        container.addGestureRecognizer(panGesture)
+        container.addGestureRecognizer(pinchGesture)
+    }
+    
+    weak var container: UIView!
+    
+    var singleTap: UITapGestureRecognizer!
+    var doubleTap: UITapGestureRecognizer!
+    var pinchGesture: UIPinchGestureRecognizer!
+    var panGesture: UIPanGestureRecognizer!
+    
+    @objc func handleSingleTap() {
+        
+    }
+    
+    @objc func handleDoubleTap() {
+        
+    }
+    
+    @objc func handlePan() {
+        
+    }
+    
+    @objc func handlePinch() {
+        
+    }
+    
+    private func configGesture(_ gesture: UIGestureRecognizer) {
+        gesture.delegate = self
+        gesture.delaysTouchesBegan = true
+    }
+}
+
+extension RongYaoTeamGestureControl: UIGestureRecognizerDelegate {
+    
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if ( gestureRecognizer == pinchGesture ) {
+            if ( pinchGesture.numberOfTouches <= 1 ) { return false }
+            else { return true }
+        }
+        
+        
+        
+        return true
+    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }

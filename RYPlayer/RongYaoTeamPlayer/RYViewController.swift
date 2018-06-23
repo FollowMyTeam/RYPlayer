@@ -33,6 +33,8 @@ class RYViewController: UIViewController {
             make.height.equalTo(player!.view.snp.width).multipliedBy(9/16.0)
         }
         
+        player?.view.rotationManager.delegate = self
+        
         slider = SJSlider.init()
         slider?.delegate = self
         slider?.enableBufferProgress = true
@@ -65,9 +67,10 @@ class RYViewController: UIViewController {
     
     
     @IBAction func initalize(_ sender: Any) {
-        let videoURL = URL.init(string: "https://www.apple.com/105/media/us/iphone-x/2017/01df5b43-28e4-4848-bf20-490c34a926a7/films/feature/iphone-x-feature-tpl-cc-us-20170912_1280x720h.mp4")
+//        let videoURL = URL.init(string: "https://www.apple.com/105/media/us/iphone-x/2017/01df5b43-28e4-4848-bf20-490c34a926a7/films/feature/iphone-x-feature-tpl-cc-us-20170912_1280x720h.mp4")
+        let videoURL = Bundle.main.url(forResource: "sample", withExtension: "mp4")
 //        player?.asset = RongYaoTeamPlayerAsset.init(videoURL!)
-        player?.asset = RongYaoTeamPlayerAsset.init(videoURL!, specifyStartTime: 20)
+        player?.asset = RongYaoTeamPlayerAsset.init(videoURL!, specifyStartTime: 0)
     }
     
     @IBAction func play(_ sender: Any) {
@@ -85,6 +88,16 @@ class RYViewController: UIViewController {
     @IBAction func stop(_ sender: Any) {
         player?.stop()
         
+    }
+}
+
+extension RYViewController: RongYaoTeamViewRotationManagerDelegate {
+    func rotationManager(_ mgr: RongYaoTeamViewRotationManager, willRotateView isFullscreen: Bool) {
+        
+    }
+    
+    func rotationManager(_ mgr: RongYaoTeamViewRotationManager, didRotateView isFullscreen: Bool) {
+        print("orientation: \(mgr.currentOrientation)")
     }
 }
 
