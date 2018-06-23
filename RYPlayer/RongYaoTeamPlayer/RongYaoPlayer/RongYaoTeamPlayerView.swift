@@ -12,11 +12,9 @@ import AVFoundation
 // MARK: - 播放器视图
 
 /// RongYaoTeamPlayerView - 播放器视图
-/// - 呈现视频
-/// - 视图旋转
-///     - 自动旋转
-///     - 旋转到指定方向
-///     - 旋转相关管理
+/// - 呈现
+/// - 旋转
+/// - 手势
 public class RongYaoTeamPlayerView: UIView {
     
     deinit {
