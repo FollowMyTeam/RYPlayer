@@ -157,7 +157,9 @@ public class RongYaoTeamPlayer {
     ///
     /// 当您想在后台播放视频时:
     /// 1. 前往 `TARGETS` -> `Capability` -> enable `Background Modes` -> select this mode `Audio, AirPlay, and Picture in Picture`
-    /// 2. 需要设置 player.pauseWhenAppDidEnterBackground = false; (该值默认为YES, 即App进入后台默认暂停).
+    /// 2. 需要设置 player.pauseWhenAppDidEnterBackground = false; (该值默认为 true, 即App进入后台默认暂停).
+    ///
+    /// - default is true.
     public var pauseWhenAppDidEndEnterBackground: Bool = true
 
     /// 资源初始化期间, 开发者进行的操作

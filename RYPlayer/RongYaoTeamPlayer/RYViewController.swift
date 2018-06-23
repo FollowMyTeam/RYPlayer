@@ -33,6 +33,8 @@ class RYViewController: UIViewController {
         }
         
         player?.view.rotationManager.delegate = self
+        player?.view.gestureManager.delegate = self
+        
         
         slider = SJSlider.init()
         slider?.delegate = self
@@ -89,13 +91,49 @@ class RYViewController: UIViewController {
     }
 }
 
-extension RYViewController: RongYaoTeamViewRotationManagerDelegate {
-    func rotationManager(_ mgr: RongYaoTeamViewRotationManager, willRotateView isFullscreen: Bool) {
+extension RYViewController: RongYaoTeamPlayerViewRotationManagerDelegate {
+    func rotationManager(_ mgr: RongYaoTeamPlayerViewRotationManager, willRotateView isFullscreen: Bool) {
         
     }
     
-    func rotationManager(_ mgr: RongYaoTeamViewRotationManager, didRotateView isFullscreen: Bool) {
+    func rotationManager(_ mgr: RongYaoTeamPlayerViewRotationManager, didRotateView isFullscreen: Bool) {
         print("orientation: \(mgr.currentOrientation)")
+    }
+}
+
+extension RYViewController: RongYaoTeamPlayerViewGestureManagerDelegate {
+    func gestureManager(_ mgr: RongYaoTeamPlayerViewGestureManager, gestureShouldTrigger type: RongYaoTeamPlayerViewGestureType, location: CGPoint) -> Bool {
+        return true
+    }
+    
+    func triggerSingleTapGestureForGestureManager(_ mgr: RongYaoTeamPlayerViewGestureManager) {
+        #if DEBUG
+        print("\(#function) - \(#line) - RongYaoTeamPlayer")
+        #endif
+    }
+    
+    func triggerDoubleTapGestureForGestureManager(_ mgr: RongYaoTeamPlayerViewGestureManager) {
+        #if DEBUG
+        print("\(#function) - \(#line) - RongYaoTeamPlayer")
+        #endif
+        if case RongYaoTeamPlayerPlayStatus.paused(reason: .pause) = player!.state {
+            player?.play()
+        }
+        else {
+            player?.pause()
+        }
+    }
+    
+    func triggerPinchGestureForGestureManager(_ mgr: RongYaoTeamPlayerViewGestureManager) {
+        #if DEBUG
+        print("\(#function) - \(#line) - RongYaoTeamPlayer")
+        #endif
+    }
+    
+    func triggerPanGestureForGestureManager(_ mgr: RongYaoTeamPlayerViewGestureManager, state: RongYaoTeamPlayerViewPanGestureState, movingDirection: RongYaoTeamPlayerViewPanGestureMovingDirection, location: RongYaoTeamPlayerViewPanGestureLocation, translate: CGPoint) {
+        #if DEBUG
+        print("\(#function) - \(#line) - RongYaoTeamPlayer")
+        #endif
     }
 }
 
