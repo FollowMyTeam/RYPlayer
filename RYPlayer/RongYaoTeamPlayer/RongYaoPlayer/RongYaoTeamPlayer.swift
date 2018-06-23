@@ -376,11 +376,7 @@ public class RongYaoTeamPlayer {
     }
     
     private func needResetPlayer() {
-        assetProperties = nil
-        if case RongYaoTeamPlayerPlayStatus.unknown = state {
-            return
-        }
-        state = .unknown
+        stop()
     }
     
     /// -----------------------------------------------------------------------

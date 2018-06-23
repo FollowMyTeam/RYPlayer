@@ -430,7 +430,7 @@ public class RongYaoTeamPlayerViewGestureManager: NSObject {
     public init(container: UIView) {
         super.init()
         self.container = container
-        initialize()
+        initializeGestures()
     }
     
     public weak var delegate: (AnyObject & RongYaoTeamPlayerViewGestureManagerDelegate)?
@@ -442,14 +442,12 @@ public class RongYaoTeamPlayerViewGestureManager: NSObject {
     
     fileprivate weak var container: UIView!
     
-    private var singleTap: UITapGestureRecognizer!
-    private var doubleTap: UITapGestureRecognizer!
+    private var singleTapGesture: UITapGestureRecognizer!
+    private var doubleTapGesture: UITapGestureRecognizer!
     private var pinchGesture: UIPinchGestureRecognizer!
     private var panGesture: UIPanGestureRecognizer!
     private var panLocation: RongYaoTeamPlayerViewPanGestureLocation = .unknown
     private var panMovingDirection: RongYaoTeamPlayerViewPanGestureMovingDirection = .unknown
-    
-    private var currentGesture: UIGestureRecognizer?
     
     @objc private func handleSingleTap() {
         delegate?.triggerSingleTapGestureForGestureManager(self)
@@ -505,13 +503,13 @@ public class RongYaoTeamPlayerViewGestureManager: NSObject {
         }
     }
     
-    private func initialize() {
-        singleTap = UITapGestureRecognizer.init(target: self, action: #selector(handleSingleTap))
-        configGesture(singleTap)
+    private func initializeGestures() {
+        singleTapGesture = UITapGestureRecognizer.init(target: self, action: #selector(handleSingleTap))
+        configGesture(singleTapGesture)
         
-        doubleTap = UITapGestureRecognizer.init(target: self, action: #selector(handleDoubleTap))
-        doubleTap.numberOfTapsRequired = 2
-        configGesture(doubleTap)
+        doubleTapGesture = UITapGestureRecognizer.init(target: self, action: #selector(handleDoubleTap))
+        doubleTapGesture.numberOfTapsRequired = 2
+        configGesture(doubleTapGesture)
         
         panGesture = UIPanGestureRecognizer.init(target: self, action: #selector(handlePan))
         configGesture(panGesture)
@@ -519,11 +517,11 @@ public class RongYaoTeamPlayerViewGestureManager: NSObject {
         pinchGesture = UIPinchGestureRecognizer.init(target: self, action: #selector(handlePinch))
         configGesture(pinchGesture)
         
-        singleTap.require(toFail: doubleTap)
-        doubleTap.require(toFail: panGesture)
+        singleTapGesture.require(toFail: doubleTapGesture)
+        doubleTapGesture.require(toFail: panGesture)
         
-        container.addGestureRecognizer(singleTap)
-        container.addGestureRecognizer(doubleTap)
+        container.addGestureRecognizer(singleTapGesture)
+        container.addGestureRecognizer(doubleTapGesture)
         container.addGestureRecognizer(panGesture)
         container.addGestureRecognizer(pinchGesture)
     }
@@ -535,10 +533,10 @@ public class RongYaoTeamPlayerViewGestureManager: NSObject {
     
     /// 是否支持某个手势
     fileprivate func isSupportedGesture(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        if gestureRecognizer == singleTap {
+        if gestureRecognizer == singleTapGesture {
             return isSupporedSingleTap()
         }
-        else if gestureRecognizer == doubleTap {
+        else if gestureRecognizer == doubleTapGesture {
             return isSupportedDoubleTag()
         }
         else if gestureRecognizer == panGesture {
@@ -688,10 +686,10 @@ extension RongYaoTeamPlayerViewGestureManager: UIGestureRecognizerDelegate {
         
         var type = RongYaoTeamPlayerViewGestureType.unknown
         
-        if gestureRecognizer == singleTap {
+        if gestureRecognizer == singleTapGesture {
             type = .singleTap
         }
-        else if gestureRecognizer == doubleTap {
+        else if gestureRecognizer == doubleTapGesture {
             type = .doubleTap
         }
         else if gestureRecognizer == panGesture {
