@@ -2,7 +2,7 @@
 //  RYViewController.swift
 //  RongYaoTeamPlayer
 //
-//  Created by BlueDancer on 2018/6/8.
+//  Created by 畅三江 on 2018/6/8.
 //  Copyright © 2018年 SanJiang. All rights reserved.
 //
 

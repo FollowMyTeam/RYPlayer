@@ -2,7 +2,7 @@
 //  RongYaoTeamPlayerView.swift
 //  RongYaoTeamPlayer
 //
-//  Created by BlueDancer on 2018/6/19.
+//  Created by 畅三江 on 2018/6/19.
 //  Copyright © 2018年 SanJiang. All rights reserved.
 //
 
