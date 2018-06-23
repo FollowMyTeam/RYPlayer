@@ -11,7 +11,7 @@ import AVFoundation
 
 // MARK: - 播放器视图
 
-/// 播放器视图
+/// RongYaoTeamPlayerView - 播放器视图
 /// - 呈现视频
 /// - 视图旋转
 ///     - 自动旋转
@@ -25,6 +25,24 @@ public class RongYaoTeamPlayerView: UIView {
         #endif
     }
     
+    /// 旋转管理
+    public private(set) var rotationManager: RongYaoTeamPlayerViewRotationManager!
+    
+    /// 手势管理
+    public private(set) var gestureManager: RongYaoTeamPlayerViewGestureManager!
+
+    /// 内容模式
+    public var avVideoGravity: AVLayerVideoGravity {
+        get{ return self.presentView.avVideoGravity }
+        set{ self.presentView.avVideoGravity = newValue }
+    }
+    
+    /// 设置avplayer, 呈现视频画面
+    public func setAVPlayer(_ avPlayer: AVPlayer?) { self.presentView.setAVPlayer(avPlayer) }
+    
+    /// 呈现视频画面的视图
+    private private(set) var presentView: RongYaoTeamPlayerPresentView = RongYaoTeamPlayerPresentView.init(frame: .zero)
+    
     public override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(presentView)
@@ -34,88 +52,38 @@ public class RongYaoTeamPlayerView: UIView {
         gestureManager = RongYaoTeamPlayerViewGestureManager.init(container: self)
     }
     
-    /// 旋转管理, 功能大概如下:
-    /// - 手动旋转到指定方向
-    /// - 设置自动旋转支持的方向
-    /// - 设置旋转动画持续时间
-    /// - 是否禁止自动旋转
-    public private(set) var rotationManager: RongYaoTeamPlayerViewRotationManager!
-    
-    /// 手势管理
-    public private(set) var gestureManager: RongYaoTeamPlayerViewGestureManager!
-
-    public var avVideoGravity: AVLayerVideoGravity {
-        get{ return self.presentView.avVideoGravity }
-        set{ self.presentView.avVideoGravity = newValue }
-    }
-    
-    public func setAVPlayer(_ avPlayer: AVPlayer?) { self.presentView.setAVPlayer(avPlayer) }
-    
-    private private(set) var presentView: RongYaoTeamPlayerPresentView = RongYaoTeamPlayerPresentView.init(frame: .zero)
-    
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
     override public func layoutSubviews() {
         super.layoutSubviews()
+        // 第一次初始化时, 设置frame
         if ( self.presentView.frame.isEmpty ) {
             presentView.frame = self.bounds
         }
     }
 }
 
+
+
+
+
+
+
+
+
+
+
+
 // MARK: - 旋转管理
 
-/// `播放器视图`方向
-///
-/// - portrait:       竖屏
-/// - landscapeLeft:  全屏, Home键在右侧
-/// - landscapeRight: 全屏, Home键在左侧
-public enum RongYaoTeamViewOrientation: UInt {
-    case portrait = 0
-    case landscapeLeft = 1
-    case landscapeRight = 2
-}
-
-/// `播放器视图`自动旋转支持的方向
-public struct RongYaoTeamViewAutorotationSupportedOrientation: OptionSet {
-    
-    /// 是否支持全屏
-    public static var portrait: RongYaoTeamViewAutorotationSupportedOrientation { return RongYaoTeamViewAutorotationSupportedOrientation(rawValue: 1 << 0) }
-    
-    /// 是否支持全屏, Home键在右侧
-    public static var landscapeLeft: RongYaoTeamViewAutorotationSupportedOrientation { return RongYaoTeamViewAutorotationSupportedOrientation(rawValue: 1 << 1) }
-    
-    /// 是否支持全屏, Home键在左侧
-    public static var landscapeRight: RongYaoTeamViewAutorotationSupportedOrientation { return RongYaoTeamViewAutorotationSupportedOrientation(rawValue: 1 << 2) }
-    
-    /// 是否支持全部方向
-    public static var all: RongYaoTeamViewAutorotationSupportedOrientation { return
-        RongYaoTeamViewAutorotationSupportedOrientation(rawValue:
-            RongYaoTeamViewAutorotationSupportedOrientation.portrait.rawValue |
-                RongYaoTeamViewAutorotationSupportedOrientation.landscapeLeft.rawValue |
-                RongYaoTeamViewAutorotationSupportedOrientation.landscapeRight.rawValue) }
-    
-    /// init
-    public init(rawValue: UInt) {
-        self.rawValue = rawValue
-    }
-    
-    /// value
-    public var rawValue: UInt
-}
-
-/// 代理
-public protocol RongYaoTeamPlayerViewRotationManagerDelegate {
-    /// 将要旋转的回调
-    func rotationManager(_ mgr: RongYaoTeamPlayerViewRotationManager, willRotateView isFullscreen: Bool)
-    
-    /// 完成旋转的回调
-    func rotationManager(_ mgr: RongYaoTeamPlayerViewRotationManager, didRotateView isFullscreen: Bool)
-}
-
-/// 旋转管理类
+/// RongYaoTeamPlayerViewRotationManager - 旋转管理类
+/// - 设置自动旋转支持的方向
+/// - 设置旋转动画持续时间
+/// - 手动旋转到指定方向
+/// - 是否禁止自动旋转
+/// - 代理
 public class RongYaoTeamPlayerViewRotationManager {
     
     deinit {
@@ -129,14 +97,14 @@ public class RongYaoTeamPlayerViewRotationManager {
     public init(target: UIView, superview: UIView ) {
         self.target = target
         self.superview = superview
-        self.observeDeviceOrientation()
+        observeDeviceOrientation()
     }
     
     public weak var delegate: (AnyObject & RongYaoTeamPlayerViewRotationManagerDelegate)?
- 
+    
     /// 是否禁止自动旋转
-    /// - 默认为 false
     /// - 该属性只会禁止自动旋转, 当调用 rotate 等方法还是可以旋转的
+    /// - 默认为 false
     public var disableAutorotation: Bool = false
     
     /// 自动旋转时, 所支持的方法
@@ -149,24 +117,25 @@ public class RongYaoTeamPlayerViewRotationManager {
     /// 动画持续的时间
     /// - 默认是 0.4
     public var duration: TimeInterval = 0.4
-
+    
     /// 是否全屏
+    /// - landscapeRight 或者 landscapeLeft 即为全屏
     public var isFullscreen: Bool { return ( orientation == .landscapeRight || orientation == .landscapeLeft ) }
     
     /// 旋转
     /// - Animated
     public func rotate() {
-        /// 如果是全屏状态 并且 支持 Portrait
+        // 如果是全屏状态 并且 支持 Portrait
         if ( self.isFullscreen && isSupportedPortrait ) {
             self.rotate(.portrait, animated: true)
             
             return
         }
         
-        /// 不是全屏或者不支持竖屏
-        /// 就是要全屏
-        /// 查看当前方向是否与设备方向一致
-        /// 如果不一致, 当前设备朝哪个方向, 就旋转到那个方向
+        // 不是全屏或者不支持竖屏
+        // 就是要全屏
+        // 查看当前方向是否与设备方向一致
+        // 如果不一致, 当前设备朝哪个方向, 就旋转到那个方向
         if ( isCurrentOrientationAsDeviceOrientation == false ) {
             switch rec_deviceOrientation {
             case .landscapeLeft:
@@ -183,7 +152,7 @@ public class RongYaoTeamPlayerViewRotationManager {
             return
         }
         
-        /// 如果方向一致, 就旋转到相反的方向
+        // 如果方向一致, 就旋转到相反的方向
         switch rec_deviceOrientation {
         case .landscapeLeft:
             if ( self.isSupportedLandscapeRight ) {
@@ -206,7 +175,7 @@ public class RongYaoTeamPlayerViewRotationManager {
     /// 转回小屏时, 需进行修正
     public var reviser: (AnyObject & RongYaoTeamPlayerViewRotationManagerReviser)?
     
- 
+    
     
     /// 记录的设备方向
     /// - 只记录三种设备方向 `.portrait, .landscapeLeft, .landscapeRight`
@@ -367,17 +336,66 @@ public class RongYaoTeamPlayerViewRotationManager {
     }
 }
 
+/// RongYaoTeamPlayerViewRotationManager - `播放器视图`方向
+///
+/// - portrait:       竖屏
+/// - landscapeLeft:  全屏, Home键在右侧
+/// - landscapeRight: 全屏, Home键在左侧
+public enum RongYaoTeamViewOrientation: UInt {
+    case portrait = 0
+    case landscapeLeft = 1
+    case landscapeRight = 2
+}
+
+/// RongYaoTeamPlayerViewRotationManager - `播放器视图`自动旋转支持的方向
+public struct RongYaoTeamViewAutorotationSupportedOrientation: OptionSet {
+    
+    /// 是否支持全屏
+    public static var portrait: RongYaoTeamViewAutorotationSupportedOrientation { return RongYaoTeamViewAutorotationSupportedOrientation(rawValue: 1 << 0) }
+    
+    /// 是否支持全屏, Home键在右侧
+    public static var landscapeLeft: RongYaoTeamViewAutorotationSupportedOrientation { return RongYaoTeamViewAutorotationSupportedOrientation(rawValue: 1 << 1) }
+    
+    /// 是否支持全屏, Home键在左侧
+    public static var landscapeRight: RongYaoTeamViewAutorotationSupportedOrientation { return RongYaoTeamViewAutorotationSupportedOrientation(rawValue: 1 << 2) }
+    
+    /// 是否支持全部方向
+    public static var all: RongYaoTeamViewAutorotationSupportedOrientation { return
+        RongYaoTeamViewAutorotationSupportedOrientation(rawValue:
+            RongYaoTeamViewAutorotationSupportedOrientation.portrait.rawValue |
+                RongYaoTeamViewAutorotationSupportedOrientation.landscapeLeft.rawValue |
+                RongYaoTeamViewAutorotationSupportedOrientation.landscapeRight.rawValue) }
+    
+    /// init
+    public init(rawValue: UInt) {
+        self.rawValue = rawValue
+    }
+    
+    /// value
+    public var rawValue: UInt
+}
+
+/// RongYaoTeamPlayerViewRotationManager - 代理
+public protocol RongYaoTeamPlayerViewRotationManagerDelegate {
+    /// 将要旋转的回调
+    func rotationManager(_ mgr: RongYaoTeamPlayerViewRotationManager, willRotateView isFullscreen: Bool)
+    
+    /// 完成旋转的回调
+    func rotationManager(_ mgr: RongYaoTeamPlayerViewRotationManager, didRotateView isFullscreen: Bool)
+}
+
+/// RongYaoTeamPlayerViewRotationManager - reviser
 public protocol RongYaoTeamPlayerViewRotationManagerReviser {
     /// 旋转视图需要复位
     func targetNeedRestFrame(_ mgr: RongYaoTeamPlayerViewRotationManager)
 }
 
+/// RongYaoTeamPlayerView -
 extension RongYaoTeamPlayerView: RongYaoTeamPlayerViewRotationManagerReviser {
     public func targetNeedRestFrame(_ mgr: RongYaoTeamPlayerViewRotationManager) {
         self.presentView.frame = self.bounds
     }
 }
-
 
 // MARK: - 画面呈现视图
 fileprivate class RongYaoTeamPlayerPresentView: UIView {
@@ -406,107 +424,9 @@ fileprivate class RongYaoTeamPlayerPresentView: UIView {
 
 // MARK: - 手势管理
 
-/// `播放器视图`默认添加的手势类型
-///
-/// - unknown:   未知
-/// - singleTap: 单击
-/// - doubleTap: 双击
-/// - pan:       pan
-/// - pinch:     捏合
-public enum RongYaoTeamPlayerViewGestureType {
-    case unknown
-    case singleTap
-    case doubleTap
-    case pan
-    case pinch
-}
-
-/// `播放器视图`默认支持的手势类型
-public struct RongYaoTeamPlayerViewSupportedGestureTypes: OptionSet {
-    
-    /// 全部不支持
-    public static var none: RongYaoTeamPlayerViewSupportedGestureTypes { return RongYaoTeamPlayerViewSupportedGestureTypes.init(rawValue: 0) }
-    
-    /// 是否支持 单击手势
-    public static var singleTap: RongYaoTeamPlayerViewSupportedGestureTypes { return RongYaoTeamPlayerViewSupportedGestureTypes.init(rawValue: 1 << 0) }
-    
-    /// 是否支持 双击手势
-    public static var doubleTap: RongYaoTeamPlayerViewSupportedGestureTypes { return RongYaoTeamPlayerViewSupportedGestureTypes.init(rawValue: 1 << 1) }
-    
-    /// 是否支持 pan手势
-    public static var pan: RongYaoTeamPlayerViewSupportedGestureTypes { return RongYaoTeamPlayerViewSupportedGestureTypes.init(rawValue: 1 << 2) }
-    
-    /// 是否支持 捏合手势
-    public static var pinch: RongYaoTeamPlayerViewSupportedGestureTypes { return RongYaoTeamPlayerViewSupportedGestureTypes.init(rawValue: 1 << 3) }
-    
-    /// 是否支持 全部手势
-    public static var all: RongYaoTeamPlayerViewSupportedGestureTypes {  return
-        RongYaoTeamPlayerViewSupportedGestureTypes.init(rawValue:
-            RongYaoTeamPlayerViewSupportedGestureTypes.singleTap.rawValue |
-                RongYaoTeamPlayerViewSupportedGestureTypes.doubleTap.rawValue |
-                RongYaoTeamPlayerViewSupportedGestureTypes.pan.rawValue |
-                RongYaoTeamPlayerViewSupportedGestureTypes.pinch.rawValue ) }
-    
-    /// init
-    public init(rawValue: UInt) {
-        self.rawValue = rawValue
-    }
-    
-    /// value
-    public var rawValue: UInt
-}
-
-/// pan手势触发的位置
-///
-/// - unknown: 未知
-/// - left:    左半屏
-/// - right:   右半屏
-public enum RongYaoTeamPlayerViewPanGestureLocation: Int {
-    case unknown
-    case left
-    case right
-}
-
-/// pan手势移动方向
-///
-/// - unknown:      未知
-/// - vertical:     垂直方向移动
-/// - horizontal:   水平方向移动
-public enum RongYaoTeamPlayerViewPanGestureMovingDirection: Int {
-    case unknown
-    case vertical
-    case horizontal
-}
-
-/// pan手势的状态
-///
-/// - unknown:  未知
-/// - began:    手势开始触发
-/// - changed:  手势触发中
-/// - ended:    手势结束
-public enum RongYaoTeamPlayerViewPanGestureState: Int {
-    case unknown
-    case began
-    case changed
-    case ended
-}
-
-public protocol RongYaoTeamPlayerViewGestureManagerDelegate {
-    /// 用户touch的位置, 是否可以触发手势
-    /// - 如果返回false, 不触发任何手势
-    func gestureManager(_ mgr: RongYaoTeamPlayerViewGestureManager, gestureShouldTrigger type: RongYaoTeamPlayerViewGestureType, location: CGPoint) -> Bool
-    
-    /// 触发单击手势
-    func triggerSingleTapGestureForGestureManager(_ mgr: RongYaoTeamPlayerViewGestureManager)
-    /// 触发双击手势
-    func triggerDoubleTapGestureForGestureManager(_ mgr: RongYaoTeamPlayerViewGestureManager)
-    /// 触发捏合手势
-    func triggerPinchGestureForGestureManager(_ mgr: RongYaoTeamPlayerViewGestureManager)
-    /// 触发pan手势
-    func triggerPanGestureForGestureManager(_ mgr: RongYaoTeamPlayerViewGestureManager, state: RongYaoTeamPlayerViewPanGestureState, movingDirection: RongYaoTeamPlayerViewPanGestureMovingDirection, location: RongYaoTeamPlayerViewPanGestureLocation, translate: CGPoint)
-}
-
-/// 手势管理
+/// RongYaoTeamPlayerViewGestureManager - 手势管理
+/// - 设置支持的手势类型
+/// - 代理
 public class RongYaoTeamPlayerViewGestureManager: NSObject {
     
     public init(container: UIView) {
@@ -651,6 +571,107 @@ public class RongYaoTeamPlayerViewGestureManager: NSObject {
     fileprivate func isSupportedPinchGesture() -> Bool {
         return RongYaoTeamPlayerViewSupportedGestureTypes.pinch.rawValue == (supportedGestureTypes.rawValue & RongYaoTeamPlayerViewSupportedGestureTypes.pinch.rawValue)
     }
+}
+
+/// RongYaoTeamPlayerViewGestureManager - `播放器视图`默认添加的手势类型
+///
+/// - unknown:   未知
+/// - singleTap: 单击
+/// - doubleTap: 双击
+/// - pan:       pan
+/// - pinch:     捏合
+public enum RongYaoTeamPlayerViewGestureType {
+    case unknown
+    case singleTap
+    case doubleTap
+    case pan
+    case pinch
+}
+
+/// RongYaoTeamPlayerViewGestureManager - `播放器视图`默认支持的手势类型
+public struct RongYaoTeamPlayerViewSupportedGestureTypes: OptionSet {
+    
+    /// 全部不支持
+    public static var none: RongYaoTeamPlayerViewSupportedGestureTypes { return RongYaoTeamPlayerViewSupportedGestureTypes.init(rawValue: 0) }
+    
+    /// 是否支持 单击手势
+    public static var singleTap: RongYaoTeamPlayerViewSupportedGestureTypes { return RongYaoTeamPlayerViewSupportedGestureTypes.init(rawValue: 1 << 0) }
+    
+    /// 是否支持 双击手势
+    public static var doubleTap: RongYaoTeamPlayerViewSupportedGestureTypes { return RongYaoTeamPlayerViewSupportedGestureTypes.init(rawValue: 1 << 1) }
+    
+    /// 是否支持 pan手势
+    public static var pan: RongYaoTeamPlayerViewSupportedGestureTypes { return RongYaoTeamPlayerViewSupportedGestureTypes.init(rawValue: 1 << 2) }
+    
+    /// 是否支持 捏合手势
+    public static var pinch: RongYaoTeamPlayerViewSupportedGestureTypes { return RongYaoTeamPlayerViewSupportedGestureTypes.init(rawValue: 1 << 3) }
+    
+    /// 是否支持 全部手势
+    public static var all: RongYaoTeamPlayerViewSupportedGestureTypes {  return
+        RongYaoTeamPlayerViewSupportedGestureTypes.init(rawValue:
+            RongYaoTeamPlayerViewSupportedGestureTypes.singleTap.rawValue |
+                RongYaoTeamPlayerViewSupportedGestureTypes.doubleTap.rawValue |
+                RongYaoTeamPlayerViewSupportedGestureTypes.pan.rawValue |
+                RongYaoTeamPlayerViewSupportedGestureTypes.pinch.rawValue ) }
+    
+    /// init
+    public init(rawValue: UInt) {
+        self.rawValue = rawValue
+    }
+    
+    /// value
+    public var rawValue: UInt
+}
+
+/// RongYaoTeamPlayerViewGestureManager - pan手势触发的位置
+///
+/// - unknown: 未知
+/// - left:    左半屏
+/// - right:   右半屏
+public enum RongYaoTeamPlayerViewPanGestureLocation: Int {
+    case unknown
+    case left
+    case right
+}
+
+/// RongYaoTeamPlayerViewGestureManager - pan手势移动方向
+///
+/// - unknown:      未知
+/// - vertical:     垂直方向移动
+/// - horizontal:   水平方向移动
+public enum RongYaoTeamPlayerViewPanGestureMovingDirection: Int {
+    case unknown
+    case vertical
+    case horizontal
+}
+
+/// RongYaoTeamPlayerViewGestureManager - pan手势的状态
+///
+/// - unknown:  未知
+/// - began:    手势开始触发
+/// - changed:  手势触发中
+/// - ended:    手势结束
+public enum RongYaoTeamPlayerViewPanGestureState: Int {
+    case unknown
+    case began
+    case changed
+    case ended
+}
+
+/// RongYaoTeamPlayerViewGestureManager - 代理
+public protocol RongYaoTeamPlayerViewGestureManagerDelegate {
+    /// 用户touch的位置, 是否可以触发手势
+    /// - 如果返回false, 不触发任何手势
+    func gestureManager(_ mgr: RongYaoTeamPlayerViewGestureManager, gestureShouldTrigger type: RongYaoTeamPlayerViewGestureType, location: CGPoint) -> Bool
+    
+    /// 触发单击手势
+    func triggerSingleTapGestureForGestureManager(_ mgr: RongYaoTeamPlayerViewGestureManager)
+    /// 触发双击手势
+    func triggerDoubleTapGestureForGestureManager(_ mgr: RongYaoTeamPlayerViewGestureManager)
+    /// 触发捏合手势
+    func triggerPinchGestureForGestureManager(_ mgr: RongYaoTeamPlayerViewGestureManager)
+    /// 触发pan手势
+    func triggerPanGestureForGestureManager(_ mgr: RongYaoTeamPlayerViewGestureManager, state: RongYaoTeamPlayerViewPanGestureState, movingDirection: RongYaoTeamPlayerViewPanGestureMovingDirection, location: RongYaoTeamPlayerViewPanGestureLocation, translate: CGPoint)
 }
 
 extension RongYaoTeamPlayerViewGestureManager: UIGestureRecognizerDelegate {
