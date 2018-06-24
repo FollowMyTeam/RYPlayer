@@ -6,6 +6,10 @@
 //  Copyright © 2018年 SanJiang. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 /// 边缘控制层 - 右
+
+public class RongYaoTeamPlayerEdgeControlLayerRightView: UIView {
+    
+}

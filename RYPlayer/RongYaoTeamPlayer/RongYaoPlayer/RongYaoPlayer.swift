@@ -1,5 +1,5 @@
 //
-//  RongYaoTeamPlayerEdgeControlLayer.swift
+//  RongYaoPlayer.swift
 //  RongYaoTeamPlayer
 //
 //  Created by 畅三江 on 2018/6/24.
@@ -7,5 +7,3 @@
 //
 
 import Foundation
-
-/// 边缘控制层

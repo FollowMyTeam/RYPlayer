@@ -13,12 +13,20 @@ import SJSlider
 
 class RYViewController: UIViewController {
     
+    deinit {
+        #if DEBUG
+        print("\(#function) - \(#line) - RYViewController")
+        #endif
+    }
+    
     var player: RongYaoTeamPlayer?
     
     var slider: SJSlider?
     
     var gestureManager: RongYaoTeamPlayerPresentViewGestureManager!
 
+    var edgeControlLayer: RongYaoTeamPlayerEdgeControlLayer!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -38,6 +46,13 @@ class RYViewController: UIViewController {
         
         gestureManager = RongYaoTeamPlayerPresentViewGestureManager.init(target: player!.view.presentView)
         gestureManager.delegate = self
+        
+        edgeControlLayer = RongYaoTeamPlayerEdgeControlLayer.init(frame: .zero)
+        player?.view.presentView.addSubview(edgeControlLayer)
+        edgeControlLayer.snp.makeConstraints { (make) in
+            make.edges.equalTo(edgeControlLayer.superview!)
+        }
+        
         
         slider = SJSlider.init()
         slider?.delegate = self

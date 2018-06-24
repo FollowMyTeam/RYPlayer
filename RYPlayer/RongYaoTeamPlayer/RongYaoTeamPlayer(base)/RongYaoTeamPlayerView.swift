@@ -166,7 +166,7 @@ public class RongYaoTeamPlayerViewRotationManager {
     public fileprivate(set) weak var superview: UIView!
     
     /// 转回小屏时, 需进行修正
-    public var reviser: (AnyObject & RongYaoTeamPlayerViewRotationManagerReviser)?
+    public weak var reviser: (AnyObject & RongYaoTeamPlayerViewRotationManagerReviser)?
     
     
     
@@ -238,6 +238,7 @@ public class RongYaoTeamPlayerViewRotationManager {
                 self.target.center = CGPoint.init(x: _min * 0.5, y: _max * 0.5)
             }
             self.target.transform = transform
+            self.target.layoutIfNeeded()
         }) { (_) in
             if ( self.orientation == .portrait ) {
                 superview.addSubview(self.target)

@@ -29,6 +29,8 @@
 		A6089F0B20DF478E00DA5E9B /* RongYaoTeamPlayerEdgeControlLayerRightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6089F0A20DF478E00DA5E9B /* RongYaoTeamPlayerEdgeControlLayerRightView.swift */; };
 		A6089F0D20DF73D100DA5E9B /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = A6089F0C20DF73D100DA5E9B /* README.md */; };
 		A6089F0F20DF757200DA5E9B /* RongYaoTeamPlayerAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6089F0E20DF757200DA5E9B /* RongYaoTeamPlayerAsset.swift */; };
+		A6089F1220DF7D8900DA5E9B /* RongYaoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6089F1120DF7D8900DA5E9B /* RongYaoPlayer.swift */; };
+		A6089F1420DF801400DA5E9B /* UIViewExtension+RongYao.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6089F1320DF801400DA5E9B /* UIViewExtension+RongYao.swift */; };
 		A658746220CB8E0500611B72 /* sample.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = A658746120CB8E0500611B72 /* sample.mp4 */; };
 /* End PBXBuildFile section */
 
@@ -58,6 +60,8 @@
 		A6089F0A20DF478E00DA5E9B /* RongYaoTeamPlayerEdgeControlLayerRightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoTeamPlayerEdgeControlLayerRightView.swift; sourceTree = "<group>"; };
 		A6089F0C20DF73D100DA5E9B /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		A6089F0E20DF757200DA5E9B /* RongYaoTeamPlayerAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoTeamPlayerAsset.swift; sourceTree = "<group>"; };
+		A6089F1120DF7D8900DA5E9B /* RongYaoPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoPlayer.swift; sourceTree = "<group>"; };
+		A6089F1320DF801400DA5E9B /* UIViewExtension+RongYao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewExtension+RongYao.swift"; sourceTree = "<group>"; };
 		A658746120CB8E0500611B72 /* sample.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample.mp4; sourceTree = "<group>"; };
 		F5C898A3DAF5A2087BF75381 /* Pods_RongYaoTeamPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RongYaoTeamPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -111,7 +115,9 @@
 				773DD2C320D66761008113CD /* RYTabBarController.swift */,
 				773DD2C520D6676D008113CD /* RYNavigationController.swift */,
 				7790D1A720CADC6F00F7CAF5 /* RYViewController.swift */,
-				A6089F0120DF46AE00DA5E9B /* EdgeControlLayer */,
+				A6089F1520DF808100DA5E9B /* RongYaoExtension */,
+				A6089F1020DF7D7C00DA5E9B /* RongYaoPlayer */,
+				A6089F0120DF46AE00DA5E9B /* RongYaoEdgeControlLayer */,
 				7790D19B20CABA4300F7CAF5 /* RongYaoTeamPlayer(base) */,
 				7790D18D20CABA2C00F7CAF5 /* Main.storyboard */,
 				7790D19020CABA2D00F7CAF5 /* Assets.xcassets */,
@@ -143,7 +149,7 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		A6089F0120DF46AE00DA5E9B /* EdgeControlLayer */ = {
+		A6089F0120DF46AE00DA5E9B /* RongYaoEdgeControlLayer */ = {
 			isa = PBXGroup;
 			children = (
 				A6089EFF20DF44E400DA5E9B /* RongYaoTeamPlayerPresentViewGestureManager.swift */,
@@ -153,7 +159,23 @@
 				A6089F0820DF478700DA5E9B /* RongYaoTeamPlayerEdgeControlLayerBottomView.swift */,
 				A6089F0A20DF478E00DA5E9B /* RongYaoTeamPlayerEdgeControlLayerRightView.swift */,
 			);
-			path = EdgeControlLayer;
+			path = RongYaoEdgeControlLayer;
+			sourceTree = "<group>";
+		};
+		A6089F1020DF7D7C00DA5E9B /* RongYaoPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				A6089F1120DF7D8900DA5E9B /* RongYaoPlayer.swift */,
+			);
+			path = RongYaoPlayer;
+			sourceTree = "<group>";
+		};
+		A6089F1520DF808100DA5E9B /* RongYaoExtension */ = {
+			isa = PBXGroup;
+			children = (
+				A6089F1320DF801400DA5E9B /* UIViewExtension+RongYao.swift */,
+			);
+			path = RongYaoExtension;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -290,11 +312,13 @@
 				771C27A720CBE1D900C17E34 /* RongYaoTeamPlayer.swift in Sources */,
 				7790D18A20CABA2C00F7CAF5 /* AppDelegate.swift in Sources */,
 				A6089F0720DF477F00DA5E9B /* RongYaoTeamPlayerEdgeControlLayerLeftView.swift in Sources */,
+				A6089F1220DF7D8900DA5E9B /* RongYaoPlayer.swift in Sources */,
 				A6089F0F20DF757200DA5E9B /* RongYaoTeamPlayerAsset.swift in Sources */,
 				7790D1A820CADC6F00F7CAF5 /* RYViewController.swift in Sources */,
 				A6089F0920DF478700DA5E9B /* RongYaoTeamPlayerEdgeControlLayerBottomView.swift in Sources */,
 				77B8815620D906070054DDE2 /* RongYaoTeamPlayerExport.swift in Sources */,
 				773DD2C620D6676D008113CD /* RYNavigationController.swift in Sources */,
+				A6089F1420DF801400DA5E9B /* UIViewExtension+RongYao.swift in Sources */,
 				7790D1AA20CBB22900F7CAF5 /* RYObserver.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
