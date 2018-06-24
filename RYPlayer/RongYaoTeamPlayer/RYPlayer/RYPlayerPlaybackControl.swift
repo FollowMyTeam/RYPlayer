@@ -26,4 +26,6 @@ public protocol RongYaoTeamPlayerPlaybackControl {
     func stop()
     
     func replay()
+    
+    func seekToTime(_ time: TimeInterval, completionHandler: @escaping (_ player: RongYaoTeamPlayerPlaybackControl, _ finished: Bool)->Void)
 }
