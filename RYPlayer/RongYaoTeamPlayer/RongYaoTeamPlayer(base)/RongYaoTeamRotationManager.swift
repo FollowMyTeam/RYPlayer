@@ -185,16 +185,15 @@ public class RongYaoTeamRotationManager {
             if ( self.orientation == .portrait ) {
                 superview.addSubview(self.target)
                 self.target.frame = superview.bounds
-                self.delegate?.rotationManager( self, didRotateView:self.isFullscreen)
             }
             else {
                 self.blackView.bounds = self.target.bounds
                 self.blackView.center = self.target.center
                 self.blackView.transform = self.target.transform
                 UIApplication.shared.keyWindow?.insertSubview(self.blackView, belowSubview: self.target)
-                self.delegate?.rotationManager( self, didRotateView:self.isFullscreen)
-                completionHandler(self)
             }
+            self.delegate?.rotationManager( self, didRotateView:self.isFullscreen)
+            completionHandler(self)
         }
     }
     
