@@ -27,12 +27,22 @@ public class RongYaoTeamRotationManager {
     }
     
     /// 实例化一个旋转管理对象
-    /// - 使用注意:
-    ///   - 目标视图(target)的大小需与父视图相等. 即 target.frame = superview.bounds, 或者在使用自动布局时`target.edges = superview`
     ///
     /// - Parameters:
     ///   - target:     目标视图, 用来旋转的视图
     ///   - superview:  父视图, 旋转视图的父视图
+    ///
+    /// - 使用注意:
+    ///   - 目标视图(target)的大小需与父视图相等, 如下:
+    ///     ```Swift
+    ///         // - 使用frame布局时:
+    ///         target.frame = superview.bounds
+    ///
+    ///         // - 使用autolayout布局时:
+    ///         target.snp.makeConstraints { (make) in
+    ///             make.edges.equalTo(superview)
+    ///         }
+    ///     ```
     public init(target: UIView, superview: UIView ) {
         self.target = target
         self.superview = superview
@@ -302,9 +312,7 @@ public struct RongYaoTeamViewAutorotationSupportedOrientation: OptionSet {
                 RongYaoTeamViewAutorotationSupportedOrientation.landscapeRight.rawValue) }
     
     /// init
-    public init(rawValue: UInt) {
-        self.rawValue = rawValue
-    }
+    public init(rawValue: UInt) { self.rawValue = rawValue }
     
     /// value
     public var rawValue: UInt
