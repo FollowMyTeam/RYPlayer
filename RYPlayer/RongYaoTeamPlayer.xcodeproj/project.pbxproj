@@ -27,6 +27,8 @@
 		A6089F0720DF477F00DA5E9B /* RongYaoTeamPlayerEdgeControlLayerLeftView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6089F0620DF477F00DA5E9B /* RongYaoTeamPlayerEdgeControlLayerLeftView.swift */; };
 		A6089F0920DF478700DA5E9B /* RongYaoTeamPlayerEdgeControlLayerBottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6089F0820DF478700DA5E9B /* RongYaoTeamPlayerEdgeControlLayerBottomView.swift */; };
 		A6089F0B20DF478E00DA5E9B /* RongYaoTeamPlayerEdgeControlLayerRightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6089F0A20DF478E00DA5E9B /* RongYaoTeamPlayerEdgeControlLayerRightView.swift */; };
+		A6089F0D20DF73D100DA5E9B /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = A6089F0C20DF73D100DA5E9B /* README.md */; };
+		A6089F0F20DF757200DA5E9B /* RongYaoTeamPlayerAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6089F0E20DF757200DA5E9B /* RongYaoTeamPlayerAsset.swift */; };
 		A658746220CB8E0500611B72 /* sample.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = A658746120CB8E0500611B72 /* sample.mp4 */; };
 /* End PBXBuildFile section */
 
@@ -54,6 +56,8 @@
 		A6089F0620DF477F00DA5E9B /* RongYaoTeamPlayerEdgeControlLayerLeftView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoTeamPlayerEdgeControlLayerLeftView.swift; sourceTree = "<group>"; };
 		A6089F0820DF478700DA5E9B /* RongYaoTeamPlayerEdgeControlLayerBottomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoTeamPlayerEdgeControlLayerBottomView.swift; sourceTree = "<group>"; };
 		A6089F0A20DF478E00DA5E9B /* RongYaoTeamPlayerEdgeControlLayerRightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoTeamPlayerEdgeControlLayerRightView.swift; sourceTree = "<group>"; };
+		A6089F0C20DF73D100DA5E9B /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		A6089F0E20DF757200DA5E9B /* RongYaoTeamPlayerAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoTeamPlayerAsset.swift; sourceTree = "<group>"; };
 		A658746120CB8E0500611B72 /* sample.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample.mp4; sourceTree = "<group>"; };
 		F5C898A3DAF5A2087BF75381 /* Pods_RongYaoTeamPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RongYaoTeamPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -83,6 +87,7 @@
 		7790D17D20CABA2C00F7CAF5 = {
 			isa = PBXGroup;
 			children = (
+				A6089F0C20DF73D100DA5E9B /* README.md */,
 				7790D18820CABA2C00F7CAF5 /* RongYaoTeamPlayer */,
 				7790D18720CABA2C00F7CAF5 /* Products */,
 				7790D1A020CABA7200F7CAF5 /* Frameworks */,
@@ -121,6 +126,7 @@
 			isa = PBXGroup;
 			children = (
 				771C27A620CBE1D900C17E34 /* RongYaoTeamPlayer.swift */,
+				A6089F0E20DF757200DA5E9B /* RongYaoTeamPlayerAsset.swift */,
 				77B8815320D8EED00054DDE2 /* RongYaoTeamPlayerView.swift */,
 				77B8815520D906070054DDE2 /* RongYaoTeamPlayerExport.swift */,
 				7790D1A920CBB22900F7CAF5 /* RYObserver.swift */,
@@ -218,6 +224,7 @@
 			files = (
 				7790D19420CABA2D00F7CAF5 /* LaunchScreen.storyboard in Resources */,
 				7790D19120CABA2D00F7CAF5 /* Assets.xcassets in Resources */,
+				A6089F0D20DF73D100DA5E9B /* README.md in Resources */,
 				7790D18F20CABA2C00F7CAF5 /* Main.storyboard in Resources */,
 				A658746220CB8E0500611B72 /* sample.mp4 in Resources */,
 			);
@@ -283,6 +290,7 @@
 				771C27A720CBE1D900C17E34 /* RongYaoTeamPlayer.swift in Sources */,
 				7790D18A20CABA2C00F7CAF5 /* AppDelegate.swift in Sources */,
 				A6089F0720DF477F00DA5E9B /* RongYaoTeamPlayerEdgeControlLayerLeftView.swift in Sources */,
+				A6089F0F20DF757200DA5E9B /* RongYaoTeamPlayerAsset.swift in Sources */,
 				7790D1A820CADC6F00F7CAF5 /* RYViewController.swift in Sources */,
 				A6089F0920DF478700DA5E9B /* RongYaoTeamPlayerEdgeControlLayerBottomView.swift in Sources */,
 				77B8815620D906070054DDE2 /* RongYaoTeamPlayerExport.swift in Sources */,

@@ -22,10 +22,13 @@ public class RongYaoTeamPlayerView: UIView {
         #endif
     }
     
-    /// 旋转管理
-    public private(set) var rotationManager: RongYaoTeamPlayerViewRotationManager!
+    /// 呈现
+    public private(set) var presentView: UIView = RongYaoTeamPlayerPresentView.init(frame: .zero)
     
-    /// 内容模式
+    /// 旋转
+    public var rotationManager: RongYaoTeamPlayerViewRotationManager!
+    
+    /// 内容
     public var avVideoGravity: AVLayerVideoGravity {
         get{ return (self.presentView as! RongYaoTeamPlayerPresentView).avVideoGravity }
         set{ (self.presentView as! RongYaoTeamPlayerPresentView).avVideoGravity = newValue }
@@ -33,9 +36,6 @@ public class RongYaoTeamPlayerView: UIView {
     
     /// 设置avplayer, 呈现视频画面
     public func setAVPlayer(_ avPlayer: AVPlayer?) { (self.presentView as! RongYaoTeamPlayerPresentView).setAVPlayer(avPlayer) }
-    
-    /// 呈现视频画面的视图
-    public private(set) var presentView: UIView = RongYaoTeamPlayerPresentView.init(frame: .zero)
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -391,6 +391,7 @@ extension RongYaoTeamPlayerView: RongYaoTeamPlayerViewRotationManagerReviser {
 }
 
 // MARK: - 画面呈现视图
+/// RongYaoTeamPlayerPresentView -
 fileprivate class RongYaoTeamPlayerPresentView: UIView {
     deinit {
         #if DEBUG

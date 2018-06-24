@@ -77,42 +77,7 @@ public enum RongYaoTeamPlayerPropertyKey {
     case bufferStatus
     case presentationSize
 }
-/// 播放器资源
-/// 使用两个参数进行初始化分别如下:
-/// - URL
-/// - 播放的开始时间
-public class RongYaoTeamPlayerAsset {
-    deinit {
-        #if DEBUG
-        print("\(#function) - \(#line) - RongYaoTeamPlayerAsset")
-        #endif
-    }
-    
-    /// 创建一个Asset
-    ///
-    /// - Parameters:
-    ///   - playURL: 播放的URL(本地/远程)
-    ///   - specifyStartTime: 从指定时间开始播放, 默认为0
-    public init(_ playURL: URL, specifyStartTime: TimeInterval) {
-        self.specifyStartTime = specifyStartTime
-        self.playURL = playURL
-    }
-    
-    public convenience init(_ playURL: URL) {
-        self.init(playURL, specifyStartTime: 0)
-    }
-    
-    public init(_ otherAsset: RongYaoTeamPlayerAsset) {
-        playURL = otherAsset.playURL
-        specifyStartTime = otherAsset.specifyStartTime
-        avPlayer = otherAsset.avPlayer
-        isOtherAsset = true
-    }
-    
-    public private(set) var playURL: URL
-    public private(set) var specifyStartTime: TimeInterval = 0
-    public private(set) var isOtherAsset = false
-}
+
 public class RongYaoTeamPlayer {
     deinit {
         #if DEBUG
@@ -738,45 +703,36 @@ public class RongYaoTeamPlayerAssetProperties {
 // MARK: - 资源 - 初始化AVPlayer
 fileprivate extension RongYaoTeamPlayerAsset {
     
+    var avPlayer: AVPlayer? {
+        set {
+            objc_setAssociatedObject(self, &RongYaoTeamPlayerInitPlayerAssociatedKeys.kplayer, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+        
+        get {
+            if ( self.isOtherAsset ) { return self.otherAsset?.avPlayer }
+            return objc_getAssociatedObject(self, &RongYaoTeamPlayerInitPlayerAssociatedKeys.kplayer) as? AVPlayer
+        }
+    }
+    
+    var asset: AVURLAsset? { return self.playerItem?.asset as? AVURLAsset }
+    var playerItem: AVPlayerItem? { return self.avPlayer?.currentItem }
+
     /// 初始化 AVPlayer
     /// - 将操作任务添加到队列中
     /// - 任务完成后, 回调 block
-    fileprivate func initializingAVPlayer(_ completionBlock: @escaping (_ asset: RongYaoTeamPlayerAsset)->Void) {
-        if ( self.state == .initialized ) {
-            completionBlock(self)
-            return
-        }
-        
-        if ( state == .prepare ) {
-            return
-        }
+    func initializingAVPlayer(_ completionBlock: @escaping (_ asset: RongYaoTeamPlayerAsset)->Void) {
+        if ( self.state == .initialized ) { completionBlock(self); return }
+        if ( state == .prepare ) { return }
         
         state = .prepare
         addOperationToQueue { [weak self] in
-            guard let `self` = self else {
-                return
-            }
+            guard let `self` = self else { return }
             self.state = .initialized
             completionBlock(self)
         }
     }
     
-    
-    
-    
-    
-    
-    
-    
-    /// -----------------------------------------------------------------------
-    /// 分割线 分割线 分割线 分割线 分割线 分割线 分割线 分割线 分割线 分割线 分割线 分割线
-    /// -----------------------------------------------------------------------
-    /// 不好看 不好看 不好看 不好看 不好看 不好看 不好看 不好看 不好看 不好看 不好看 不好看
-    /// -----------------------------------------------------------------------
-    
-    
-    
-    
+
     /// - 用来初始化Player的队列
     /// - 由于创建耗时所以, 将初始化任务放到了这个队列中
     private static var SERIAL_QUEUE: OperationQueue?
@@ -808,25 +764,11 @@ fileprivate extension RongYaoTeamPlayerAsset {
         }
     }
     
-    
-    
-    fileprivate enum RongYaoPlayerAssetState: Int {
-        case unknown = 0, prepare, initialized
+    private enum RongYaoPlayerAssetState: Int {
+        case unknown, prepare, initialized
     }
     
-    
-    fileprivate var avPlayer: AVPlayer? {
-        set {
-            objc_setAssociatedObject(self, &RongYaoTeamPlayerInitPlayerAssociatedKeys.kplayer, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
-        
-        get {
-            return objc_getAssociatedObject(self, &RongYaoTeamPlayerInitPlayerAssociatedKeys.kplayer) as? AVPlayer
-        }
-    }
-    fileprivate var asset: AVURLAsset? { return self.playerItem?.asset as? AVURLAsset }
-    fileprivate var playerItem: AVPlayerItem? { return self.avPlayer?.currentItem }
-    fileprivate var state: RongYaoPlayerAssetState {
+    private var state: RongYaoPlayerAssetState {
         set {
             objc_setAssociatedObject(self, &RongYaoTeamPlayerInitPlayerAssociatedKeys.kstate, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
