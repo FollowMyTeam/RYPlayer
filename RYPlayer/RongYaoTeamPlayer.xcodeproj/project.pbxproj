@@ -22,6 +22,11 @@
 		77B8815420D8EED00054DDE2 /* RongYaoTeamPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B8815320D8EED00054DDE2 /* RongYaoTeamPlayerView.swift */; };
 		77B8815620D906070054DDE2 /* RongYaoTeamPlayerExport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B8815520D906070054DDE2 /* RongYaoTeamPlayerExport.swift */; };
 		A6089F0020DF44E400DA5E9B /* RongYaoTeamPlayerPresentViewGestureManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6089EFF20DF44E400DA5E9B /* RongYaoTeamPlayerPresentViewGestureManager.swift */; };
+		A6089F0320DF476100DA5E9B /* RongYaoTeamPlayerEdgeControlLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6089F0220DF476100DA5E9B /* RongYaoTeamPlayerEdgeControlLayer.swift */; };
+		A6089F0520DF477200DA5E9B /* RongYaoTeamPlayerEdgeControlLayerTopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6089F0420DF477200DA5E9B /* RongYaoTeamPlayerEdgeControlLayerTopView.swift */; };
+		A6089F0720DF477F00DA5E9B /* RongYaoTeamPlayerEdgeControlLayerLeftView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6089F0620DF477F00DA5E9B /* RongYaoTeamPlayerEdgeControlLayerLeftView.swift */; };
+		A6089F0920DF478700DA5E9B /* RongYaoTeamPlayerEdgeControlLayerBottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6089F0820DF478700DA5E9B /* RongYaoTeamPlayerEdgeControlLayerBottomView.swift */; };
+		A6089F0B20DF478E00DA5E9B /* RongYaoTeamPlayerEdgeControlLayerRightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6089F0A20DF478E00DA5E9B /* RongYaoTeamPlayerEdgeControlLayerRightView.swift */; };
 		A658746220CB8E0500611B72 /* sample.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = A658746120CB8E0500611B72 /* sample.mp4 */; };
 /* End PBXBuildFile section */
 
@@ -44,6 +49,11 @@
 		77B8815320D8EED00054DDE2 /* RongYaoTeamPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoTeamPlayerView.swift; sourceTree = "<group>"; };
 		77B8815520D906070054DDE2 /* RongYaoTeamPlayerExport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoTeamPlayerExport.swift; sourceTree = "<group>"; };
 		A6089EFF20DF44E400DA5E9B /* RongYaoTeamPlayerPresentViewGestureManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoTeamPlayerPresentViewGestureManager.swift; sourceTree = "<group>"; };
+		A6089F0220DF476100DA5E9B /* RongYaoTeamPlayerEdgeControlLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoTeamPlayerEdgeControlLayer.swift; sourceTree = "<group>"; };
+		A6089F0420DF477200DA5E9B /* RongYaoTeamPlayerEdgeControlLayerTopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoTeamPlayerEdgeControlLayerTopView.swift; sourceTree = "<group>"; };
+		A6089F0620DF477F00DA5E9B /* RongYaoTeamPlayerEdgeControlLayerLeftView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoTeamPlayerEdgeControlLayerLeftView.swift; sourceTree = "<group>"; };
+		A6089F0820DF478700DA5E9B /* RongYaoTeamPlayerEdgeControlLayerBottomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoTeamPlayerEdgeControlLayerBottomView.swift; sourceTree = "<group>"; };
+		A6089F0A20DF478E00DA5E9B /* RongYaoTeamPlayerEdgeControlLayerRightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoTeamPlayerEdgeControlLayerRightView.swift; sourceTree = "<group>"; };
 		A658746120CB8E0500611B72 /* sample.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample.mp4; sourceTree = "<group>"; };
 		F5C898A3DAF5A2087BF75381 /* Pods_RongYaoTeamPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RongYaoTeamPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -96,6 +106,7 @@
 				773DD2C320D66761008113CD /* RYTabBarController.swift */,
 				773DD2C520D6676D008113CD /* RYNavigationController.swift */,
 				7790D1A720CADC6F00F7CAF5 /* RYViewController.swift */,
+				A6089F0120DF46AE00DA5E9B /* EdgeControlLayer */,
 				7790D19B20CABA4300F7CAF5 /* RongYaoPlayer */,
 				7790D18D20CABA2C00F7CAF5 /* Main.storyboard */,
 				7790D19020CABA2D00F7CAF5 /* Assets.xcassets */,
@@ -111,7 +122,6 @@
 			children = (
 				771C27A620CBE1D900C17E34 /* RongYaoTeamPlayer.swift */,
 				77B8815320D8EED00054DDE2 /* RongYaoTeamPlayerView.swift */,
-				A6089EFF20DF44E400DA5E9B /* RongYaoTeamPlayerPresentViewGestureManager.swift */,
 				77B8815520D906070054DDE2 /* RongYaoTeamPlayerExport.swift */,
 				7790D1A920CBB22900F7CAF5 /* RYObserver.swift */,
 			);
@@ -125,6 +135,19 @@
 				F5C898A3DAF5A2087BF75381 /* Pods_RongYaoTeamPlayer.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A6089F0120DF46AE00DA5E9B /* EdgeControlLayer */ = {
+			isa = PBXGroup;
+			children = (
+				A6089EFF20DF44E400DA5E9B /* RongYaoTeamPlayerPresentViewGestureManager.swift */,
+				A6089F0220DF476100DA5E9B /* RongYaoTeamPlayerEdgeControlLayer.swift */,
+				A6089F0420DF477200DA5E9B /* RongYaoTeamPlayerEdgeControlLayerTopView.swift */,
+				A6089F0620DF477F00DA5E9B /* RongYaoTeamPlayerEdgeControlLayerLeftView.swift */,
+				A6089F0820DF478700DA5E9B /* RongYaoTeamPlayerEdgeControlLayerBottomView.swift */,
+				A6089F0A20DF478E00DA5E9B /* RongYaoTeamPlayerEdgeControlLayerRightView.swift */,
+			);
+			path = EdgeControlLayer;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -251,12 +274,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				A6089F0020DF44E400DA5E9B /* RongYaoTeamPlayerPresentViewGestureManager.swift in Sources */,
+				A6089F0320DF476100DA5E9B /* RongYaoTeamPlayerEdgeControlLayer.swift in Sources */,
 				77B8815420D8EED00054DDE2 /* RongYaoTeamPlayerView.swift in Sources */,
 				7790D18C20CABA2C00F7CAF5 /* ViewController.swift in Sources */,
 				773DD2C420D66761008113CD /* RYTabBarController.swift in Sources */,
+				A6089F0520DF477200DA5E9B /* RongYaoTeamPlayerEdgeControlLayerTopView.swift in Sources */,
+				A6089F0B20DF478E00DA5E9B /* RongYaoTeamPlayerEdgeControlLayerRightView.swift in Sources */,
 				771C27A720CBE1D900C17E34 /* RongYaoTeamPlayer.swift in Sources */,
 				7790D18A20CABA2C00F7CAF5 /* AppDelegate.swift in Sources */,
+				A6089F0720DF477F00DA5E9B /* RongYaoTeamPlayerEdgeControlLayerLeftView.swift in Sources */,
 				7790D1A820CADC6F00F7CAF5 /* RYViewController.swift in Sources */,
+				A6089F0920DF478700DA5E9B /* RongYaoTeamPlayerEdgeControlLayerBottomView.swift in Sources */,
 				77B8815620D906070054DDE2 /* RongYaoTeamPlayerExport.swift in Sources */,
 				773DD2C620D6676D008113CD /* RYNavigationController.swift in Sources */,
 				7790D1AA20CBB22900F7CAF5 /* RYObserver.swift in Sources */,
