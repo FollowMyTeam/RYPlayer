@@ -25,7 +25,7 @@ class RYViewController: UIViewController {
     
     var slider: SJSlider?
     
-    var gestureManager: RongYaoTeamPlayerPresentViewGestureManager!
+    var gestureManager: RongYaoTeamGestureManager!
 
     var rotationManager: RongYaoTeamRotationManager!
     
@@ -54,7 +54,7 @@ class RYViewController: UIViewController {
             make.edges.equalTo(player!.view.superview!)
         }
         
-        gestureManager = RongYaoTeamPlayerPresentViewGestureManager.init(target: player!.view)
+        gestureManager = RongYaoTeamGestureManager.init(target: player!.view)
         gestureManager.delegate = self
         
         edgeControlLayer = RongYaoTeamPlayerEdgeControlLayer.init(frame: .zero)
@@ -132,18 +132,18 @@ extension RYViewController: RongYaoTeamRotationManagerDelegate {
     }
 }
 
-extension RYViewController: RongYaoTeamPlayerPresentViewGestureManagerDelegate {
-    func gestureManager(_ mgr: RongYaoTeamPlayerPresentViewGestureManager, gestureShouldTrigger type: RongYaoTeamPlayerViewGestureType, location: CGPoint) -> Bool {
+extension RYViewController: RongYaoTeamGestureManagerDelegate {
+    func gestureManager(_ mgr: RongYaoTeamGestureManager, gestureShouldTrigger type: RongYaoTeamPlayerViewGestureType, location: CGPoint) -> Bool {
         return true
     }
     
-    func triggerSingleTapGestureForGestureManager(_ mgr: RongYaoTeamPlayerPresentViewGestureManager) {
+    func triggerSingleTapGestureForGestureManager(_ mgr: RongYaoTeamGestureManager) {
         #if DEBUG
         print("\(#function) - \(#line) - RongYaoTeamPlayer")
         #endif
     }
     
-    func triggerDoubleTapGestureForGestureManager(_ mgr: RongYaoTeamPlayerPresentViewGestureManager) {
+    func triggerDoubleTapGestureForGestureManager(_ mgr: RongYaoTeamGestureManager) {
         #if DEBUG
         print("\(#function) - \(#line) - RongYaoTeamPlayer")
         #endif
@@ -157,7 +157,7 @@ extension RYViewController: RongYaoTeamPlayerPresentViewGestureManagerDelegate {
         }
     }
     
-    func triggerPinchGestureForGestureManager(_ mgr: RongYaoTeamPlayerPresentViewGestureManager) {
+    func triggerPinchGestureForGestureManager(_ mgr: RongYaoTeamGestureManager) {
         #if DEBUG
         print("\(#function) - \(#line) - RongYaoTeamPlayer")
         #endif
@@ -171,7 +171,7 @@ extension RYViewController: RongYaoTeamPlayerPresentViewGestureManagerDelegate {
         }
     }
     
-    func triggerPanGestureForGestureManager(_ mgr: RongYaoTeamPlayerPresentViewGestureManager,
+    func triggerPanGestureForGestureManager(_ mgr: RongYaoTeamGestureManager,
                                             state: RongYaoTeamPlayerViewPanGestureState,
                                             movingDirection: RongYaoTeamPlayerViewPanGestureMovingDirection,
                                             location: RongYaoTeamPlayerViewPanGestureLocation,
