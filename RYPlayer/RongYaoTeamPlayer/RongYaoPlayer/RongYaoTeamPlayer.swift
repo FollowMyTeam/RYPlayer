@@ -356,6 +356,10 @@ public class RongYaoTeamPlayer {
     }
     
     private func needPlayNewAsset() {
+        assetProperties = nil
+        if case RongYaoTeamPlayerPlayStatus.unknown = state {}
+        else { state = .unknown }
+        
         // 2. prepare
         // - 初始化AVPlayer
         // - 初始化完成后, 创建记录员
@@ -425,6 +429,7 @@ public class RongYaoTeamPlayer {
     /// -----------------------------------------------------------------------
 
     fileprivate func currentTimeDidChange() {
+        // 正在播放
         if case RongYaoTeamPlayerPlayStatus.playing = state {
             valueDidChangeForKey(.currentTime)
         }

@@ -128,6 +128,13 @@ extension RYViewController: RongYaoTeamPlayerViewGestureManagerDelegate {
         #if DEBUG
         print("\(#function) - \(#line) - RongYaoTeamPlayer")
         #endif
+        guard let `player` = player else { return }
+        if ( player.view.avVideoGravity == .resizeAspect ) {
+            player.view.avVideoGravity = .resizeAspectFill
+        }
+        else {
+            player.view.avVideoGravity = .resizeAspect
+        }
     }
     
     func triggerPanGestureForGestureManager(_ mgr: RongYaoTeamPlayerViewGestureManager, state: RongYaoTeamPlayerViewPanGestureState, movingDirection: RongYaoTeamPlayerViewPanGestureMovingDirection, location: RongYaoTeamPlayerViewPanGestureLocation, translate: CGPoint) {

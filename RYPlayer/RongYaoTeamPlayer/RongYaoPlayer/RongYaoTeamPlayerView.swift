@@ -47,7 +47,7 @@ public class RongYaoTeamPlayerView: UIView {
         rotationManager = RongYaoTeamPlayerViewRotationManager.init(target: self.presentView, superview: self)
         rotationManager.reviser = self
         presentView.backgroundColor = UIColor.black
-        gestureManager = RongYaoTeamPlayerViewGestureManager.init(container: self)
+        gestureManager = RongYaoTeamPlayerViewGestureManager.init(target: self.presentView)
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -427,9 +427,9 @@ fileprivate class RongYaoTeamPlayerPresentView: UIView {
 /// - 代理
 public class RongYaoTeamPlayerViewGestureManager: NSObject {
     
-    public init(container: UIView) {
+    public init(target: UIView) {
         super.init()
-        self.container = container
+        self.target = target
         initializeGestures()
     }
     
@@ -440,7 +440,7 @@ public class RongYaoTeamPlayerViewGestureManager: NSObject {
     public var supportedGestureTypes: RongYaoTeamPlayerViewSupportedGestureTypes = .all
     
     
-    fileprivate weak var container: UIView!
+    fileprivate weak var target: UIView!
     
     private var singleTapGesture: UITapGestureRecognizer!
     private var doubleTapGesture: UITapGestureRecognizer!
@@ -520,10 +520,10 @@ public class RongYaoTeamPlayerViewGestureManager: NSObject {
         singleTapGesture.require(toFail: doubleTapGesture)
         doubleTapGesture.require(toFail: panGesture)
         
-        container.addGestureRecognizer(singleTapGesture)
-        container.addGestureRecognizer(doubleTapGesture)
-        container.addGestureRecognizer(panGesture)
-        container.addGestureRecognizer(pinchGesture)
+        target.addGestureRecognizer(singleTapGesture)
+        target.addGestureRecognizer(doubleTapGesture)
+        target.addGestureRecognizer(panGesture)
+        target.addGestureRecognizer(pinchGesture)
     }
     
     private func configGesture(_ gesture: UIGestureRecognizer) {
@@ -679,7 +679,12 @@ extension RongYaoTeamPlayerViewGestureManager: UIGestureRecognizerDelegate {
         
         if ( isSupportedGesture(gestureRecognizer) == false ) { return false }
         
-        if ( panGesture.state == .changed ) { return false }
+        // pan 手势如果触发, 其他手势暂时不触发
+        switch panGesture.state {
+        case .began, .changed, .ended:
+            return false
+        default: break
+        }
         
         // 如果没有代理, default触发任何默认手势
         guard let `delegate` = self.delegate else { return true }
@@ -704,7 +709,7 @@ extension RongYaoTeamPlayerViewGestureManager: UIGestureRecognizerDelegate {
     }
     
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        if ( self.container.gestureRecognizers?.contains(otherGestureRecognizer) == false ) { return false }
+        if ( self.target.gestureRecognizers?.contains(otherGestureRecognizer) == false ) { return false }
         if ( gestureRecognizer.numberOfTouches >= 2 ) { return false }
         return true
     }
