@@ -9,11 +9,14 @@
 import UIKit
 import AVFoundation
 
-/// 播放器资源
+// MARK: - 播放资源
+
+/// RongYaoTeamPlayerAsset - 播放器资源
 /// 使用两个参数进行初始化分别如下:
 /// - URL
 /// - 播放的开始时间
 public class RongYaoTeamPlayerAsset {
+    
     deinit {
         #if DEBUG
         print("\(#function) - \(#line) - RongYaoTeamPlayerAsset")

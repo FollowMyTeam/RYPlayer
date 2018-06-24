@@ -13,11 +13,40 @@ import AVFoundation
 
 /// RongYaoTeamPlayerView - 播放器视图
 /// - 呈现
+/// - 旋转
 public class RongYaoTeamPlayerView: UIView {
-
+    
     deinit {
         #if DEBUG
-        print("\(#function) - \(#line) - \(NSStringFromClass(self.classForCoder))")
+        print("\(#function) - \(#line) - RongYaoTeamPlayerView")
+        #endif
+    }
+    
+    /// 呈现
+    public var presentView: RongYaoTeamPlayerPresentView!
+    
+    /// 旋转
+    public var rotationManager: RongYaoTeamRotationManager!
+    
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        presentView = RongYaoTeamPlayerPresentView.init(frame: .zero)
+        presentView.backgroundColor = .black
+        presentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        addSubview(presentView)
+        rotationManager = RongYaoTeamRotationManager.init(target: presentView, superview: self)
+    } 
+    
+    public required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+public class RongYaoTeamPlayerPresentView: UIView {
+    
+    deinit {
+        #if DEBUG
+        print("\(#function) - \(#line) - RongYaoTeamPlayerView")
         #endif
     }
     

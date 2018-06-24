@@ -17,15 +17,19 @@ import ImageIO
 /// - 导出片段视频
 /// - 导出片段GIF
 public class RongYaoTeamPlayerExport {
-    public init(_ asset: AVAsset, _ player: AVPlayer) {
-        self.asset = asset
-        self.player = player
-    }
     
     deinit {
+        #if DEBUG
+        print("\(#function) - \(#line) - RongYaoTeamPlayerExport")
+        #endif
         screenshotGenerator?.cancelAllCGImageGeneration()
         exportSession?.cancelExport()
         exportProgressRefreshTimer?.invalidate()
+    }
+    
+    public init(_ asset: AVAsset, _ player: AVPlayer) {
+        self.asset = asset
+        self.player = player
     }
     
 // MARK: private

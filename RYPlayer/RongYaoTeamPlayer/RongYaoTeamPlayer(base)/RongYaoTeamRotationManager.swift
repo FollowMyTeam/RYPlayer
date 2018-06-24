@@ -17,7 +17,7 @@ import UIKit
 /// - 是否禁止自动旋转
 /// - 代理
 public class RongYaoTeamRotationManager {
-    
+
     deinit {
         #if DEBUG
         print("\(#function) - \(#line) - RongYaoTeamRotationManager")
@@ -115,6 +115,8 @@ public class RongYaoTeamRotationManager {
         }
     }
     
+    private var con_portraitRect: CGRect = .zero
+    
     /// 旋转视图
     public fileprivate(set) weak var target: UIView!
     
@@ -128,10 +130,7 @@ public class RongYaoTeamRotationManager {
     
     /// - Any value of `RongYaoTeamViewOrientation`
     private var orientation: RongYaoTeamViewOrientation = .portrait
-    
-    /// 转换过的坐标
-    private var con_portraitRect: CGRect = .zero
-    
+
     /// 全屏时的背景视图
     private var blackView: UIView = {
         let blackView = UIView.init()
@@ -141,69 +140,74 @@ public class RongYaoTeamRotationManager {
     
     /// 旋转到指定方向
     public func rotate(_ orientation: RongYaoTeamViewOrientation, animated: Bool, completionHandler: @escaping (RongYaoTeamRotationManager)->() = {(_) in } ) {
-        let ori_old = self.orientation
-        let ori_new = orientation
-        
-        if ( ori_new == ori_old ) { completionHandler(self); return }
-        guard let `window` = UIApplication.shared.keyWindow else { return }
-        guard let `superview` = superview else { return }
-        
-        var transform = CGAffineTransform.identity
-        var statusBarOrientation = UIInterfaceOrientation.unknown
-        
-        switch orientation {
-        case .portrait:
-            statusBarOrientation = .portrait
-            if ( blackView.superview != nil ) { blackView.removeFromSuperview() }
-        case .landscapeLeft:
-            statusBarOrientation = .landscapeRight
-            transform = CGAffineTransform.init(rotationAngle: CGFloat(Double.pi/2))
-        case .landscapeRight:
-            statusBarOrientation = .landscapeLeft
-            transform = CGAffineTransform.init(rotationAngle: CGFloat(-Double.pi/2))
-        }
-        
-        if ( ori_old == .portrait ) {
-            target.translatesAutoresizingMaskIntoConstraints = true
-            let frame = window.convert(target.frame, from: superview)
-            target.frame = frame
-            window.addSubview(target)
-            con_portraitRect = frame
-        }
-        
-        // update
-        self.orientation = ori_new
-        
-        self.delegate?.rotationManager( self, willRotateView:self.isFullscreen)
-        UIApplication.shared.statusBarOrientation = statusBarOrientation
-        UIView.animate(withDuration: animated ? duration : 0, animations: {
-            if ( ori_new == .portrait ) {
-                self.target.bounds = CGRect.init(origin: .zero, size: self.con_portraitRect.size)
-                self.target.center = CGPoint.init(x: self.con_portraitRect.origin.x + self.con_portraitRect.size.width * 0.5, y: self.con_portraitRect.origin.y + self.con_portraitRect.size.height * 0.5)
+        DispatchQueue.main.async { [weak self] in
+            guard let `self` = self else { return }
+            guard let `window` = UIApplication.shared.keyWindow else { return }
+            guard let `superview` = self.superview else { return }
+            guard let `target` = self.target else { return }
+            
+            let ori_old = self.orientation
+            let ori_new = orientation
+            
+            if ( ori_new == ori_old ) { completionHandler(self); return }
+            
+            var transform = CGAffineTransform.identity
+            var statusBarOrientation = UIInterfaceOrientation.unknown
+            
+            switch orientation {
+            case .portrait:
+                statusBarOrientation = .portrait
+                if ( self.blackView.superview != nil ) { self.blackView.removeFromSuperview() }
+            case .landscapeLeft:
+                statusBarOrientation = .landscapeRight
+                transform = CGAffineTransform.init(rotationAngle: CGFloat(Double.pi/2))
+            case .landscapeRight:
+                statusBarOrientation = .landscapeLeft
+                transform = CGAffineTransform.init(rotationAngle: CGFloat(-Double.pi/2))
             }
-            else {
-                let width = UIScreen.main.bounds.size.width
-                let height = UIScreen.main.bounds.size.height
-                let _max = max(width, height)
-                let _min = min(width, height)
-                self.target.bounds = CGRect.init(x: 0, y: 0, width: width, height: height)
-                self.target.center = CGPoint.init(x: _min * 0.5, y: _max * 0.5)
+            
+            if ( ori_old == .portrait ) {
+                target.translatesAutoresizingMaskIntoConstraints = true
+                let frame = window.convert(target.frame, from: superview)
+                target.frame = frame
+                window.addSubview(target)
+                self.con_portraitRect = frame
             }
-            self.target.transform = transform
-            self.target.layoutIfNeeded()
-        }) { (_) in
-            if ( self.orientation == .portrait ) {
-                superview.addSubview(self.target)
-                self.target.frame = superview.bounds
+            
+            // update
+            self.orientation = ori_new
+            
+            self.delegate?.rotationManager( self, willRotateView:self.isFullscreen)
+            UIApplication.shared.statusBarOrientation = statusBarOrientation
+            UIView.animate(withDuration: animated ? self.duration : 0, animations: {
+                if ( ori_new == .portrait ) {
+                    target.bounds = CGRect.init(origin: .zero, size: self.con_portraitRect.size)
+                    target.center = CGPoint.init(x: self.con_portraitRect.origin.x + self.con_portraitRect.size.width * 0.5, y: self.con_portraitRect.origin.y + self.con_portraitRect.size.height * 0.5)
+                }
+                else {
+                    let width = UIScreen.main.bounds.size.width
+                    let height = UIScreen.main.bounds.size.height
+                    let _max = max(width, height)
+                    let _min = min(width, height)
+                    target.bounds = CGRect.init(x: 0, y: 0, width: width, height: height)
+                    target.center = CGPoint.init(x: _min * 0.5, y: _max * 0.5)
+                }
+                target.transform = transform
+                target.layoutIfNeeded()
+            }) { (_) in
+                if ( self.orientation == .portrait ) {
+                    superview.addSubview(self.target)
+                    target.frame = superview.bounds
+                }
+                else {
+                    self.blackView.bounds = target.bounds
+                    self.blackView.center = target.center
+                    self.blackView.transform = target.transform
+                    UIApplication.shared.keyWindow?.insertSubview(self.blackView, belowSubview: target)
+                }
+                self.delegate?.rotationManager( self, didRotateView:self.isFullscreen)
+                completionHandler(self)
             }
-            else {
-                self.blackView.bounds = self.target.bounds
-                self.blackView.center = self.target.center
-                self.blackView.transform = self.target.transform
-                UIApplication.shared.keyWindow?.insertSubview(self.blackView, belowSubview: self.target)
-            }
-            self.delegate?.rotationManager( self, didRotateView:self.isFullscreen)
-            completionHandler(self)
         }
     }
     

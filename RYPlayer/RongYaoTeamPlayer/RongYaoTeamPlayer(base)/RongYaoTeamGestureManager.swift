@@ -14,7 +14,13 @@ import UIKit
 /// - 设置支持的手势类型
 /// - 代理
 public class RongYaoTeamGestureManager: NSObject {
-
+    
+    deinit {
+        #if DEBUG
+        print("\(#function) - \(#line) - RongYaoTeamGestureManager")
+        #endif
+    }
+    
     public init(target: UIView) {
         super.init()
         self.target = target
@@ -48,10 +54,10 @@ public class RongYaoTeamGestureManager: NSObject {
     /// 是否支持某个手势
     fileprivate func isSupportedGesture(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if gestureRecognizer == singleTapGesture {
-            return isSupporedSingleTap()
+            return isSupporedSingleTapGesture()
         }
         else if gestureRecognizer == doubleTapGesture {
-            return isSupportedDoubleTag()
+            return isSupportedDoubleTapGesture()
         }
         else if gestureRecognizer == panGesture {
             return isSupportedPanGesture()
@@ -76,7 +82,7 @@ extension RongYaoTeamGestureManager {
     }
     
     /// 单击手势是否支持
-    fileprivate func isSupporedSingleTap() -> Bool {
+    fileprivate func isSupporedSingleTapGesture() -> Bool {
         return RongYaoTeamPlayerViewSupportedGestureTypes.singleTap.rawValue == (supportedGestureTypes.rawValue & RongYaoTeamPlayerViewSupportedGestureTypes.singleTap.rawValue)
     }
 }
@@ -94,7 +100,7 @@ extension RongYaoTeamGestureManager {
     }
 
     /// 双击手势是否支持
-    fileprivate func isSupportedDoubleTag() -> Bool {
+    fileprivate func isSupportedDoubleTapGesture() -> Bool {
         return RongYaoTeamPlayerViewSupportedGestureTypes.doubleTap.rawValue == (supportedGestureTypes.rawValue & RongYaoTeamPlayerViewSupportedGestureTypes.doubleTap.rawValue)
     }
 }

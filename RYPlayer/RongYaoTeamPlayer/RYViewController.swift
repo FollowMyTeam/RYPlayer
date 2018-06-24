@@ -26,8 +26,6 @@ class RYViewController: UIViewController {
     var slider: SJSlider?
     
     var gestureManager: RongYaoTeamGestureManager!
-
-    var rotationManager: RongYaoTeamRotationManager!
     
     var edgeControlLayer: RongYaoTeamPlayerEdgeControlLayer!
     
@@ -46,6 +44,7 @@ class RYViewController: UIViewController {
 //        let videoURL = Bundle.main.url(forResource: "sample", withExtension: "mp4")!
         player = RongYaoTeamPlayer.init()
         player?.delegate = self
+        player?.view.rotationManager.delegate = self
         
         self.edgesForExtendedLayout = UIRectEdge.init(rawValue: 0)
         
@@ -54,17 +53,14 @@ class RYViewController: UIViewController {
             make.edges.equalTo(player!.view.superview!)
         }
         
-        gestureManager = RongYaoTeamGestureManager.init(target: player!.view)
+        gestureManager = RongYaoTeamGestureManager.init(target: player!.view.presentView)
         gestureManager.delegate = self
         
         edgeControlLayer = RongYaoTeamPlayerEdgeControlLayer.init(frame: .zero)
-        player?.view.addSubview(edgeControlLayer)
+        player?.view.presentView.addSubview(edgeControlLayer)
         edgeControlLayer.snp.makeConstraints { (make) in
             make.edges.equalTo(edgeControlLayer.superview!)
         }
-        
-        rotationManager = RongYaoTeamRotationManager.init(target: player!.view, superview: player!.view.superview!)
-        rotationManager.delegate = self
         
         slider = SJSlider.init()
         slider?.delegate = self
@@ -149,7 +145,7 @@ extension RYViewController: RongYaoTeamGestureManagerDelegate {
         #endif
         guard let `player` = player else { return }
         
-        if case RongYaoTeamPlayerPlayStatus.paused(reason: .pause) = player.state {
+        if case RongYaoTeamPlayerPlayStatus.paused(reason: .pause) = player.status {
             player.play()
         }
         else {
@@ -163,11 +159,11 @@ extension RYViewController: RongYaoTeamGestureManagerDelegate {
         #endif
         guard let `player` = player else { return }
         
-        if ( player.view.avVideoGravity == .resizeAspect ) {
-            player.view.avVideoGravity = .resizeAspectFill
+        if ( player.view.presentView.avVideoGravity == .resizeAspect ) {
+            player.view.presentView.avVideoGravity = .resizeAspectFill
         }
         else {
-            player.view.avVideoGravity = .resizeAspect
+            player.view.presentView.avVideoGravity = .resizeAspect
         }
     }
     

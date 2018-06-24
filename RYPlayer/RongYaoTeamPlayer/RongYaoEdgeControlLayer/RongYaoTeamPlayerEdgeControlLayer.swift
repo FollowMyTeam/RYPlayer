@@ -25,48 +25,67 @@ public class RongYaoTeamPlayerEdgeControlLayer: UIView {
     
     private func setupViews() {
         contentView = UIView.init()
-        topView = RongYaoTeamPlayerEdgeControlLayerTopView(frame: .zero)
-        leftView = RongYaoTeamPlayerEdgeControlLayerLeftView(frame: .zero)
-        bottomView = RongYaoTeamPlayerEdgeControlLayerBottomView(frame: .zero)
-        rightView = RongYaoTeamPlayerEdgeControlLayerRightView(frame: .zero)
-        
         self.addSubview(contentView)
-        contentView.addSubview(topView)
-        contentView.addSubview(leftView)
-        contentView.addSubview(bottomView)
-        contentView.addSubview(rightView)
+        addTopView(contentView)
+        addLeftView(contentView)
+        addBottomView(contentView)
+        addRightView(contentView)
+
+        contentView.snp.makeConstraints { (make) in
+            make.edges.equalTo(self)
+        }
         
         topView.backgroundColor = .green
         leftView.backgroundColor = .green
         bottomView.backgroundColor = .green
         rightView.backgroundColor = .green
-        
-        contentView.snp.makeConstraints { (make) in
-            make.edges.equalTo(self)
-        }
-        
-        topView.snp.makeConstraints { (make) in
-            make.top.leading.trailing.equalTo(topView.superview!)
-            make.height.equalTo(60)
-        }
-        
-        leftView.snp.makeConstraints { (make) in
-            make.size.equalTo(60)
-            make.leading.centerY.equalTo(leftView.superview!)
-        }
-        
-        bottomView.snp.makeConstraints { (make) in
-            make.leading.bottom.trailing.equalTo(bottomView.superview!)
-            make.height.equalTo(60)
-        }
-        
-        rightView.snp.makeConstraints { (make) in
-            make.size.equalTo(60)
-            make.trailing.centerY.equalTo(rightView.superview!)
-        }
     }
     
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension RongYaoTeamPlayerEdgeControlLayer {
+    fileprivate func addTopView(_ superview: UIView) {
+        topView = RongYaoTeamPlayerEdgeControlLayerTopView(frame: .zero)
+        superview.addSubview(topView)
+        topView.snp.makeConstraints { (make) in
+            make.top.leading.trailing.equalTo(topView.superview!)
+            make.height.equalTo(60)
+        }
+    }
+}
+
+extension RongYaoTeamPlayerEdgeControlLayer {
+    fileprivate func addLeftView(_ superview: UIView) {
+        leftView = RongYaoTeamPlayerEdgeControlLayerLeftView(frame: .zero)
+        superview.addSubview(leftView)
+        leftView.snp.makeConstraints { (make) in
+            make.size.equalTo(60)
+            make.leading.centerY.equalTo(leftView.superview!)
+        }
+    }
+}
+
+extension RongYaoTeamPlayerEdgeControlLayer {
+    fileprivate func addBottomView(_ superview: UIView) {
+        bottomView = RongYaoTeamPlayerEdgeControlLayerBottomView(frame: .zero)
+        superview.addSubview(bottomView)
+        bottomView.snp.makeConstraints { (make) in
+            make.leading.bottom.trailing.equalTo(bottomView.superview!)
+            make.height.equalTo(60)
+        }
+    }
+}
+
+extension RongYaoTeamPlayerEdgeControlLayer {
+    fileprivate func addRightView(_ superview: UIView) {
+        rightView = RongYaoTeamPlayerEdgeControlLayerRightView(frame: .zero)
+        superview.addSubview(rightView)
+        rightView.snp.makeConstraints { (make) in
+            make.size.equalTo(60)
+            make.trailing.centerY.equalTo(rightView.superview!)
+        }
     }
 }
