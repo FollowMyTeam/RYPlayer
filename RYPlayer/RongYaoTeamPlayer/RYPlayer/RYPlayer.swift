@@ -14,6 +14,8 @@ public class RYPlayer {
     
     public var controlLayerDelegate: Any!
     
-    private var view: UIView!
+    private var view: UIView { return player.view }
+    
+    private var player: RongYaoTeamPlayer!
 }
 

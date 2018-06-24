@@ -16,6 +16,9 @@ import UIKit
 /// - 手动旋转到指定方向
 /// - 是否禁止自动旋转
 /// - 代理
+///
+/// 注意:
+/// - 当全屏时, 旋转管理类将会把目标(target)视图添加到window中
 public class RongYaoTeamRotationManager {
 
     deinit {

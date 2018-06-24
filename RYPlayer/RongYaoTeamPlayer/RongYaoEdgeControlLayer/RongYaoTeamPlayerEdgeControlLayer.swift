@@ -26,15 +26,16 @@ public class RongYaoTeamPlayerEdgeControlLayer: UIView {
     private func setupViews() {
         contentView = UIView.init()
         self.addSubview(contentView)
+        contentView.snp.makeConstraints { (make) in
+            make.edges.equalTo(self)
+        }
+        
         addTopView(contentView)
         addLeftView(contentView)
         addBottomView(contentView)
         addRightView(contentView)
 
-        contentView.snp.makeConstraints { (make) in
-            make.edges.equalTo(self)
-        }
-        
+        /// test
         topView.backgroundColor = .green
         leftView.backgroundColor = .green
         bottomView.backgroundColor = .green

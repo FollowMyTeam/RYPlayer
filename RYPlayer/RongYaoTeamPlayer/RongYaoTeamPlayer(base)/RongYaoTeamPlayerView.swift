@@ -20,6 +20,7 @@ public class RongYaoTeamPlayerView: UIView {
         #if DEBUG
         print("\(#function) - \(#line) - RongYaoTeamPlayerView")
         #endif
+        presentView.removeFromSuperview()
     }
     
     /// 呈现

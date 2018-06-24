@@ -22,17 +22,18 @@ public class RongYaoTeamPlayer {
     
     public init() {
         registrar.delegate = self
+        view = RongYaoTeamPlayerView.init(frame: .zero)
+        view.backgroundColor = .black
     }
     
     /// 播放资源
     /// - 使用URL进行初始化
-    public var asset: RongYaoTeamPlayerAsset? { didSet { assetDidChange() } }
+    public var asset: RongYaoTeamPlayerAsset? { didSet{ assetDidChange() } }
     
-    public private(set) var view: RongYaoTeamPlayerView = {
-        let view = RongYaoTeamPlayerView.init(frame: .zero)
-        view.backgroundColor = .black
-        return view
-    }()
+    /// 播放器视图
+    /// - 呈现
+    /// - 旋转
+    public private(set) var view: RongYaoTeamPlayerView!
     
     /// 资源的一些属性
     /// - 如: 视频时长
@@ -56,12 +57,14 @@ public class RongYaoTeamPlayer {
     /// 速率, default is 1.0
     public var rate: Float {
         set{
-            var _new = newValue
-            if ( newValue < 0.1 ) { _new = 0.1 }
+            var _new = newValue; if ( _new < 0.1 ) { _new = 0.1 }
+            
             if ( _rate == _new ) { return }
            
             _rate = _new
+            
             if ( self.asset?.avPlayer == nil ) { return }
+            
             if case RongYaoTeamPlayerPlayStatus.playing = status {
                 self.asset?.avPlayer?.rate = _rate
             }
@@ -89,7 +92,7 @@ public class RongYaoTeamPlayer {
     
     
     /// 资源初始化期间, 开发者进行的操作
-    /// - 将在初始化完成时调用, 并置为nil
+    /// - 此属性如果有值, 将在资源初始化完成时调用, 调用完成后会置为nil
     private var operationOfInitializing: (()->())?
     
     /// 使播放
@@ -163,9 +166,9 @@ public class RongYaoTeamPlayer {
     }
     
     /// 使停止
-    /// - 清除相关资源
-    /// - 由于相关资源已清除, 所以需重新创建资源进行播放
     /// - 将会把`state`置为`unknown`
+    /// - 清除相关资源
+    /// - 由于相关资源已清除, 所以需开发者重新创建资源进行播放
     public func stop() {
         operationOfInitializing = nil
         if ( asset?.isOtherAsset == false ) { self.view.presentView.setAVPlayer(nil) }
@@ -189,7 +192,7 @@ public class RongYaoTeamPlayer {
             return
         }
         
-        seekToTime(0) { (player, _) in }
+        seekToTime(0)
     }
     
     /// 跳转到指定时间
@@ -197,7 +200,7 @@ public class RongYaoTeamPlayer {
     /// - Parameters:
     ///   - time:              将要跳转的时间
     ///   - completionHandler: 操作完成/失败 后的回调
-    public func seekToTime(_ time: TimeInterval, completionHandler: @escaping (_ player: RongYaoTeamPlayer, _ finished: Bool)->Void) {
+    public func seekToTime(_ time: TimeInterval, completionHandler: @escaping ((_ player: RongYaoTeamPlayer, _ finished: Bool)->Void) = {(_, _) in } ) {
         switch status {
         case .unknown, .inactivity(reason: .playFailed):
             completionHandler(self, false)
@@ -507,39 +510,34 @@ public class RongYaoTeamPlayerAssetProperties {
         removeObserverOfPlayerItem(asset.playerItem, observerContainer: &playerItemObservers)
     }
     
+    /// error
+    public private(set) var error: Error?
+    
     /// 播放时长
-    public private(set) var duration: TimeInterval = 0 { didSet{ self.delegate!.properties(self, durationDidChange: self.duration) } }
+    public private(set) var duration: TimeInterval = 0 { didSet{ self.delegate.properties(self, durationDidChange: self.duration) } }
     
     /// 当前时间
-    public private(set) var currentTime: TimeInterval = 0 { didSet{ self.delegate!.properties(self, currentTimeDidChange: self.currentTime) } }
+    public private(set) var currentTime: TimeInterval = 0 { didSet{ self.delegate.properties(self, currentTimeDidChange: self.currentTime) } }
     
     /// 已缓冲到的时间
-    public private(set) var bufferLoadedTime: TimeInterval = 0 { didSet{ self.delegate!.properties(self, bufferLoadedTimeDidChange: bufferLoadedTime) } }
+    public private(set) var bufferLoadedTime: TimeInterval = 0 { didSet{ self.delegate.properties(self, bufferLoadedTimeDidChange: bufferLoadedTime) } }
     
     /// 缓冲状态
-    public private(set) var bufferStatus: RongYaoTeamPlayerBufferStatus = .unknown { didSet{ self.delegate!.properties(self, bufferStatusDidChange: bufferStatus) } }
+    public private(set) var bufferStatus: RongYaoTeamPlayerBufferStatus = .unknown { didSet{ self.delegate.properties(self, bufferStatusDidChange: bufferStatus) } }
 
     /// 视频宽高
     /// - 资源初始化未完成之前, 该值为 .zero
-    public private(set) var presentationSize: CGSize = CGSize.zero { didSet{ self.delegate!.properties(self, presentationSizeDidChange: presentationSize) } }
+    public private(set) var presentationSize: CGSize = CGSize.zero { didSet{ self.delegate.properties(self, presentationSizeDidChange: presentationSize) } }
     
     
     
     
     
     
-    
-    
-    
-    /// -----------------------------------------------------------------------
-    /// 分割线 分割线 分割线 分割线 分割线 分割线 分割线 分割线 分割线 分割线 分割线 分割线
-    /// -----------------------------------------------------------------------
-    /// 不好看 不好看 不好看 不好看 不好看 不好看 不好看 不好看 不好看 不好看 不好看 不好看
-    /// -----------------------------------------------------------------------
-    private weak var delegate: (AnyObject & RongYaoTeamPlayerAssetPropertiesDelegate)?
+    private weak var delegate: (AnyObject & RongYaoTeamPlayerAssetPropertiesDelegate)!
     
     /// 当前 player item 的状态
-    fileprivate var playerItemStatus: AVPlayerItemStatus = .unknown { didSet{ self.delegate!.properties(self, playerItemStatusDidChange: playerItemStatus) } }
+    fileprivate var playerItemStatus: AVPlayerItemStatus = .unknown { didSet{ self.delegate.properties(self, playerItemStatusDidChange: playerItemStatus) } }
 
     fileprivate init(_ asset: RongYaoTeamPlayerAsset, delegate: AnyObject & RongYaoTeamPlayerAssetPropertiesDelegate) {
         self.asset = asset
@@ -597,6 +595,8 @@ public class RongYaoTeamPlayerAssetProperties {
             else {            
                 self.playerItemStatus = playerItem.status
             }
+            
+            if ( playerItem.status == .failed ) { self.error = playerItem.error }
         }))
         
         observerCotainer.append(RYObserver.init(owner: playerItem, observeKey: "playbackBufferEmpty", exeBlock: { [weak self] (helper) in
@@ -623,7 +623,7 @@ public class RongYaoTeamPlayerAssetProperties {
                 return
             }
             
-            self.delegate!.playerItemDidPlayToEnd(self)
+            self.delegate.playerItemDidPlayToEnd(self)
         }))
     }
     
