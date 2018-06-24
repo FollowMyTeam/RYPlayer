@@ -19,16 +19,29 @@ class RYViewController: UIViewController {
         #endif
     }
     
+    var playerBackgroundView: UIView!
+    
     var player: RongYaoTeamPlayer?
     
     var slider: SJSlider?
     
     var gestureManager: RongYaoTeamPlayerPresentViewGestureManager!
 
+    var rotationManager: RongYaoTeamRotationManager!
+    
     var edgeControlLayer: RongYaoTeamPlayerEdgeControlLayer!
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        playerBackgroundView = UIView.init(frame: .zero)
+        view.addSubview(playerBackgroundView)
+        playerBackgroundView.snp.makeConstraints { (make) in
+            make.top.leading.trailing.equalTo(self.view)
+            make.height.equalTo(playerBackgroundView.snp.width).multipliedBy(9/16.0)
+        }
 
 //        let videoURL = Bundle.main.url(forResource: "sample", withExtension: "mp4")!
         player = RongYaoTeamPlayer.init()
@@ -36,23 +49,22 @@ class RYViewController: UIViewController {
         
         self.edgesForExtendedLayout = UIRectEdge.init(rawValue: 0)
         
-        self.view.addSubview(player!.view)
+        playerBackgroundView.addSubview(player!.view)
         player!.view.snp.makeConstraints { (make) in
-            make.top.leading.trailing.equalTo(self.view)
-            make.height.equalTo(player!.view.snp.width).multipliedBy(9/16.0)
+            make.edges.equalTo(player!.view.superview!)
         }
         
-        player?.view.rotationManager.delegate = self
-        
-        gestureManager = RongYaoTeamPlayerPresentViewGestureManager.init(target: player!.view.presentView)
+        gestureManager = RongYaoTeamPlayerPresentViewGestureManager.init(target: player!.view)
         gestureManager.delegate = self
         
         edgeControlLayer = RongYaoTeamPlayerEdgeControlLayer.init(frame: .zero)
-        player?.view.presentView.addSubview(edgeControlLayer)
+        player?.view.addSubview(edgeControlLayer)
         edgeControlLayer.snp.makeConstraints { (make) in
             make.edges.equalTo(edgeControlLayer.superview!)
         }
         
+        rotationManager = RongYaoTeamRotationManager.init(target: player!.view, superview: player!.view.superview!)
+        rotationManager.delegate = self
         
         slider = SJSlider.init()
         slider?.delegate = self
@@ -61,7 +73,7 @@ class RYViewController: UIViewController {
         slider?.backgroundColor = UIColor.purple
         self.view.addSubview(slider!)
         slider?.snp.makeConstraints({ (make) in
-            make.top.equalTo(player!.view.snp.bottom).offset(20)
+            make.top.equalTo(playerBackgroundView.snp.bottom).offset(20)
             make.leading.equalTo(self.view).offset(12)
             make.trailing.equalTo(self.view).offset(-12)
             make.height.equalTo(40)
@@ -109,12 +121,13 @@ class RYViewController: UIViewController {
     }
 }
 
-extension RYViewController: RongYaoTeamPlayerViewRotationManagerDelegate {
-    func rotationManager(_ mgr: RongYaoTeamPlayerViewRotationManager, willRotateView isFullscreen: Bool) {
-        
+extension RYViewController: RongYaoTeamRotationManagerDelegate {
+
+    func rotationManager(_ mgr: RongYaoTeamRotationManager, willRotateView isFullscreen: Bool) {
+
     }
     
-    func rotationManager(_ mgr: RongYaoTeamPlayerViewRotationManager, didRotateView isFullscreen: Bool) {
+    func rotationManager(_ mgr: RongYaoTeamRotationManager, didRotateView isFullscreen: Bool) {
         print("orientation: \(mgr.currentOrientation)")
     }
 }
