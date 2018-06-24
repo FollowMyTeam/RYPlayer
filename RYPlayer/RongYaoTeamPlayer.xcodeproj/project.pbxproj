@@ -112,7 +112,7 @@
 				773DD2C520D6676D008113CD /* RYNavigationController.swift */,
 				7790D1A720CADC6F00F7CAF5 /* RYViewController.swift */,
 				A6089F0120DF46AE00DA5E9B /* EdgeControlLayer */,
-				7790D19B20CABA4300F7CAF5 /* RongYaoPlayer */,
+				7790D19B20CABA4300F7CAF5 /* RongYaoTeamPlayer(base) */,
 				7790D18D20CABA2C00F7CAF5 /* Main.storyboard */,
 				7790D19020CABA2D00F7CAF5 /* Assets.xcassets */,
 				7790D19220CABA2D00F7CAF5 /* LaunchScreen.storyboard */,
@@ -122,7 +122,7 @@
 			path = RongYaoTeamPlayer;
 			sourceTree = "<group>";
 		};
-		7790D19B20CABA4300F7CAF5 /* RongYaoPlayer */ = {
+		7790D19B20CABA4300F7CAF5 /* RongYaoTeamPlayer(base) */ = {
 			isa = PBXGroup;
 			children = (
 				771C27A620CBE1D900C17E34 /* RongYaoTeamPlayer.swift */,
@@ -131,7 +131,7 @@
 				77B8815520D906070054DDE2 /* RongYaoTeamPlayerExport.swift */,
 				7790D1A920CBB22900F7CAF5 /* RYObserver.swift */,
 			);
-			path = RongYaoPlayer;
+			path = "RongYaoTeamPlayer(base)";
 			sourceTree = "<group>";
 		};
 		7790D1A020CABA7200F7CAF5 /* Frameworks */ = {

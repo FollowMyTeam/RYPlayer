@@ -9,75 +9,6 @@
 import UIKit
 import AVFoundation
 
-/// 播放器的代理
-public protocol RongYaoTeamPlayerDelegate: NSObjectProtocol {
-    /// 相应的属性, 当值改变时的回调
-    ///
-    /// - Parameters:
-    ///   - player: 播放器
-    ///   - valueDidChangeForKey: 相应的属性
-    /// - Returns: Void
-    func player(_ player: RongYaoTeamPlayer, valueDidChangeForKey key: RongYaoTeamPlayerPropertyKey)
-}
-/// 播放器当前的状态
-///
-/// - unknown:      未播放任何资源时的状态
-/// - readyToPlay:  资源准备就绪
-/// - playing:      播放中
-/// - paused:       暂停状态
-/// - inactivity:   不活跃状态
-public enum RongYaoTeamPlayerPlayStatus {
-    case unknown
-    case readyToPlay
-    case playing
-    case paused(reason: RongYaoTeamPlayerPausedReason)
-    case inactivity(reason: RongYaoTeamPlayerInactivityReason)
-}
-/// 播放暂停的理由
-///
-/// - buffering: 正在缓冲
-/// - pause:     被暂停
-/// - seeking:   正在跳转(调用seekToTime:时)
-public enum RongYaoTeamPlayerPausedReason {
-    case buffering
-    case pause
-    case seeking
-}
-/// 播放不活跃的原因
-///
-/// - playEnd:    播放完毕
-/// - playFailed: 播放失败
-public enum RongYaoTeamPlayerInactivityReason {
-    case playEnd
-    case playFailed
-}
-/// 缓冲的状态
-///
-/// - unknown: 未知, 可能还未播放
-/// - empty:   缓冲区为空
-/// - full:    缓冲区已满
-public enum RongYaoTeamPlayerBufferStatus {
-    case unknown
-    case empty
-    case full
-}
-/// 播放器的属性key
-///
-/// - state:             同 player.assetProperties.state
-/// - duration:          同 player.assetProperties.duration
-/// - currentTime:       同 player.assetProperties.currentTime
-/// - bufferLoadedTime:  同 player.assetProperties.bufferLoadedTime
-/// - bufferStatus:      同 player.assetProperties.bufferStatus
-/// - presentationSize:  同 player.assetProperties.presentationSize
-public enum RongYaoTeamPlayerPropertyKey {
-    case state
-    case duration
-    case currentTime
-    case bufferLoadedTime
-    case bufferStatus
-    case presentationSize
-}
-
 public class RongYaoTeamPlayer {
     deinit {
         #if DEBUG
@@ -89,7 +20,7 @@ public class RongYaoTeamPlayer {
     public init() {
         registrar.delegate = self
     }
-
+    
     /// 播放资源
     /// - 使用URL进行初始化
     public var asset: RongYaoTeamPlayerAsset? { didSet { assetDidChange() } }
@@ -125,17 +56,17 @@ public class RongYaoTeamPlayer {
     ///
     /// - default is true.
     public var pauseWhenAppDidEndEnterBackground: Bool = true
-
+    
     /// 资源初始化期间, 开发者进行的操作
     /// - 将在初始化完成时调用, 并置为nil
     private var operationOfInitializing: (()->())?
-
+    
     /// 使播放
     public func play() {
         if ( self.asset == nil ) {
             return
         }
-
+        
         if case RongYaoTeamPlayerPlayStatus.inactivity(reason: .playEnd) = state {
             replay()
             return
@@ -159,17 +90,17 @@ public class RongYaoTeamPlayer {
             operationOfInitializing = self.play
             return
         }
-
+        
         asset?.avPlayer?.play()
         state = .playing
     }
     
     /// 使暂停
     public func pause() {
-        _pause(.pause)
+        pause(.pause)
     }
     
-    private func _pause(_ reason: RongYaoTeamPlayerPausedReason) {
+    private func pause(_ reason: RongYaoTeamPlayerPausedReason) {
         if ( self.asset == nil ) {
             return
         }
@@ -275,7 +206,7 @@ public class RongYaoTeamPlayer {
             asset?.playerItem?.cancelPendingSeeks()
         }
         else {
-            _pause(.seeking)
+            pause(.seeking)
         }
         asset?.playerItem?.seek(to: CMTimeMakeWithSeconds(Float64.init(time), Int32(NSEC_PER_SEC)), completionHandler: { [weak self] (finished) in
             guard let `self` = self else { return }
@@ -283,19 +214,10 @@ public class RongYaoTeamPlayer {
             completionHandler(self, finished)
         })
     }
-
     
     
     
     
-    
-    
-    
-    /// -----------------------------------------------------------------------
-    /// 分割线 分割线 分割线 分割线 分割线 分割线 分割线 分割线 分割线 分割线 分割线 分割线
-    /// -----------------------------------------------------------------------
-    /// 不好看 不好看 不好看 不好看 不好看 不好看 不好看 不好看 不好看 不好看 不好看 不好看
-    /// -----------------------------------------------------------------------
     
     fileprivate func valueDidChangeForKey(_ key: RongYaoTeamPlayerPropertyKey) {
         delegate?.player(self, valueDidChangeForKey: key)
@@ -310,7 +232,7 @@ public class RongYaoTeamPlayer {
     }
     
     /// -----------------------------------------------------------------------
-
+    
     private func assetDidChange() {
         if ( asset != nil ) {
             needPlayNewAsset()
@@ -370,14 +292,14 @@ public class RongYaoTeamPlayer {
     private func playerItemDidPlayToEnd() {
         state = .inactivity(reason: .playEnd)
     }
-
+    
     /// -----------------------------------------------------------------------
     
     fileprivate func bufferStatusDidChange(_ buffer: RongYaoTeamPlayerBufferStatus) {
         switch buffer {
         case .unknown: break
         case .empty:
-            _pause(.buffering)
+            pause(.buffering)
         case .full:
             // 如果已暂停, break
             if case RongYaoTeamPlayerPlayStatus.paused(reason: .pause) = state {
@@ -392,7 +314,7 @@ public class RongYaoTeamPlayer {
     
     
     /// -----------------------------------------------------------------------
-
+    
     fileprivate func currentTimeDidChange() {
         // 正在播放
         if case RongYaoTeamPlayerPlayStatus.playing = state {
@@ -401,8 +323,78 @@ public class RongYaoTeamPlayer {
     }
     
     /// -----------------------------------------------------------------------
-    /// 通知记录员
+    
+    /// 一些通知记录员
     private var registrar: RongYaoTeamRegistrar = RongYaoTeamRegistrar.init()
+}
+
+/// 播放器的代理
+public protocol RongYaoTeamPlayerDelegate: NSObjectProtocol {
+    /// 相应的属性, 当值改变时的回调
+    ///
+    /// - Parameters:
+    ///   - player: 播放器
+    ///   - valueDidChangeForKey: 相应的属性
+    /// - Returns: Void
+    func player(_ player: RongYaoTeamPlayer, valueDidChangeForKey key: RongYaoTeamPlayerPropertyKey)
+}
+/// 播放器当前的状态
+///
+/// - unknown:      未播放任何资源时的状态
+/// - readyToPlay:  资源准备就绪
+/// - playing:      播放中
+/// - paused:       暂停状态
+/// - inactivity:   不活跃状态
+public enum RongYaoTeamPlayerPlayStatus {
+    case unknown
+    case readyToPlay
+    case playing
+    case paused(reason: RongYaoTeamPlayerPausedReason)
+    case inactivity(reason: RongYaoTeamPlayerInactivityReason)
+}
+/// 播放暂停的理由
+///
+/// - buffering: 正在缓冲
+/// - pause:     被暂停
+/// - seeking:   正在跳转(调用seekToTime:时)
+public enum RongYaoTeamPlayerPausedReason {
+    case buffering
+    case pause
+    case seeking
+}
+/// 播放不活跃的原因
+///
+/// - playEnd:    播放完毕
+/// - playFailed: 播放失败
+public enum RongYaoTeamPlayerInactivityReason {
+    case playEnd
+    case playFailed
+}
+/// 缓冲的状态
+///
+/// - unknown: 未知, 可能还未播放
+/// - empty:   缓冲区为空
+/// - full:    缓冲区已满
+public enum RongYaoTeamPlayerBufferStatus {
+    case unknown
+    case empty
+    case full
+}
+/// 播放器的属性key
+///
+/// - state:             同 player.assetProperties.state
+/// - duration:          同 player.assetProperties.duration
+/// - currentTime:       同 player.assetProperties.currentTime
+/// - bufferLoadedTime:  同 player.assetProperties.bufferLoadedTime
+/// - bufferStatus:      同 player.assetProperties.bufferStatus
+/// - presentationSize:  同 player.assetProperties.presentationSize
+public enum RongYaoTeamPlayerPropertyKey {
+    case state
+    case duration
+    case currentTime
+    case bufferLoadedTime
+    case bufferStatus
+    case presentationSize
 }
 
 extension RongYaoTeamPlayer: RongYaoTeamPlayerAssetPropertiesDelegate {

@@ -37,12 +37,16 @@ public class RongYaoTeamPlayerAsset {
 
     
     
+    /// 创建一个Asset, 通过其他Asset
+    ///
+    /// - Parameter otherAsset: 其他Asset
     public init(_ otherAsset: RongYaoTeamPlayerAsset) {
         playURL = otherAsset.playURL
         specifyStartTime = otherAsset.specifyStartTime
         self.otherAsset = otherAsset
     }
     
+    /// strong ref
     public private(set) var otherAsset: RongYaoTeamPlayerAsset?
     public var isOtherAsset: Bool { return otherAsset != nil }
 }
