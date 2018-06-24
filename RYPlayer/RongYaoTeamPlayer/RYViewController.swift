@@ -16,6 +16,8 @@ class RYViewController: UIViewController {
     var player: RongYaoTeamPlayer?
     
     var slider: SJSlider?
+    
+    var gestureManager: RongYaoTeamPlayerPresentViewGestureManager!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,8 +35,9 @@ class RYViewController: UIViewController {
         }
         
         player?.view.rotationManager.delegate = self
-        player?.view.gestureManager.delegate = self
         
+        gestureManager = RongYaoTeamPlayerPresentViewGestureManager.init(target: player!.view.presentView)
+        gestureManager.delegate = self
         
         slider = SJSlider.init()
         slider?.delegate = self
@@ -101,34 +104,37 @@ extension RYViewController: RongYaoTeamPlayerViewRotationManagerDelegate {
     }
 }
 
-extension RYViewController: RongYaoTeamPlayerViewGestureManagerDelegate {
-    func gestureManager(_ mgr: RongYaoTeamPlayerViewGestureManager, gestureShouldTrigger type: RongYaoTeamPlayerViewGestureType, location: CGPoint) -> Bool {
+extension RYViewController: RongYaoTeamPlayerPresentViewGestureManagerDelegate {
+    func gestureManager(_ mgr: RongYaoTeamPlayerPresentViewGestureManager, gestureShouldTrigger type: RongYaoTeamPlayerViewGestureType, location: CGPoint) -> Bool {
         return true
     }
     
-    func triggerSingleTapGestureForGestureManager(_ mgr: RongYaoTeamPlayerViewGestureManager) {
+    func triggerSingleTapGestureForGestureManager(_ mgr: RongYaoTeamPlayerPresentViewGestureManager) {
         #if DEBUG
         print("\(#function) - \(#line) - RongYaoTeamPlayer")
         #endif
     }
     
-    func triggerDoubleTapGestureForGestureManager(_ mgr: RongYaoTeamPlayerViewGestureManager) {
-        #if DEBUG
-        print("\(#function) - \(#line) - RongYaoTeamPlayer")
-        #endif
-        if case RongYaoTeamPlayerPlayStatus.paused(reason: .pause) = player!.state {
-            player?.play()
-        }
-        else {
-            player?.pause()
-        }
-    }
-    
-    func triggerPinchGestureForGestureManager(_ mgr: RongYaoTeamPlayerViewGestureManager) {
+    func triggerDoubleTapGestureForGestureManager(_ mgr: RongYaoTeamPlayerPresentViewGestureManager) {
         #if DEBUG
         print("\(#function) - \(#line) - RongYaoTeamPlayer")
         #endif
         guard let `player` = player else { return }
+        
+        if case RongYaoTeamPlayerPlayStatus.paused(reason: .pause) = player.state {
+            player.play()
+        }
+        else {
+            player.pause()
+        }
+    }
+    
+    func triggerPinchGestureForGestureManager(_ mgr: RongYaoTeamPlayerPresentViewGestureManager) {
+        #if DEBUG
+        print("\(#function) - \(#line) - RongYaoTeamPlayer")
+        #endif
+        guard let `player` = player else { return }
+        
         if ( player.view.avVideoGravity == .resizeAspect ) {
             player.view.avVideoGravity = .resizeAspectFill
         }
@@ -137,10 +143,24 @@ extension RYViewController: RongYaoTeamPlayerViewGestureManagerDelegate {
         }
     }
     
-    func triggerPanGestureForGestureManager(_ mgr: RongYaoTeamPlayerViewGestureManager, state: RongYaoTeamPlayerViewPanGestureState, movingDirection: RongYaoTeamPlayerViewPanGestureMovingDirection, location: RongYaoTeamPlayerViewPanGestureLocation, translate: CGPoint) {
+    func triggerPanGestureForGestureManager(_ mgr: RongYaoTeamPlayerPresentViewGestureManager,
+                                            state: RongYaoTeamPlayerViewPanGestureState,
+                                            movingDirection: RongYaoTeamPlayerViewPanGestureMovingDirection,
+                                            location: RongYaoTeamPlayerViewPanGestureLocation,
+                                            translate: CGPoint) {
         #if DEBUG
         print("\(#function) - \(#line) - RongYaoTeamPlayer")
         #endif
+        guard let `player` = player else { return }
+        
+        switch movingDirection {
+        case .unknown: break
+        case .horizontal:
+            
+            break
+        case .vertical:
+            break
+        }
     }
 }
 
