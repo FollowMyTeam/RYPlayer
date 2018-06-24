@@ -33,7 +33,6 @@
 		A6089F1420DF801400DA5E9B /* UIViewExtension+RongYao.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6089F1320DF801400DA5E9B /* UIViewExtension+RongYao.swift */; };
 		A6089F1720DF8EA700DA5E9B /* RongYaoTeamRotationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6089F1620DF8EA700DA5E9B /* RongYaoTeamRotationManager.swift */; };
 		A658746220CB8E0500611B72 /* sample.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = A658746120CB8E0500611B72 /* sample.mp4 */; };
-		A69FA7E520DFABA30055609C /* RYPlayerPlaybackControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A69FA7E420DFABA30055609C /* RYPlayerPlaybackControl.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -66,7 +65,6 @@
 		A6089F1320DF801400DA5E9B /* UIViewExtension+RongYao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewExtension+RongYao.swift"; sourceTree = "<group>"; };
 		A6089F1620DF8EA700DA5E9B /* RongYaoTeamRotationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoTeamRotationManager.swift; sourceTree = "<group>"; };
 		A658746120CB8E0500611B72 /* sample.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample.mp4; sourceTree = "<group>"; };
-		A69FA7E420DFABA30055609C /* RYPlayerPlaybackControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYPlayerPlaybackControl.swift; sourceTree = "<group>"; };
 		F5C898A3DAF5A2087BF75381 /* Pods_RongYaoTeamPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RongYaoTeamPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -171,7 +169,6 @@
 			isa = PBXGroup;
 			children = (
 				A6089F1120DF7D8900DA5E9B /* RYPlayer.swift */,
-				A69FA7E420DFABA30055609C /* RYPlayerPlaybackControl.swift */,
 			);
 			path = RYPlayer;
 			sourceTree = "<group>";
@@ -312,7 +309,6 @@
 				A6089F0320DF476100DA5E9B /* RongYaoTeamPlayerEdgeControlLayer.swift in Sources */,
 				77B8815420D8EED00054DDE2 /* RongYaoTeamPlayerView.swift in Sources */,
 				7790D18C20CABA2C00F7CAF5 /* ViewController.swift in Sources */,
-				A69FA7E520DFABA30055609C /* RYPlayerPlaybackControl.swift in Sources */,
 				773DD2C420D66761008113CD /* RYTabBarController.swift in Sources */,
 				A6089F0520DF477200DA5E9B /* RongYaoTeamPlayerEdgeControlLayerTopView.swift in Sources */,
 				A6089F1720DF8EA700DA5E9B /* RongYaoTeamRotationManager.swift in Sources */,

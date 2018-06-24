@@ -11,7 +11,7 @@ import AVFoundation
 
 // MARK: - 播放器(base)
 
-public class RongYaoTeamPlayer: RongYaoTeamPlayerPlaybackControl {
+public class RongYaoTeamPlayer {
    
     deinit {
         #if DEBUG
@@ -197,7 +197,7 @@ public class RongYaoTeamPlayer: RongYaoTeamPlayerPlaybackControl {
     /// - Parameters:
     ///   - time:              将要跳转的时间
     ///   - completionHandler: 操作完成/失败 后的回调
-    public func seekToTime(_ time: TimeInterval, completionHandler: @escaping (_ player: RongYaoTeamPlayerPlaybackControl, _ finished: Bool)->Void) {
+    public func seekToTime(_ time: TimeInterval, completionHandler: @escaping (_ player: RongYaoTeamPlayer, _ finished: Bool)->Void) {
         switch status {
         case .unknown, .inactivity(reason: .playFailed):
             completionHandler(self, false)

@@ -14,8 +14,6 @@ public class RYPlayer {
     
     public var controlLayerDelegate: Any!
     
-    public var playbackControl: RongYaoTeamPlayerPlaybackControl!
-    
     private var view: UIView!
 }
 
