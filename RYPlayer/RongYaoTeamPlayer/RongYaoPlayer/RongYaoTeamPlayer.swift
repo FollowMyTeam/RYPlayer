@@ -88,11 +88,6 @@ public class RongYaoTeamPlayerAsset {
         #endif
     }
     
-    
-    public private(set) var playURL: URL
-    public private(set) var specifyStartTime: TimeInterval = 0
-    public private(set) var isOtherAsset = false
-    
     /// 创建一个Asset
     ///
     /// - Parameters:
@@ -113,6 +108,10 @@ public class RongYaoTeamPlayerAsset {
         avPlayer = otherAsset.avPlayer
         isOtherAsset = true
     }
+    
+    public private(set) var playURL: URL
+    public private(set) var specifyStartTime: TimeInterval = 0
+    public private(set) var isOtherAsset = false
 }
 public class RongYaoTeamPlayer {
     deinit {
@@ -163,7 +162,7 @@ public class RongYaoTeamPlayer {
     public var pauseWhenAppDidEndEnterBackground: Bool = true
 
     /// 资源初始化期间, 开发者进行的操作
-    /// 将在初始化完成时调用, 并置为nil
+    /// - 将在初始化完成时调用, 并置为nil
     private var operationOfInitializing: (()->())?
 
     /// 使播放
@@ -216,7 +215,7 @@ public class RongYaoTeamPlayer {
         }
         
         if case RongYaoTeamPlayerPlayStatus.inactivity(reason: .playEnd) = state {
-            if ( reason == .pause ) {
+            if case RongYaoTeamPlayerPausedReason.pause = reason {
                 return
             }
         }
@@ -244,10 +243,10 @@ public class RongYaoTeamPlayer {
     /// - 由于相关资源已清除, 所以需重新创建资源进行播放
     /// - 将会把`state`置为`unknown`
     public func stop() {
-        if ( asset?.isOtherAsset == false ) { self.view.setAVPlayer(nil) }
         operationOfInitializing = nil
-        assetProperties = nil
-        asset = nil
+        if ( asset?.isOtherAsset == false ) { self.view.setAVPlayer(nil) }
+        if ( assetProperties != nil ) { assetProperties = nil }
+        if ( asset != nil ) { asset = nil }
         if case RongYaoTeamPlayerPlayStatus.unknown = state {
             return
         }
@@ -357,7 +356,6 @@ public class RongYaoTeamPlayer {
     }
     
     private func needPlayNewAsset() {
-        needResetPlayer()
         // 2. prepare
         // - 初始化AVPlayer
         // - 初始化完成后, 创建记录员
