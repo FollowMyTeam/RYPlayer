@@ -1,5 +1,5 @@
 //
-//  RYObserver.swift
+//  RongYaoObserver.swift
 //  RongYaoTeamPlayer
 //
 //  Created by 畅三江 on 2018/6/9.
@@ -8,17 +8,19 @@
 
 import UIKit
 
-public class RYObserver: NSObject {
+public class RongYaoObserver: NSObject {
     var observeKey: String?
-    var exeBlock: ((RYObserver)->Void)
+    var exeBlock: ((RongYaoObserver)->Void)
     var nota: Notification.Name?
+    var owner_p: UnsafeMutableRawPointer
     
     /// KVO
     var value_new: AnyObject?
     var value_old: AnyObject?
-    init(owner: AnyObject, observeKey: String, exeBlock: @escaping (RYObserver)->Void ) {
+    init(owner: AnyObject, observeKey: String, exeBlock: @escaping (RongYaoObserver)->Void ) {
         self.observeKey = observeKey
         self.exeBlock = exeBlock
+        owner_p = ry_bridge(obj: owner)
         super.init()
         owner.addObserver(self, forKeyPath: observeKey, options: [.old, .new], context: nil)
     }
@@ -33,9 +35,10 @@ public class RYObserver: NSObject {
     }
     
     /// Notification
-    init(owner: AnyObject, nota: Notification.Name, exeBlock: @escaping (RYObserver)->Void) {
+    init(owner: AnyObject, nota: Notification.Name, exeBlock: @escaping (RongYaoObserver)->Void) {
         self.nota = nota;
         self.exeBlock = exeBlock
+        owner_p = ry_bridge(obj: owner)
         super.init()
         NotificationCenter.default.addObserver(self, selector: #selector(handleNotification), name: nota, object: owner)
     }
@@ -44,8 +47,8 @@ public class RYObserver: NSObject {
         self.exeBlock(self)
     }
     
-    /// Remove
-    func remove(owner: AnyObject) {
+    deinit {
+        let owner = ry_bridge(ptr: owner_p)
         if ( observeKey != nil ) {
             owner.removeObserver(self, forKeyPath: observeKey!)
         }

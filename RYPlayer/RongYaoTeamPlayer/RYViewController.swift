@@ -43,7 +43,7 @@ class RYViewController: UIViewController {
 
 //        let videoURL = Bundle.main.url(forResource: "sample", withExtension: "mp4")!
         player = RongYaoTeamPlayer.init()
-        player?.delegate = self
+        player?.delegates.add(self)
         player?.view.rotationManager.delegate = self
         
         self.edgesForExtendedLayout = UIRectEdge.init(rawValue: 0)
@@ -74,7 +74,7 @@ class RYViewController: UIViewController {
             make.trailing.equalTo(self.view).offset(-12)
             make.height.equalTo(40)
         })
-
+        
         // Do any additional setup after loading the view, typically from a nib.
     }
 

@@ -42,7 +42,7 @@ public class RongYaoTeamPlayer {
     public private(set) var assetProperties: RongYaoTeamPlayerAssetProperties?
     
     /// 代理
-    public weak var delegate: RongYaoTeamPlayerDelegate?
+    public var delegates: RongYaoMultidelegateManager<RongYaoTeamPlayerDelegate> = RongYaoMultidelegateManager()
     
     /// 播放状态
     public private(set) var status: RongYaoTeamPlayerPlayStatus = .unknown { didSet { stateDidChange() } }
@@ -247,7 +247,9 @@ public class RongYaoTeamPlayer {
     
     
     fileprivate func valueDidChangeForKey(_ key: RongYaoTeamPlayerPropertyKey) {
-        delegate?.player(self, valueDidChangeForKey: key)
+        for delegate in delegates.all() {
+            delegate.player(self, valueDidChangeForKey: key)
+        }
     }
     
     /// -----------------------------------------------------------------------
@@ -507,7 +509,6 @@ public class RongYaoTeamPlayerAssetProperties {
         
         asset.avPlayer?.pause()
         removeTimeObserverOfPlayer(asset.avPlayer)
-        removeObserverOfPlayerItem(asset.playerItem, observerContainer: &playerItemObservers)
     }
     
     /// error
@@ -548,16 +549,16 @@ public class RongYaoTeamPlayerAssetProperties {
     
     fileprivate private(set) var asset: RongYaoTeamPlayerAsset
     
-    private var playerItemObservers = [RYObserver]()
+    private var playerItemObservers = [RongYaoObserver]()
     private var sought: Bool = false
     
     /// - player item observers
-    private func addObserverOfPlayerItem(_ playerItem: AVPlayerItem?, observerCotainer: inout [RYObserver]) {
+    private func addObserverOfPlayerItem(_ playerItem: AVPlayerItem?, observerCotainer: inout [RongYaoObserver]) {
         guard let `playerItem` = playerItem else {
             return
         }
         
-        observerCotainer.append(RYObserver.init(owner: playerItem, observeKey: "duration", exeBlock: { [weak self] (helper) in
+        observerCotainer.append(RongYaoObserver.init(owner: playerItem, observeKey: "duration", exeBlock: { [weak self] (helper) in
             guard let `self` = self else {
                 return
             }
@@ -565,7 +566,7 @@ public class RongYaoTeamPlayerAssetProperties {
             self.duration = CMTimeGetSeconds(playerItem.duration)
         }))
         
-        observerCotainer.append(RYObserver.init(owner: playerItem, observeKey: "loadedTimeRanges", exeBlock: { [weak self] (helper) in
+        observerCotainer.append(RongYaoObserver.init(owner: playerItem, observeKey: "loadedTimeRanges", exeBlock: { [weak self] (helper) in
             guard let `self` = self else {
                 return
             }
@@ -581,7 +582,7 @@ public class RongYaoTeamPlayerAssetProperties {
             self.bufferLoadedTime = time
         }))
         
-        observerCotainer.append(RYObserver.init(owner: playerItem, observeKey: "status", exeBlock: { [weak self] (helper) in
+        observerCotainer.append(RongYaoObserver.init(owner: playerItem, observeKey: "status", exeBlock: { [weak self] (helper) in
             guard let `self` = self else {
                 return
             }
@@ -599,7 +600,7 @@ public class RongYaoTeamPlayerAssetProperties {
             if ( playerItem.status == .failed ) { self.error = playerItem.error }
         }))
         
-        observerCotainer.append(RYObserver.init(owner: playerItem, observeKey: "playbackBufferEmpty", exeBlock: { [weak self] (helper) in
+        observerCotainer.append(RongYaoObserver.init(owner: playerItem, observeKey: "playbackBufferEmpty", exeBlock: { [weak self] (helper) in
             guard let `self` = self else {
                 return
             }
@@ -610,7 +611,7 @@ public class RongYaoTeamPlayerAssetProperties {
             self.pollingPlaybackBuffer()
         }))
         
-        observerCotainer.append(RYObserver.init(owner: playerItem, observeKey: "presentationSize", exeBlock: { [weak self] (helper) in
+        observerCotainer.append(RongYaoObserver.init(owner: playerItem, observeKey: "presentationSize", exeBlock: { [weak self] (helper) in
             guard let `self` = self else {
                 return
             }
@@ -618,23 +619,13 @@ public class RongYaoTeamPlayerAssetProperties {
             self.presentationSize = playerItem.presentationSize
         }))
         
-        observerCotainer.append(RYObserver.init(owner: playerItem, nota: NSNotification.Name.AVPlayerItemDidPlayToEndTime, exeBlock: { [weak self] (helper) in
+        observerCotainer.append(RongYaoObserver.init(owner: playerItem, nota: NSNotification.Name.AVPlayerItemDidPlayToEndTime, exeBlock: { [weak self] (helper) in
             guard let `self` = self else {
                 return
             }
             
             self.delegate.playerItemDidPlayToEnd(self)
         }))
-    }
-    
-    private func removeObserverOfPlayerItem(_ playerItem: AVPlayerItem?, observerContainer: inout [RYObserver]) {
-        guard let `playerItem` = playerItem else {
-            return
-        }
-        
-        for kvo in observerContainer {
-            kvo.remove(owner: playerItem)
-        }
     }
     
     /// - 轮询缓冲, 查看是否可以继续播放

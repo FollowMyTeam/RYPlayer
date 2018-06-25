@@ -8,14 +8,3 @@
 
 import UIKit
 
-public class RYPlayer {
-    
-    public var controlLayerDataSource: Any!
-    
-    public var controlLayerDelegate: Any!
-    
-    private var view: UIView { return player.view }
-    
-    private var player: RongYaoTeamPlayer!
-}
-

@@ -12,10 +12,17 @@ import SnapKit
 /// 边缘控制层
 public class RongYaoTeamPlayerEdgeControlLayer: UIView {
     
+    public convenience init(frame: CGRect, player: RongYaoTeamPlayer) {
+        self.init(frame: frame)
+        self.player = player
+    }
+    
     public override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
     }
+    
+    public weak var player: RongYaoTeamPlayer?
     
     private var contentView: UIView!
     private var topView: RongYaoTeamPlayerEdgeControlLayerTopView!

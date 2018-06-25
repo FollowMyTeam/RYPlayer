@@ -188,7 +188,7 @@ public extension RongYaoTeamPlayerExport {
         
         var count = Int(ceil(duration/interval))
         var times = Array<NSValue>()
-        for i in 0...count {
+        for i in 0...(count-1) {
             times.append(NSValue.init(time: CMTimeMakeWithSeconds(Float64(start + TimeInterval(i) * interval), Int32(NSEC_PER_SEC))))
         }
         GIFGenerator = AVAssetImageGenerator.init(asset: self.asset)
@@ -254,7 +254,7 @@ public extension RongYaoTeamPlayerExport {
         var totalFrame: Int = 0
         var gcdFrame: Int = 0
         
-        for i in 0...count {
+        for i in 0...(count-1) {
             let delay = _yy_CGImageSource(source, getGIFFrameDelayAtIndex: i)
             totalTime = totalTime + delay
             var frame = lrint(delay / oneFrameTime)
@@ -278,7 +278,7 @@ public extension RongYaoTeamPlayerExport {
         }
         
         var array = Array<UIImage>()
-        for i in 0...count {
+        for i in 0...(count-1) {
             guard let imageRef = CGImageSourceCreateImageAtIndex(source, i, nil) else { return nil }
             let width = imageRef.width
             let height = imageRef.height
