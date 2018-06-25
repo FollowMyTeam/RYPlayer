@@ -59,6 +59,9 @@ public class RongYaoTeamRotationManager {
     /// - 默认为 false
     public var disableAutorotation: Bool = false
     
+    /// 是否正在旋转
+    public var transitioning: Bool = false
+    
     /// 自动旋转时, 所支持的方法
     /// - 默认为 .all
     public var autorotationSupportedOrientation: RongYaoTeamViewAutorotationSupportedOrientation = RongYaoTeamViewAutorotationSupportedOrientation.all
@@ -90,7 +93,7 @@ public class RongYaoTeamRotationManager {
         // 如果不一致, 当前设备朝哪个方向, 就旋转到那个方向
         if ( isCurrentOrientationAsDeviceOrientation == false ) {
             switch rec_deviceOrientation {
-            case .landscapeLeft:
+            case .portrait, .landscapeLeft:
                 if ( self.isSupportedLandscapeLeft ) {
                     self.rotate(.landscapeLeft, animated: true)
                 }
@@ -145,19 +148,18 @@ public class RongYaoTeamRotationManager {
     public func rotate(_ orientation: RongYaoTeamViewOrientation, animated: Bool, completionHandler: @escaping (RongYaoTeamRotationManager)->() = {(_) in } ) {
         DispatchQueue.main.async { [weak self] in
             guard let `self` = self else { return }
-            guard let `window` = UIApplication.shared.keyWindow else { return }
+            if ( self.transitioning ) { return }
             guard let `superview` = self.superview else { return }
             guard let `target` = self.target else { return }
-            
             let ori_old = self.orientation
             let ori_new = orientation
-            
             if ( ori_new == ori_old ) { completionHandler(self); return }
+            guard let `window` = UIApplication.shared.keyWindow else { return }
             
             var transform = CGAffineTransform.identity
             var statusBarOrientation = UIInterfaceOrientation.unknown
             
-            switch orientation {
+            switch ori_new {
             case .portrait:
                 statusBarOrientation = .portrait
                 if ( self.blackView.superview != nil ) { self.blackView.removeFromSuperview() }
@@ -180,23 +182,26 @@ public class RongYaoTeamRotationManager {
             // update
             self.orientation = ori_new
             
+            self.transitioning = true
             self.delegate?.rotationManager( self, willRotateView:self.isFullscreen)
             UIApplication.shared.statusBarOrientation = statusBarOrientation
             UIView.animate(withDuration: animated ? self.duration : 0, animations: {
                 if ( ori_new == .portrait ) {
+                    target.transform = transform
                     target.bounds = CGRect.init(origin: .zero, size: self.con_portraitRect.size)
                     target.center = CGPoint.init(x: self.con_portraitRect.origin.x + self.con_portraitRect.size.width * 0.5, y: self.con_portraitRect.origin.y + self.con_portraitRect.size.height * 0.5)
+                    target.layoutIfNeeded()
                 }
                 else {
                     let width = UIScreen.main.bounds.size.width
                     let height = UIScreen.main.bounds.size.height
                     let _max = max(width, height)
                     let _min = min(width, height)
-                    target.bounds = CGRect.init(x: 0, y: 0, width: width, height: height)
+                    target.bounds = CGRect.init(x: 0, y: 0, width: _max, height: _min)
                     target.center = CGPoint.init(x: _min * 0.5, y: _max * 0.5)
+                    target.layoutIfNeeded()
+                    target.transform = transform
                 }
-                target.transform = transform
-                target.layoutIfNeeded()
             }) { (_) in
                 if ( self.orientation == .portrait ) {
                     superview.addSubview(self.target)
@@ -206,8 +211,9 @@ public class RongYaoTeamRotationManager {
                     self.blackView.bounds = target.bounds
                     self.blackView.center = target.center
                     self.blackView.transform = target.transform
-                    UIApplication.shared.keyWindow?.insertSubview(self.blackView, belowSubview: target)
+                    window.insertSubview(self.blackView, belowSubview: target)
                 }
+                self.transitioning = false
                 self.delegate?.rotationManager( self, didRotateView:self.isFullscreen)
                 completionHandler(self)
             }
@@ -276,8 +282,6 @@ public class RongYaoTeamRotationManager {
     /// 当前方向是否与设备方向一致
     private var isCurrentOrientationAsDeviceOrientation: Bool {
         switch rec_deviceOrientation {
-        case .portrait:
-            if ( self.orientation == .portrait ) { return true }
         case .landscapeLeft:
             if ( self.orientation == .landscapeLeft ) { return true }
         case .landscapeRight:

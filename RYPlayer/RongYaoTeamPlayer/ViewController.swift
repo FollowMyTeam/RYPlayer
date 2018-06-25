@@ -20,7 +20,6 @@ class Tettt: Text {
 class ViewController: UIViewController {
     
     override func viewDidLoad() {
-        
         self.edgesForExtendedLayout = UIRectEdge.init(rawValue: 0)
         
         let te = Tettt.init()

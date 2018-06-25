@@ -36,7 +36,7 @@ public class RongYaoTeamPlayerView: UIView {
         presentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         addSubview(presentView)
         rotationManager = RongYaoTeamRotationManager.init(target: presentView, superview: self)
-    } 
+    }
     
     public required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
