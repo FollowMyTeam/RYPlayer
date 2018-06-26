@@ -36,15 +36,17 @@ public class RongYaoTeamGestureManager: NSObject {
     
     /// 设置支持的手势类型
     /// - 默认为 .all
-    public var supportedGestureTypes: RongYaoTeamPlayerViewSupportedGestureTypes = .all
+    public var supportedGestureTypes: GestureTypes = .all
+    
+    
     
     fileprivate weak var target: UIView!
     private var singleTapGesture: UITapGestureRecognizer!
     private var doubleTapGesture: UITapGestureRecognizer!
     private var pinchGesture: UIPinchGestureRecognizer!
     private var panGesture: UIPanGestureRecognizer!
-    private var panLocation: RongYaoTeamPlayerViewPanGestureLocation = .unknown
-    private var panMovingDirection: RongYaoTeamPlayerViewPanGestureMovingDirection = .unknown
+    private var panLocation: PanGestureLocation = .unknown
+    private var panMovingDirection: PanGestureMovingDirection = .unknown
     
     private func configGesture(_ gesture: UIGestureRecognizer) {
         gesture.delegate = self
@@ -83,7 +85,7 @@ extension RongYaoTeamGestureManager {
     
     /// 单击手势是否支持
     fileprivate func isSupporedSingleTapGesture() -> Bool {
-        return RongYaoTeamPlayerViewSupportedGestureTypes.singleTap.rawValue == (supportedGestureTypes.rawValue & RongYaoTeamPlayerViewSupportedGestureTypes.singleTap.rawValue)
+        return GestureTypes.singleTap.rawValue == (supportedGestureTypes.rawValue & GestureTypes.singleTap.rawValue)
     }
 }
 
@@ -101,7 +103,7 @@ extension RongYaoTeamGestureManager {
 
     /// 双击手势是否支持
     fileprivate func isSupportedDoubleTapGesture() -> Bool {
-        return RongYaoTeamPlayerViewSupportedGestureTypes.doubleTap.rawValue == (supportedGestureTypes.rawValue & RongYaoTeamPlayerViewSupportedGestureTypes.doubleTap.rawValue)
+        return GestureTypes.doubleTap.rawValue == (supportedGestureTypes.rawValue & GestureTypes.doubleTap.rawValue)
     }
 }
 
@@ -154,7 +156,7 @@ extension RongYaoTeamGestureManager {
     
     /// pan手势是否支持
     fileprivate func isSupportedPanGesture() -> Bool {
-        return RongYaoTeamPlayerViewSupportedGestureTypes.pan.rawValue == (supportedGestureTypes.rawValue & RongYaoTeamPlayerViewSupportedGestureTypes.pan.rawValue)
+        return GestureTypes.pan.rawValue == (supportedGestureTypes.rawValue & GestureTypes.pan.rawValue)
     }
 }
 
@@ -173,7 +175,7 @@ extension RongYaoTeamGestureManager {
     
     /// 捏合手势是否支持
     fileprivate func isSupportedPinchGesture() -> Bool {
-        return RongYaoTeamPlayerViewSupportedGestureTypes.pinch.rawValue == (supportedGestureTypes.rawValue & RongYaoTeamPlayerViewSupportedGestureTypes.pinch.rawValue)
+        return GestureTypes.pinch.rawValue == (supportedGestureTypes.rawValue & GestureTypes.pinch.rawValue)
     }
 }
 
@@ -196,7 +198,7 @@ extension RongYaoTeamGestureManager: UIGestureRecognizerDelegate {
         // 如果没有代理, default触发任何默认手势
         guard let `delegate` = self.delegate else { return true }
         
-        var type = RongYaoTeamPlayerViewGestureType.unknown
+        var type = GestureType.unknown
         
         if gestureRecognizer == singleTapGesture {
             type = .singleTap
@@ -222,96 +224,99 @@ extension RongYaoTeamGestureManager: UIGestureRecognizerDelegate {
     }
 }
 
-/// RongYaoTeamGestureManager - `播放器视图`默认添加的手势类型
-///
-/// - unknown:   未知
-/// - singleTap: 单击
-/// - doubleTap: 双击
-/// - pan:       pan
-/// - pinch:     捏合
-public enum RongYaoTeamPlayerViewGestureType {
-    case unknown
-    case singleTap
-    case doubleTap
-    case pan
-    case pinch
-}
+public extension RongYaoTeamGestureManager {
 
-/// RongYaoTeamGestureManager - `播放器视图`默认支持的手势类型
-public struct RongYaoTeamPlayerViewSupportedGestureTypes: OptionSet {
-    
-    /// 全部不支持
-    public static var none: RongYaoTeamPlayerViewSupportedGestureTypes { return RongYaoTeamPlayerViewSupportedGestureTypes.init(rawValue: 0) }
-    
-    /// 是否支持 单击手势
-    public static var singleTap: RongYaoTeamPlayerViewSupportedGestureTypes { return RongYaoTeamPlayerViewSupportedGestureTypes.init(rawValue: 1 << 0) }
-    
-    /// 是否支持 双击手势
-    public static var doubleTap: RongYaoTeamPlayerViewSupportedGestureTypes { return RongYaoTeamPlayerViewSupportedGestureTypes.init(rawValue: 1 << 1) }
-    
-    /// 是否支持 pan手势
-    public static var pan: RongYaoTeamPlayerViewSupportedGestureTypes { return RongYaoTeamPlayerViewSupportedGestureTypes.init(rawValue: 1 << 2) }
-    
-    /// 是否支持 捏合手势
-    public static var pinch: RongYaoTeamPlayerViewSupportedGestureTypes { return RongYaoTeamPlayerViewSupportedGestureTypes.init(rawValue: 1 << 3) }
-    
-    /// 是否支持 全部手势
-    public static var all: RongYaoTeamPlayerViewSupportedGestureTypes {  return
-        RongYaoTeamPlayerViewSupportedGestureTypes.init(rawValue:
-            RongYaoTeamPlayerViewSupportedGestureTypes.singleTap.rawValue |
-                RongYaoTeamPlayerViewSupportedGestureTypes.doubleTap.rawValue |
-                RongYaoTeamPlayerViewSupportedGestureTypes.pan.rawValue |
-                RongYaoTeamPlayerViewSupportedGestureTypes.pinch.rawValue ) }
-    
-    /// init
-    public init(rawValue: UInt) {
-        self.rawValue = rawValue
+    /// 支持的手势类型
+    struct GestureTypes: OptionSet {
+        
+        /// 全部不支持
+        public static var none: GestureTypes { return GestureTypes.init(rawValue: 0) }
+        
+        /// 是否支持 单击手势
+        public static var singleTap: GestureTypes { return GestureTypes.init(rawValue: 1 << 0) }
+        
+        /// 是否支持 双击手势
+        public static var doubleTap: GestureTypes { return GestureTypes.init(rawValue: 1 << 1) }
+        
+        /// 是否支持 pan手势
+        public static var pan: GestureTypes { return GestureTypes.init(rawValue: 1 << 2) }
+        
+        /// 是否支持 捏合手势
+        public static var pinch: GestureTypes { return GestureTypes.init(rawValue: 1 << 3) }
+        
+        /// 是否支持 全部手势
+        public static var all: GestureTypes {  return
+            GestureTypes.init(rawValue:
+                    GestureTypes.singleTap.rawValue |
+                    GestureTypes.doubleTap.rawValue |
+                    GestureTypes.pan.rawValue |
+                    GestureTypes.pinch.rawValue ) }
+        
+        /// init
+        public init(rawValue: UInt) {
+            self.rawValue = rawValue
+        }
+        
+        /// value
+        public var rawValue: UInt
+    }
+
+    /// 默认添加的手势类型
+    ///
+    /// - unknown:   未知
+    /// - singleTap: 单击
+    /// - doubleTap: 双击
+    /// - pan:       pan
+    /// - pinch:     捏合
+    public enum GestureType {
+        case unknown
+        case singleTap
+        case doubleTap
+        case pan
+        case pinch
     }
     
-    /// value
-    public var rawValue: UInt
-}
-
-/// RongYaoTeamGestureManager - pan手势触发的位置
-///
-/// - unknown: 未知
-/// - left:    左半屏
-/// - right:   右半屏
-public enum RongYaoTeamPlayerViewPanGestureLocation: Int {
-    case unknown
-    case left
-    case right
-}
-
-/// RongYaoTeamGestureManager - pan手势移动方向
-///
-/// - unknown:      未知
-/// - vertical:     垂直方向移动
-/// - horizontal:   水平方向移动
-public enum RongYaoTeamPlayerViewPanGestureMovingDirection: Int {
-    case unknown
-    case vertical
-    case horizontal
-}
-
-/// RongYaoTeamGestureManager - pan手势的状态
-///
-/// - unknown:  未知
-/// - began:    手势开始触发
-/// - changed:  手势触发中
-/// - ended:    手势结束
-public enum RongYaoTeamPlayerViewPanGestureState: Int {
-    case unknown
-    case began
-    case changed
-    case ended
+    /// pan手势触发的位置
+    ///
+    /// - unknown: 未知
+    /// - left:    左半屏
+    /// - right:   右半屏
+    enum PanGestureLocation: Int {
+        case unknown
+        case left
+        case right
+    }
+    
+    /// pan手势移动方向
+    ///
+    /// - unknown:      未知
+    /// - vertical:     垂直方向移动
+    /// - horizontal:   水平方向移动
+    enum PanGestureMovingDirection: Int {
+        case unknown
+        case vertical
+        case horizontal
+    }
+    
+    /// pan手势的状态
+    ///
+    /// - unknown:  未知
+    /// - began:    手势开始触发
+    /// - changed:  手势触发中
+    /// - ended:    手势结束
+    enum PanGestureState: Int {
+        case unknown
+        case began
+        case changed
+        case ended
+    }
 }
 
 /// RongYaoTeamGestureManager - 代理
 public protocol RongYaoTeamGestureManagerDelegate {
     /// 是否可以触发手势(用户touch的位置)
     /// - 如果返回false, 不触发手势
-    func gestureManager(_ mgr: RongYaoTeamGestureManager, gestureShouldTrigger type: RongYaoTeamPlayerViewGestureType, location: CGPoint) -> Bool
+    func gestureManager(_ mgr: RongYaoTeamGestureManager, gestureShouldTrigger type: RongYaoTeamGestureManager.GestureType, location: CGPoint) -> Bool
     
     /// 触发单击手势
     func triggerSingleTapGestureForGestureManager(_ mgr: RongYaoTeamGestureManager)
@@ -320,5 +325,9 @@ public protocol RongYaoTeamGestureManagerDelegate {
     /// 触发捏合手势
     func triggerPinchGestureForGestureManager(_ mgr: RongYaoTeamGestureManager)
     /// 触发pan手势
-    func triggerPanGestureForGestureManager(_ mgr: RongYaoTeamGestureManager, state: RongYaoTeamPlayerViewPanGestureState, movingDirection: RongYaoTeamPlayerViewPanGestureMovingDirection, location: RongYaoTeamPlayerViewPanGestureLocation, translate: CGPoint)
+    func triggerPanGestureForGestureManager(_ mgr: RongYaoTeamGestureManager,
+                                            state: RongYaoTeamGestureManager.PanGestureState,
+                                            movingDirection: RongYaoTeamGestureManager.PanGestureMovingDirection,
+                                            location: RongYaoTeamGestureManager.PanGestureLocation,
+                                            translate: CGPoint)
 }

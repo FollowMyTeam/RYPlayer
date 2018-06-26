@@ -129,7 +129,7 @@ extension RYViewController: RongYaoTeamRotationManagerDelegate {
 }
 
 extension RYViewController: RongYaoTeamGestureManagerDelegate {
-    func gestureManager(_ mgr: RongYaoTeamGestureManager, gestureShouldTrigger type: RongYaoTeamPlayerViewGestureType, location: CGPoint) -> Bool {
+    func gestureManager(_ mgr: RongYaoTeamGestureManager, gestureShouldTrigger type: RongYaoTeamGestureManager.GestureType, location: CGPoint) -> Bool {
         return true
     }
     
@@ -168,9 +168,9 @@ extension RYViewController: RongYaoTeamGestureManagerDelegate {
     }
     
     func triggerPanGestureForGestureManager(_ mgr: RongYaoTeamGestureManager,
-                                            state: RongYaoTeamPlayerViewPanGestureState,
-                                            movingDirection: RongYaoTeamPlayerViewPanGestureMovingDirection,
-                                            location: RongYaoTeamPlayerViewPanGestureLocation,
+                                            state: RongYaoTeamGestureManager.PanGestureState,
+                                            movingDirection: RongYaoTeamGestureManager.PanGestureMovingDirection,
+                                            location: RongYaoTeamGestureManager.PanGestureLocation,
                                             translate: CGPoint) {
         #if DEBUG
         print("\(#function) - \(#line) - RongYaoTeamPlayer")

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4311539AAE05C781EA2AF1B7 /* Pods_RongYaoTeamPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5C898A3DAF5A2087BF75381 /* Pods_RongYaoTeamPlayer.framework */; };
 		771C27A720CBE1D900C17E34 /* RongYaoTeamPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771C27A620CBE1D900C17E34 /* RongYaoTeamPlayer.swift */; };
+		771C971920E21DD0001BA7FC /* RYTestGestureManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771C971820E21DD0001BA7FC /* RYTestGestureManagerViewController.swift */; };
 		773DD2C420D66761008113CD /* RYTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 773DD2C320D66761008113CD /* RYTabBarController.swift */; };
 		773DD2C620D6676D008113CD /* RYNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 773DD2C520D6676D008113CD /* RYNavigationController.swift */; };
 		7790D18A20CABA2C00F7CAF5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7790D18920CABA2C00F7CAF5 /* AppDelegate.swift */; };
@@ -44,6 +45,7 @@
 		6106DEEF81896DA0859A4508 /* Pods-RongYaoTeamPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RongYaoTeamPlayer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RongYaoTeamPlayer/Pods-RongYaoTeamPlayer.debug.xcconfig"; sourceTree = "<group>"; };
 		6EB0C4A2BDB68892BD77B491 /* Pods-RongYaoTeamPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RongYaoTeamPlayer.release.xcconfig"; path = "Pods/Target Support Files/Pods-RongYaoTeamPlayer/Pods-RongYaoTeamPlayer.release.xcconfig"; sourceTree = "<group>"; };
 		771C27A620CBE1D900C17E34 /* RongYaoTeamPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoTeamPlayer.swift; sourceTree = "<group>"; };
+		771C971820E21DD0001BA7FC /* RYTestGestureManagerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYTestGestureManagerViewController.swift; sourceTree = "<group>"; };
 		773DD2C320D66761008113CD /* RYTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYTabBarController.swift; sourceTree = "<group>"; };
 		773DD2C520D6676D008113CD /* RYNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYNavigationController.swift; sourceTree = "<group>"; };
 		7790D18620CABA2C00F7CAF5 /* RongYaoTeamPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RongYaoTeamPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -129,6 +131,7 @@
 				7790D1A720CADC6F00F7CAF5 /* RYViewController.swift */,
 				A69FA7E620E08CB00055609C /* RYPlayerViewController.swift */,
 				A60F285A20E0F65400E1AA12 /* RYTestRotationViewController.swift */,
+				771C971820E21DD0001BA7FC /* RYTestGestureManagerViewController.swift */,
 				A6089F1020DF7D7C00DA5E9B /* RYPlayer */,
 				A6089F0120DF46AE00DA5E9B /* RongYaoEdgeControlLayer */,
 				7790D19B20CABA4300F7CAF5 /* RongYaoTeamPlayer(base) */,
@@ -344,6 +347,7 @@
 				773DD2C620D6676D008113CD /* RYNavigationController.swift in Sources */,
 				A6089F1420DF801400DA5E9B /* UIViewExtension+RongYao.swift in Sources */,
 				7790D1AA20CBB22900F7CAF5 /* RongYaoObserver.swift in Sources */,
+				771C971920E21DD0001BA7FC /* RYTestGestureManagerViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

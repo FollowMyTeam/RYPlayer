@@ -42,6 +42,14 @@
                                     <segue destination="EL4-xF-VyT" kind="show" id="oHB-lZ-Al6"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3fv-SF-dQ3">
+                                <rect key="frame" x="149" y="313" width="62" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="测试手势"/>
+                                <connections>
+                                    <segue destination="Vky-5j-LFF" kind="show" id="fFg-Cj-CCN"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
@@ -120,7 +128,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4nN-ig-9y2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1956" y="133"/>
+            <point key="canvasLocation" x="2097" y="-109"/>
         </scene>
         <!--Test Rotation View Controller-->
         <scene sceneID="ROI-rW-9L0">
@@ -135,7 +143,22 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jGj-tD-Z1a" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1076" y="911"/>
+            <point key="canvasLocation" x="2087" y="1194"/>
+        </scene>
+        <!--Test Gesture Manager View Controller-->
+        <scene sceneID="W8e-UH-u2z">
+            <objects>
+                <viewController id="Vky-5j-LFF" customClass="RYTestGestureManagerViewController" customModule="RongYaoTeamPlayer" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="NvR-8c-XdN">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="1FW-o7-pKr"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="F2S-XO-LF6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1086" y="946"/>
         </scene>
         <!--Player View Controller-->
         <scene sceneID="Xt9-sx-g7s">
@@ -150,7 +173,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Lys-OU-9vZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1956" y="803"/>
+            <point key="canvasLocation" x="2097" y="542"/>
         </scene>
         <!--Item-->
         <scene sceneID="Thu-0o-KPa">
