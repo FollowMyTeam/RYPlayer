@@ -1,5 +1,5 @@
 //
-//  RongYaoTeamPlayerEdgeControlLayerBottomView.swift
+//  RongYaoEdgeControlLayerLeftView.swift
 //  RongYaoTeamPlayer
 //
 //  Created by 畅三江 on 2018/6/24.
@@ -8,8 +8,8 @@
 
 import UIKit
 
-/// 边缘控制层 - 下
+/// 边缘控制层 - 左
 
-public class RongYaoTeamPlayerEdgeControlLayerBottomView: UIView {
+public class RongYaoEdgeControlLayerLeftView: UIView {
     
 }

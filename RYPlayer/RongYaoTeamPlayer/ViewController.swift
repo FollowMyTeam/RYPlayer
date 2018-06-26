@@ -19,6 +19,8 @@ class Tettt: Text {
 
 class ViewController: UIViewController {
     
+    var resources: RongYaoEdgeControlLayerResources!
+    
     override func viewDidLoad() {
         self.edgesForExtendedLayout = UIRectEdge.init(rawValue: 0)
         
@@ -29,6 +31,9 @@ class ViewController: UIViewController {
         let a: Int = 1
         let b: Int = 3
         print(Float(a) / Float(b))
+        
+        
+        resources = RongYaoEdgeControlLayerResources.init(delegate: self)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -59,3 +64,8 @@ class ViewController: UIViewController {
     }
 }
 
+extension ViewController: RongYaoEdgeControlLayerResourcesDelegate {
+    func resources(_ r: RongYaoEdgeControlLayerResources, loadingIsCompleted type: RongYaoEdgeControlLayerResources.ViewResourcesType) {
+        print(type)
+    }
+}

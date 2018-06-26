@@ -129,7 +129,6 @@ public class RongYaoTeamRotationManager {
     /// 旋转视图的父视图
     public fileprivate(set) weak var superview: UIView!
 
-    
     /// 记录的设备方向
     /// - 只记录三种设备方向 `.portrait, .landscapeLeft, .landscapeRight`
     private var rec_deviceOrientation: UIDeviceOrientation = .portrait
@@ -302,20 +301,20 @@ public class RongYaoTeamRotationManager {
     }
 }
 
-extension RongYaoTeamRotationManager {
+public extension RongYaoTeamRotationManager {
     /// 方向
     ///
     /// - portrait:       竖屏
     /// - landscapeLeft:  全屏, Home键在右侧
     /// - landscapeRight: 全屏, Home键在左侧
-    public enum Orientation: UInt {
+    enum Orientation: UInt {
         case portrait = 0
         case landscapeLeft = 1
         case landscapeRight = 2
     }
     
     /// 自动旋转支持的方向
-    public struct AutorotationSupportedOrientation: OptionSet {
+    struct AutorotationSupportedOrientation: OptionSet {
         
         /// 是否支持全屏
         public static var portrait: AutorotationSupportedOrientation { return AutorotationSupportedOrientation(rawValue: 1 << 0) }

@@ -1,5 +1,5 @@
 //
-//  RongYaoTeamPlayerEdgeControlLayer.swift
+//  RongYaoEdgeControlLayer.swift
 //  RongYaoTeamPlayer
 //
 //  Created by 畅三江 on 2018/6/24.
@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 
 /// 边缘控制层
-public class RongYaoTeamPlayerEdgeControlLayer: UIView {
+public class RongYaoEdgeControlLayer: UIView {
     
     public convenience init(frame: CGRect, player: RongYaoTeamPlayer) {
         self.init(frame: frame)
@@ -25,10 +25,10 @@ public class RongYaoTeamPlayerEdgeControlLayer: UIView {
     public weak var player: RongYaoTeamPlayer?
     
     private var contentView: UIView!
-    private var topView: RongYaoTeamPlayerEdgeControlLayerTopView!
-    private var leftView: RongYaoTeamPlayerEdgeControlLayerLeftView!
-    private var bottomView: RongYaoTeamPlayerEdgeControlLayerBottomView!
-    private var rightView: RongYaoTeamPlayerEdgeControlLayerRightView!
+    private var topView: RongYaoEdgeControlLayerTopView!
+    private var leftView: RongYaoEdgeControlLayerLeftView!
+    private var bottomView: RongYaoEdgeControlLayerBottomView!
+    private var rightView: RongYaoEdgeControlLayerRightView!
     
     private func setupViews() {
         contentView = UIView.init()
@@ -54,9 +54,9 @@ public class RongYaoTeamPlayerEdgeControlLayer: UIView {
     }
 }
 
-extension RongYaoTeamPlayerEdgeControlLayer {
+extension RongYaoEdgeControlLayer {
     fileprivate func addTopView(_ superview: UIView) {
-        topView = RongYaoTeamPlayerEdgeControlLayerTopView(frame: .zero)
+        topView = RongYaoEdgeControlLayerTopView(frame: .zero)
         superview.addSubview(topView)
         topView.snp.makeConstraints { (make) in
             make.top.leading.trailing.equalTo(topView.superview!)
@@ -65,9 +65,9 @@ extension RongYaoTeamPlayerEdgeControlLayer {
     }
 }
 
-extension RongYaoTeamPlayerEdgeControlLayer {
+extension RongYaoEdgeControlLayer {
     fileprivate func addLeftView(_ superview: UIView) {
-        leftView = RongYaoTeamPlayerEdgeControlLayerLeftView(frame: .zero)
+        leftView = RongYaoEdgeControlLayerLeftView(frame: .zero)
         superview.addSubview(leftView)
         leftView.snp.makeConstraints { (make) in
             make.size.equalTo(60)
@@ -76,9 +76,9 @@ extension RongYaoTeamPlayerEdgeControlLayer {
     }
 }
 
-extension RongYaoTeamPlayerEdgeControlLayer {
+extension RongYaoEdgeControlLayer {
     fileprivate func addBottomView(_ superview: UIView) {
-        bottomView = RongYaoTeamPlayerEdgeControlLayerBottomView(frame: .zero)
+        bottomView = RongYaoEdgeControlLayerBottomView(frame: .zero)
         superview.addSubview(bottomView)
         bottomView.snp.makeConstraints { (make) in
             make.leading.bottom.trailing.equalTo(bottomView.superview!)
@@ -87,9 +87,9 @@ extension RongYaoTeamPlayerEdgeControlLayer {
     }
 }
 
-extension RongYaoTeamPlayerEdgeControlLayer {
+extension RongYaoEdgeControlLayer {
     fileprivate func addRightView(_ superview: UIView) {
-        rightView = RongYaoTeamPlayerEdgeControlLayerRightView(frame: .zero)
+        rightView = RongYaoEdgeControlLayerRightView(frame: .zero)
         superview.addSubview(rightView)
         rightView.snp.makeConstraints { (make) in
             make.size.equalTo(60)

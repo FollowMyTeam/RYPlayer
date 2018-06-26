@@ -58,10 +58,10 @@ public extension UIView {
     /// default is true
     public private(set) var ry_isAppeared: Bool {
         set {
-            objc_setAssociatedObject(self, &RYUIViewExtensionAssociatedKeys.kstate, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, &UIViewExtensionAssociatedKeys.kstate, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
         get {
-            var isAppeared = objc_getAssociatedObject(self, &RYUIViewExtensionAssociatedKeys.kstate) as? Bool
+            var isAppeared = objc_getAssociatedObject(self, &UIViewExtensionAssociatedKeys.kstate) as? Bool
             if ( isAppeared == nil ) { isAppeared = true }
             return isAppeared!
         }
@@ -70,10 +70,10 @@ public extension UIView {
     /// default is .none
     var ry_disappearType: RYViewDisappearTypes {
         set {
-            objc_setAssociatedObject(self, &RYUIViewExtensionAssociatedKeys.kry_disappearType, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, &UIViewExtensionAssociatedKeys.kry_disappearType, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
         get {
-            var type = objc_getAssociatedObject(self, &RYUIViewExtensionAssociatedKeys.kry_disappearType) as? RYViewDisappearTypes
+            var type = objc_getAssociatedObject(self, &UIViewExtensionAssociatedKeys.kry_disappearType) as? RYViewDisappearTypes
             if ( type == nil ) { type = .none }
             return type!
         }
@@ -82,10 +82,10 @@ public extension UIView {
     /// default is .identity
     var ry_transformOfDisappear: CGAffineTransform {
         set {
-            objc_setAssociatedObject(self, &RYUIViewExtensionAssociatedKeys.kry_transformOfDisappear, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, &UIViewExtensionAssociatedKeys.kry_transformOfDisappear, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
         get {
-            var transform = objc_getAssociatedObject(self, &RYUIViewExtensionAssociatedKeys.kry_transformOfDisappear) as? CGAffineTransform
+            var transform = objc_getAssociatedObject(self, &UIViewExtensionAssociatedKeys.kry_transformOfDisappear) as? CGAffineTransform
             if ( transform == nil ) { transform = CGAffineTransform.identity }
             return transform!
         }
@@ -103,7 +103,7 @@ public extension UIView {
         return RYViewDisappearTypes.transform.rawValue == ( ry_disappearType.rawValue & RYViewDisappearTypes.transform.rawValue )
     }
     
-    private struct RYUIViewExtensionAssociatedKeys {
+    private struct UIViewExtensionAssociatedKeys {
         static var kry_disappearType = "ry_disappearType"
         static var kry_transformOfDisappear = "ry_transformOfDisappear"
         static var kstate = "kstate"

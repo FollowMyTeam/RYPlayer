@@ -45,7 +45,7 @@ public class RongYaoTeamPlayer {
     public var delegates: RongYaoMultidelegateManager<RongYaoTeamPlayerDelegate> = RongYaoMultidelegateManager()
     
     /// 播放状态
-    public private(set) var status: RongYaoTeamPlayerPlayStatus = .unknown { didSet { stateDidChange() } }
+    public private(set) var status: Status = .unknown { didSet { stateDidChange() } }
     
     /// 是否静音
     public var mute: Bool = false {
@@ -65,7 +65,7 @@ public class RongYaoTeamPlayer {
             
             if ( self.asset?.avPlayer == nil ) { return }
             
-            if case RongYaoTeamPlayerPlayStatus.playing = status {
+            if case Status.playing = status {
                 self.asset?.avPlayer?.rate = _rate
             }
         }
@@ -99,25 +99,25 @@ public class RongYaoTeamPlayer {
     public func play() {
         guard let `asset` = self.asset else { return }
         
-        if case RongYaoTeamPlayerPlayStatus.inactivity(reason: .playEnd) = status {
+        if case Status.inactivity(reason: .playEnd) = status {
             replay()
             return
         }
         
         // 播放失败
-        if case RongYaoTeamPlayerPlayStatus.inactivity(reason: .playFailed) = status {
+        if case Status.inactivity(reason: .playFailed) = status {
             // 尝试重新播放
             replay()
             return
         }
         
         // 播放中
-        if case RongYaoTeamPlayerPlayStatus.playing = status {
+        if case Status.playing = status {
             return
         }
         
         // 状态未知
-        if case RongYaoTeamPlayerPlayStatus.unknown = status {
+        if case Status.unknown = status {
             // 记录操作, 待资源初始化完成后调用
             operationOfInitializing = self.play
             return
@@ -133,7 +133,7 @@ public class RongYaoTeamPlayer {
         pause(.pause)
     }
     
-    private func pause(_ reason: RongYaoTeamPlayerPausedReason) {
+    private func pause(_ reason: PausedReason) {
         guard let `asset` = self.asset else { return }
         
         switch status {
@@ -141,21 +141,21 @@ public class RongYaoTeamPlayer {
         default: break
         }
         
-        if case RongYaoTeamPlayerPlayStatus.inactivity(reason: .playEnd) = status {
-            if case RongYaoTeamPlayerPausedReason.pause = reason {
+        if case Status.inactivity(reason: .playEnd) = status {
+            if case PausedReason.pause = reason {
                 return
             }
         }
         
         // 播放失败
-        if case RongYaoTeamPlayerPlayStatus.inactivity(reason: .playFailed) = status {
+        if case Status.inactivity(reason: .playFailed) = status {
             return
         }
         
         // 状态未知
-        if case RongYaoTeamPlayerPlayStatus.unknown = status {
+        if case Status.unknown = status {
             // 记录操作
-            if case RongYaoTeamPlayerPausedReason.pause = reason {
+            if case PausedReason.pause = reason {
                 operationOfInitializing = self.pause
             }
             return
@@ -174,7 +174,7 @@ public class RongYaoTeamPlayer {
         if ( asset?.isOtherAsset == false ) { self.view.presentView.setAVPlayer(nil) }
         if ( assetProperties != nil ) { assetProperties = nil }
         if ( asset != nil ) { asset = nil }
-        if case RongYaoTeamPlayerPlayStatus.unknown = status {
+        if case Status.unknown = status {
             return
         }
         status = .unknown
@@ -187,7 +187,7 @@ public class RongYaoTeamPlayer {
         guard let `asset` = self.asset else { return }
         
         // 播放失败
-        if case RongYaoTeamPlayerPlayStatus.inactivity(reason: .playFailed) = status {
+        if case Status.inactivity(reason: .playFailed) = status {
             self.asset = RongYaoTeamPlayerAsset.init(asset.playURL, specifyStartTime: asset.specifyStartTime)
             return
         }
@@ -221,7 +221,7 @@ public class RongYaoTeamPlayer {
         
         let current = floor(assetProperties.currentTime)
         let seek = floor(time)
-        if case RongYaoTeamPlayerPlayStatus.inactivity(reason: .playEnd) = status {
+        if case Status.inactivity(reason: .playEnd) = status {
             // .... nothing ....
         }
         else if ( current == seek ) {
@@ -229,7 +229,7 @@ public class RongYaoTeamPlayer {
             return
         }
         
-        if case RongYaoTeamPlayerPlayStatus.paused(reason: .seeking) = status {
+        if case Status.paused(reason: .seeking) = status {
             asset?.playerItem?.cancelPendingSeeks()
         }
         else {
@@ -246,7 +246,7 @@ public class RongYaoTeamPlayer {
     
     
     
-    fileprivate func valueDidChangeForKey(_ key: RongYaoTeamPlayerPropertyKey) {
+    fileprivate func valueDidChangeForKey(_ key: PropertyKey) {
         for delegate in delegates.all() {
             delegate.player(self, valueDidChangeForKey: key)
         }
@@ -273,7 +273,7 @@ public class RongYaoTeamPlayer {
     
     private func needPlayNewAsset() {
         assetProperties = nil
-        if case RongYaoTeamPlayerPlayStatus.unknown = status {}
+        if case Status.unknown = status {}
         else { status = .unknown }
         
         // 2. prepare
@@ -327,14 +327,14 @@ public class RongYaoTeamPlayer {
     
     /// -----------------------------------------------------------------------
     
-    fileprivate func bufferStatusDidChange(_ buffer: RongYaoTeamPlayerBufferStatus) {
+    fileprivate func bufferStatusDidChange(_ buffer: BufferStatus) {
         switch buffer {
         case .unknown: break
         case .empty:
             pause(.buffering)
         case .full:
             // 如果已暂停, break
-            if case RongYaoTeamPlayerPlayStatus.paused(reason: .pause) = status {
+            if case Status.paused(reason: .pause) = status {
                 break
             }
             play()
@@ -349,7 +349,7 @@ public class RongYaoTeamPlayer {
     
     fileprivate func currentTimeDidChange() {
         // 正在播放
-        if case RongYaoTeamPlayerPlayStatus.playing = status {
+        if case Status.playing = status {
             valueDidChangeForKey(.currentTime)
         }
     }
@@ -368,67 +368,68 @@ public protocol RongYaoTeamPlayerDelegate: NSObjectProtocol {
     ///   - player: 播放器
     ///   - valueDidChangeForKey: 相应的属性
     /// - Returns: Void
-    func player(_ player: RongYaoTeamPlayer, valueDidChangeForKey key: RongYaoTeamPlayerPropertyKey)
+    func player(_ player: RongYaoTeamPlayer, valueDidChangeForKey key: RongYaoTeamPlayer.PropertyKey)
 }
-/// 播放器当前的状态
-///
-/// - unknown:      未播放任何资源时的状态
-/// - readyToPlay:  资源准备就绪
-/// - playing:      播放中
-/// - paused:       暂停状态
-/// - inactivity:   不活跃状态
-public enum RongYaoTeamPlayerPlayStatus {
-    case unknown
-    case readyToPlay
-    case playing
-    case paused(reason: RongYaoTeamPlayerPausedReason)
-    case inactivity(reason: RongYaoTeamPlayerInactivityReason)
+public extension RongYaoTeamPlayer {
+    /// 播放器当前的状态
+    ///
+    /// - unknown:      未播放任何资源时的状态
+    /// - readyToPlay:  准备就绪
+    /// - playing:      播放中
+    /// - paused:       暂停状态
+    /// - inactivity:   不活跃状态
+    enum Status {
+        case unknown
+        case readyToPlay
+        case playing
+        case paused(reason: PausedReason)
+        case inactivity(reason: InactivityReason)
+    }
+    /// 播放暂停的理由
+    ///
+    /// - buffering: 正在缓冲
+    /// - pause:     被暂停
+    /// - seeking:   正在跳转(调用seekToTime:时)
+    enum PausedReason {
+        case buffering
+        case pause
+        case seeking
+    }
+    /// 播放不活跃的原因
+    ///
+    /// - playEnd:    播放完毕
+    /// - playFailed: 播放失败
+    enum InactivityReason {
+        case playEnd
+        case playFailed
+    }
+    /// 缓冲的状态
+    ///
+    /// - unknown: 未知, 可能还未播放
+    /// - empty:   缓冲区为空
+    /// - full:    缓冲区已满
+    enum BufferStatus {
+        case unknown
+        case empty
+        case full
+    }
+    /// 播放器的属性key
+    ///
+    /// - state:             同 player.assetProperties.state
+    /// - duration:          同 player.assetProperties.duration
+    /// - currentTime:       同 player.assetProperties.currentTime
+    /// - bufferLoadedTime:  同 player.assetProperties.bufferLoadedTime
+    /// - bufferStatus:      同 player.assetProperties.bufferStatus
+    /// - presentationSize:  同 player.assetProperties.presentationSize
+    enum PropertyKey {
+        case state
+        case duration
+        case currentTime
+        case bufferLoadedTime
+        case bufferStatus
+        case presentationSize
+    }
 }
-/// 播放暂停的理由
-///
-/// - buffering: 正在缓冲
-/// - pause:     被暂停
-/// - seeking:   正在跳转(调用seekToTime:时)
-public enum RongYaoTeamPlayerPausedReason {
-    case buffering
-    case pause
-    case seeking
-}
-/// 播放不活跃的原因
-///
-/// - playEnd:    播放完毕
-/// - playFailed: 播放失败
-public enum RongYaoTeamPlayerInactivityReason {
-    case playEnd
-    case playFailed
-}
-/// 缓冲的状态
-///
-/// - unknown: 未知, 可能还未播放
-/// - empty:   缓冲区为空
-/// - full:    缓冲区已满
-public enum RongYaoTeamPlayerBufferStatus {
-    case unknown
-    case empty
-    case full
-}
-/// 播放器的属性key
-///
-/// - state:             同 player.assetProperties.state
-/// - duration:          同 player.assetProperties.duration
-/// - currentTime:       同 player.assetProperties.currentTime
-/// - bufferLoadedTime:  同 player.assetProperties.bufferLoadedTime
-/// - bufferStatus:      同 player.assetProperties.bufferStatus
-/// - presentationSize:  同 player.assetProperties.presentationSize
-public enum RongYaoTeamPlayerPropertyKey {
-    case state
-    case duration
-    case currentTime
-    case bufferLoadedTime
-    case bufferStatus
-    case presentationSize
-}
-
 extension RongYaoTeamPlayer: RongYaoTeamPlayerAssetPropertiesDelegate {
     fileprivate func properties(_ p: RongYaoTeamPlayerAssetProperties, durationDidChange duration: TimeInterval) {
         valueDidChangeForKey(.duration)
@@ -442,7 +443,7 @@ extension RongYaoTeamPlayer: RongYaoTeamPlayerAssetPropertiesDelegate {
         valueDidChangeForKey(.bufferLoadedTime)
     }
     
-    fileprivate func properties(_ p: RongYaoTeamPlayerAssetProperties, bufferStatusDidChange bufferStatus: RongYaoTeamPlayerBufferStatus) {
+    fileprivate func properties(_ p: RongYaoTeamPlayerAssetProperties, bufferStatusDidChange bufferStatus: BufferStatus) {
         bufferStatusDidChange(bufferStatus)
     }
     
@@ -463,7 +464,7 @@ fileprivate protocol RongYaoTeamPlayerAssetPropertiesDelegate {
     func properties(_ p: RongYaoTeamPlayerAssetProperties, durationDidChange duration: TimeInterval)
     func properties(_ p: RongYaoTeamPlayerAssetProperties, currentTimeDidChange currentTime: TimeInterval)
     func properties(_ p: RongYaoTeamPlayerAssetProperties, bufferLoadedTimeDidChange bufferLoadedTime: TimeInterval)
-    func properties(_ p: RongYaoTeamPlayerAssetProperties, bufferStatusDidChange bufferStatus: RongYaoTeamPlayerBufferStatus)
+    func properties(_ p: RongYaoTeamPlayerAssetProperties, bufferStatusDidChange bufferStatus: RongYaoTeamPlayer.BufferStatus)
     func properties(_ p: RongYaoTeamPlayerAssetProperties, presentationSizeDidChange presentationSize: CGSize)
 
     func playerItemDidPlayToEnd(_ p: RongYaoTeamPlayerAssetProperties)
@@ -486,10 +487,10 @@ extension RongYaoTeamPlayer: RongYaoTeamRegistrarDelegate {
     }
     
     fileprivate func oldDeviceUnavailable() {
-        if case RongYaoTeamPlayerPlayStatus.playing = status {
+        if case Status.playing = status {
             pause()
         }
-        else if case RongYaoTeamPlayerPlayStatus.paused(reason: .seeking) = status {
+        else if case Status.paused(reason: .seeking) = status {
             pause()
         }
     }
@@ -524,7 +525,7 @@ public class RongYaoTeamPlayerAssetProperties {
     public private(set) var bufferLoadedTime: TimeInterval = 0 { didSet{ self.delegate.properties(self, bufferLoadedTimeDidChange: bufferLoadedTime) } }
     
     /// 缓冲状态
-    public private(set) var bufferStatus: RongYaoTeamPlayerBufferStatus = .unknown { didSet{ self.delegate.properties(self, bufferStatusDidChange: bufferStatus) } }
+    public private(set) var bufferStatus: RongYaoTeamPlayer.BufferStatus = .unknown { didSet{ self.delegate.properties(self, bufferStatusDidChange: bufferStatus) } }
 
     /// 视频宽高
     /// - 资源初始化未完成之前, 该值为 .zero
@@ -715,12 +716,12 @@ fileprivate extension RongYaoTeamPlayerAsset {
     
     var avPlayer: AVPlayer? {
         set {
-            objc_setAssociatedObject(self, &RongYaoTeamPlayerInitPlayerAssociatedKeys.kplayer, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, &InitPlayerAssociatedKeys.kplayer, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
         
         get {
             if ( self.isOtherAsset ) { return self.otherAsset?.avPlayer }
-            return objc_getAssociatedObject(self, &RongYaoTeamPlayerInitPlayerAssociatedKeys.kplayer) as? AVPlayer
+            return objc_getAssociatedObject(self, &InitPlayerAssociatedKeys.kplayer) as? AVPlayer
         }
     }
     
@@ -751,7 +752,7 @@ fileprivate extension RongYaoTeamPlayerAsset {
     /// - 由于创建一个AVPlayer耗时, 因此将其放入子线程进行操作
     /// - 当队列为nil时, 这里进行了队列的初始化工作
     private func addOperationToQueue(_ completionBlock: @escaping ()->Void) {
-
+        
         if ( RongYaoTeamPlayerAsset.SERIAL_QUEUE == nil ) {
             /// 初始化队列
             RongYaoTeamPlayerAsset.SERIAL_QUEUE = OperationQueue.init()
@@ -779,19 +780,19 @@ fileprivate extension RongYaoTeamPlayerAsset {
     }
     
     private var state: RongYaoPlayerAssetState {
-        set {
-            objc_setAssociatedObject(self, &RongYaoTeamPlayerInitPlayerAssociatedKeys.kstate, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        set{
+            objc_setAssociatedObject(self, &InitPlayerAssociatedKeys.kstate, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
         
-        get {
+        get{
             if ( isOtherAsset == true ) { return .initialized }
-            let b = objc_getAssociatedObject(self, &RongYaoTeamPlayerInitPlayerAssociatedKeys.kstate)
+            let b = objc_getAssociatedObject(self, &InitPlayerAssociatedKeys.kstate)
             if ( b != nil ) { return b! as! RongYaoPlayerAssetState }
             return .unknown
         }
     }
     
-    private struct RongYaoTeamPlayerInitPlayerAssociatedKeys {
+    private struct InitPlayerAssociatedKeys {
         static var kplayer = "kplayer"
         static var kstate = "kstate"
     }

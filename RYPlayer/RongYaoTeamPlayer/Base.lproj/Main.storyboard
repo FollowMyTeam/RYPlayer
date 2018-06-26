@@ -160,10 +160,10 @@
             </objects>
             <point key="canvasLocation" x="1086" y="946"/>
         </scene>
-        <!--Player View Controller-->
+        <!--Test Player View Controller-->
         <scene sceneID="Xt9-sx-g7s">
             <objects>
-                <viewController id="6iG-wg-9aU" customClass="RYPlayerViewController" customModule="RongYaoTeamPlayer" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="6iG-wg-9aU" customClass="RYTestPlayerViewController" customModule="RongYaoTeamPlayer" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2y5-j9-gQ1">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

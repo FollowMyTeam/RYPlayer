@@ -27,7 +27,7 @@ class RYViewController: UIViewController {
     
     var gestureManager: RongYaoTeamGestureManager!
     
-    var edgeControlLayer: RongYaoTeamPlayerEdgeControlLayer!
+    var edgeControlLayer: RongYaoEdgeControlLayer!
     
     
     
@@ -56,7 +56,7 @@ class RYViewController: UIViewController {
         gestureManager = RongYaoTeamGestureManager.init(target: player!.view.presentView)
         gestureManager.delegate = self
         
-        edgeControlLayer = RongYaoTeamPlayerEdgeControlLayer.init(frame: .zero)
+        edgeControlLayer = RongYaoEdgeControlLayer.init(frame: .zero)
         player?.view.presentView.addSubview(edgeControlLayer)
         edgeControlLayer.snp.makeConstraints { (make) in
             make.edges.equalTo(edgeControlLayer.superview!)
@@ -69,9 +69,8 @@ class RYViewController: UIViewController {
         slider?.backgroundColor = UIColor.purple
         self.view.addSubview(slider!)
         slider?.snp.makeConstraints({ (make) in
-            make.top.equalTo(playerBackgroundView.snp.bottom).offset(20)
-            make.leading.equalTo(self.view).offset(12)
-            make.trailing.equalTo(self.view).offset(-12)
+            make.top.equalTo(playerBackgroundView.snp.bottom)
+            make.leading.trailing.equalTo(0)
             make.height.equalTo(40)
         })
         
@@ -149,7 +148,7 @@ extension RYViewController: RongYaoTeamGestureManagerDelegate {
         #endif
         guard let `player` = player else { return }
         
-        if case RongYaoTeamPlayerPlayStatus.paused(reason: .pause) = player.status {
+        if case RongYaoTeamPlayer.Status.paused(reason: .pause) = player.status {
             player.play()
         }
         else {
@@ -208,12 +207,12 @@ extension RYViewController: SJSliderDelegate {
 }
 
 extension RYViewController: RongYaoTeamPlayerDelegate {
-    func player(_ player: RongYaoTeamPlayer, valueDidChangeForKey key: RongYaoTeamPlayerPropertyKey) {
-        if ( key == RongYaoTeamPlayerPropertyKey.currentTime ) {
+    func player(_ player: RongYaoTeamPlayer, valueDidChangeForKey key: RongYaoTeamPlayer.PropertyKey) {
+        if ( key == RongYaoTeamPlayer.PropertyKey.currentTime ) {
             if ( slider!.isDragging ) { return }
             slider!.value = CGFloat(player.assetProperties!.currentTime / player.assetProperties!.duration)
         }
-        else if ( key == RongYaoTeamPlayerPropertyKey.bufferLoadedTime ) {
+        else if ( key == RongYaoTeamPlayer.PropertyKey.bufferLoadedTime ) {
             slider?.bufferProgress = CGFloat(player.assetProperties!.bufferLoadedTime / player.assetProperties!.duration)
         }
     }
