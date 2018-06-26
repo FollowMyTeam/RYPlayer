@@ -118,7 +118,11 @@ class RYViewController: UIViewController {
 }
 
 extension RYViewController: RongYaoTeamRotationManagerDelegate {
-
+    
+    func triggerConditionForAutorotation(_ mgr: RongYaoTeamRotationManager) -> Bool {
+        return true
+    }
+    
     func rotationManager(_ mgr: RongYaoTeamRotationManager, willRotateView isFullscreen: Bool) {
 
     }

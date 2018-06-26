@@ -32,8 +32,8 @@ public class RongYaoTeamRotationManager {
     /// 实例化一个旋转管理对象
     ///
     /// - Parameters:
-    ///   - target:     目标视图, 用来旋转的视图
-    ///   - superview:  父视图, 旋转视图的父视图
+    ///   - target:            目标视图, 用来旋转的视图
+    ///   - superview:         父视图, 旋转视图的父视图
     ///
     /// - 使用注意:
     ///   - 目标视图(target)的大小需与父视图相等, 如下:
@@ -46,7 +46,7 @@ public class RongYaoTeamRotationManager {
     ///             make.edges.equalTo(superview)
     ///         }
     ///     ```
-    public init(target: UIView, superview: UIView ) {
+    public init(target: UIView, superview: UIView) {
         self.target = target
         self.superview = superview
         observeDeviceOrientation()
@@ -64,10 +64,10 @@ public class RongYaoTeamRotationManager {
     
     /// 自动旋转时, 所支持的方法
     /// - 默认为 .all
-    public var autorotationSupportedOrientation: RongYaoTeamViewAutorotationSupportedOrientation = RongYaoTeamViewAutorotationSupportedOrientation.all
+    public var autorotationSupportedOrientation: AutorotationSupportedOrientation = AutorotationSupportedOrientation.all
     
     /// 当前的方向
-    public var currentOrientation: RongYaoTeamViewOrientation { return orientation }
+    public var currentOrientation: Orientation { return orientation }
     
     /// 动画持续的时间
     /// - 默认是 0.4
@@ -134,8 +134,8 @@ public class RongYaoTeamRotationManager {
     /// - 只记录三种设备方向 `.portrait, .landscapeLeft, .landscapeRight`
     private var rec_deviceOrientation: UIDeviceOrientation = .portrait
     
-    /// - Any value of `RongYaoTeamViewOrientation`
-    private var orientation: RongYaoTeamViewOrientation = .portrait
+    /// - Any value of `Orientation`
+    private var orientation: Orientation = .portrait
 
     /// 全屏时的背景视图
     private var blackView: UIView = {
@@ -145,7 +145,7 @@ public class RongYaoTeamRotationManager {
     }()
     
     /// 旋转到指定方向
-    public func rotate(_ orientation: RongYaoTeamViewOrientation, animated: Bool, completionHandler: @escaping (RongYaoTeamRotationManager)->() = {(_) in } ) {
+    public func rotate(_ orientation: Orientation, animated: Bool, completionHandler: @escaping (RongYaoTeamRotationManager)->() = {(_) in } ) {
         DispatchQueue.main.async { [weak self] in
             guard let `self` = self else { return }
             if ( self.transitioning ) { return }
@@ -244,6 +244,16 @@ public class RongYaoTeamRotationManager {
                 #endif
                 return
             }
+            
+            if let result = self.delegate?.triggerConditionForAutorotation(self) {
+                if ( result == false ) {
+                    #if DEBUG
+                    print("\(#function) - \(#line) - RongYaoTeamRotationManager - 自动旋转触发条件返回false, 暂时无法旋转!")
+                    #endif
+                    return
+                }
+            }
+            
         default: break
         }
         
@@ -266,17 +276,17 @@ public class RongYaoTeamRotationManager {
     
     /// 是否支持 Portrait
     private var isSupportedPortrait: Bool {
-        return RongYaoTeamViewAutorotationSupportedOrientation.portrait.rawValue == (autorotationSupportedOrientation.rawValue & RongYaoTeamViewAutorotationSupportedOrientation.portrait.rawValue)
+        return AutorotationSupportedOrientation.portrait.rawValue == (autorotationSupportedOrientation.rawValue & AutorotationSupportedOrientation.portrait.rawValue)
     }
     
     /// 是否支持 LandscapeLeft
     private var isSupportedLandscapeLeft: Bool {
-        return RongYaoTeamViewAutorotationSupportedOrientation.landscapeLeft.rawValue == (autorotationSupportedOrientation.rawValue & RongYaoTeamViewAutorotationSupportedOrientation.landscapeLeft.rawValue)
+        return AutorotationSupportedOrientation.landscapeLeft.rawValue == (autorotationSupportedOrientation.rawValue & AutorotationSupportedOrientation.landscapeLeft.rawValue)
     }
     
     /// 是否支持 LandscapeRight
     private var isSupportedLandscapeRight: Bool {
-        return RongYaoTeamViewAutorotationSupportedOrientation.landscapeRight.rawValue == (autorotationSupportedOrientation.rawValue & RongYaoTeamViewAutorotationSupportedOrientation.landscapeRight.rawValue)
+        return AutorotationSupportedOrientation.landscapeRight.rawValue == (autorotationSupportedOrientation.rawValue & AutorotationSupportedOrientation.landscapeRight.rawValue)
     }
     
     /// 当前方向是否与设备方向一致
@@ -292,46 +302,54 @@ public class RongYaoTeamRotationManager {
     }
 }
 
-/// RongYaoTeamRotationManager - `播放器视图`方向
-///
-/// - portrait:       竖屏
-/// - landscapeLeft:  全屏, Home键在右侧
-/// - landscapeRight: 全屏, Home键在左侧
-public enum RongYaoTeamViewOrientation: UInt {
-    case portrait = 0
-    case landscapeLeft = 1
-    case landscapeRight = 2
+extension RongYaoTeamRotationManager {
+    /// 方向
+    ///
+    /// - portrait:       竖屏
+    /// - landscapeLeft:  全屏, Home键在右侧
+    /// - landscapeRight: 全屏, Home键在左侧
+    public enum Orientation: UInt {
+        case portrait = 0
+        case landscapeLeft = 1
+        case landscapeRight = 2
+    }
+    
+    /// 自动旋转支持的方向
+    public struct AutorotationSupportedOrientation: OptionSet {
+        
+        /// 是否支持全屏
+        public static var portrait: AutorotationSupportedOrientation { return AutorotationSupportedOrientation(rawValue: 1 << 0) }
+        
+        /// 是否支持全屏, Home键在右侧
+        public static var landscapeLeft: AutorotationSupportedOrientation { return AutorotationSupportedOrientation(rawValue: 1 << 1) }
+        
+        /// 是否支持全屏, Home键在左侧
+        public static var landscapeRight: AutorotationSupportedOrientation { return AutorotationSupportedOrientation(rawValue: 1 << 2) }
+        
+        /// 是否支持全部方向
+        public static var all: AutorotationSupportedOrientation { return
+            AutorotationSupportedOrientation(rawValue:
+                    AutorotationSupportedOrientation.portrait.rawValue |
+                    AutorotationSupportedOrientation.landscapeLeft.rawValue |
+                    AutorotationSupportedOrientation.landscapeRight.rawValue) }
+        
+        /// init
+        public init(rawValue: UInt) { self.rawValue = rawValue }
+        
+        /// value
+        public var rawValue: UInt
+    }
 }
 
-/// RongYaoTeamRotationManager - `播放器视图`自动旋转支持的方向
-public struct RongYaoTeamViewAutorotationSupportedOrientation: OptionSet {
-    
-    /// 是否支持全屏
-    public static var portrait: RongYaoTeamViewAutorotationSupportedOrientation { return RongYaoTeamViewAutorotationSupportedOrientation(rawValue: 1 << 0) }
-    
-    /// 是否支持全屏, Home键在右侧
-    public static var landscapeLeft: RongYaoTeamViewAutorotationSupportedOrientation { return RongYaoTeamViewAutorotationSupportedOrientation(rawValue: 1 << 1) }
-    
-    /// 是否支持全屏, Home键在左侧
-    public static var landscapeRight: RongYaoTeamViewAutorotationSupportedOrientation { return RongYaoTeamViewAutorotationSupportedOrientation(rawValue: 1 << 2) }
-    
-    /// 是否支持全部方向
-    public static var all: RongYaoTeamViewAutorotationSupportedOrientation { return
-        RongYaoTeamViewAutorotationSupportedOrientation(rawValue:
-            RongYaoTeamViewAutorotationSupportedOrientation.portrait.rawValue |
-                RongYaoTeamViewAutorotationSupportedOrientation.landscapeLeft.rawValue |
-                RongYaoTeamViewAutorotationSupportedOrientation.landscapeRight.rawValue) }
-    
-    /// init
-    public init(rawValue: UInt) { self.rawValue = rawValue }
-    
-    /// value
-    public var rawValue: UInt
-}
 
 /// RongYaoTeamRotationManager - 代理
 public protocol RongYaoTeamRotationManagerDelegate {
 
+    /// 自动旋转的条件
+    /// - 当触发自动旋转时, 管理类将会回调此方法
+    /// - 返回true, 将会进行旋转. 反之, 则停止此次自动旋转
+    func triggerConditionForAutorotation(_ mgr: RongYaoTeamRotationManager) -> Bool
+    
     /// 将要旋转的回调
     func rotationManager(_ mgr: RongYaoTeamRotationManager, willRotateView isFullscreen: Bool)
     

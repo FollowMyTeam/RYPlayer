@@ -43,7 +43,7 @@ class RYTestRotationViewController: UIViewController {
         }
         
         rotationManager = RongYaoTeamRotationManager.init(target: testTargetView, superview: testSuperview)
-        
+        rotationManager.delegate = self
         
         containerView = UIView.init()
         testTargetView.addSubview(containerView)
@@ -80,6 +80,7 @@ class RYTestRotationViewController: UIViewController {
             make.center.equalTo(centerView.superview!)
             make.size.equalTo(60)
         }
+        
         // Do any additional setup after loading the view.
     }
     
@@ -94,5 +95,23 @@ class RYTestRotationViewController: UIViewController {
     
     override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
         return .portrait
+    }
+}
+
+extension RYTestRotationViewController: RongYaoTeamRotationManagerDelegate {
+    func triggerConditionForAutorotation(_ mgr: RongYaoTeamRotationManager) -> Bool {
+        return true
+    }
+    
+    func rotationManager(_ mgr: RongYaoTeamRotationManager, willRotateView isFullscreen: Bool) {
+        #if DEBUG
+        print("\(#function) - \(#line) - RYTestRotationViewController")
+        #endif
+    }
+    
+    func rotationManager(_ mgr: RongYaoTeamRotationManager, didRotateView isFullscreen: Bool) {
+        #if DEBUG
+        print("\(#function) - \(#line) - RYTestRotationViewController")
+        #endif
     }
 }
