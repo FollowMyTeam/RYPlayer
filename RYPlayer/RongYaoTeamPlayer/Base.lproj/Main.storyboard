@@ -50,6 +50,14 @@
                                     <segue destination="Vky-5j-LFF" kind="show" id="fFg-Cj-CCN"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="08C-H7-sDP">
+                                <rect key="frame" x="128" y="351" width="107" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="测试ButtonItem"/>
+                                <connections>
+                                    <segue destination="mIA-71-dEF" kind="show" id="cAM-66-Kaw"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
@@ -128,7 +136,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4nN-ig-9y2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2097" y="-109"/>
+            <point key="canvasLocation" x="2097" y="-966"/>
         </scene>
         <!--Test Rotation View Controller-->
         <scene sceneID="ROI-rW-9L0">
@@ -143,7 +151,22 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jGj-tD-Z1a" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2087" y="1194"/>
+            <point key="canvasLocation" x="3562" y="-967"/>
+        </scene>
+        <!--Test Button Item View Controller-->
+        <scene sceneID="vZM-FI-Z6k">
+            <objects>
+                <viewController id="mIA-71-dEF" customClass="RYTestButtonItemViewController" customModule="RongYaoTeamPlayer" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="DKI-jZ-AOJ">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="FLJ-ET-HeW"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="NQ8-9x-5mB" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4865" y="-967"/>
         </scene>
         <!--Test Gesture Manager View Controller-->
         <scene sceneID="W8e-UH-u2z">
@@ -158,7 +181,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="F2S-XO-LF6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1086" y="946"/>
+            <point key="canvasLocation" x="4223" y="-967"/>
         </scene>
         <!--Test Player View Controller-->
         <scene sceneID="Xt9-sx-g7s">
@@ -173,7 +196,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Lys-OU-9vZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2097" y="542"/>
+            <point key="canvasLocation" x="2862" y="-967"/>
         </scene>
         <!--Item-->
         <scene sceneID="Thu-0o-KPa">

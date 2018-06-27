@@ -8,7 +8,8 @@
 
 import UIKit
 
-public class RongYaoButtonItem {
+public class RongYaoButtonItem: Equatable {
+    
     public init(_ image: UIImage, target: AnyObject, action: Selector) {
         self.image = image
         self.target = target
@@ -40,4 +41,9 @@ public class RongYaoButtonItem {
     public var action: Selector?
     
     public weak var target: AnyObject?
+    
+    public static func == (lhs: RongYaoButtonItem, rhs: RongYaoButtonItem) -> Bool {
+        return Unmanaged.passUnretained(lhs).toOpaque()
+            == Unmanaged.passUnretained(rhs).toOpaque()
+    }
 }
