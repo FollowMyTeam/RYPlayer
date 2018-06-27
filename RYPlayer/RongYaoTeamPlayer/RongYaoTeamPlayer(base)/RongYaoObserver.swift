@@ -12,7 +12,7 @@ public class RongYaoObserver: NSObject {
     var observeKey: String?
     var exeBlock: ((RongYaoObserver)->Void)
     var nota: Notification.Name?
-    var owner_p: UnsafeMutableRawPointer
+    var owner: AnyObject
     
     /// KVO
     var value_new: AnyObject?
@@ -20,7 +20,7 @@ public class RongYaoObserver: NSObject {
     init(owner: AnyObject, observeKey: String, exeBlock: @escaping (RongYaoObserver)->Void ) {
         self.observeKey = observeKey
         self.exeBlock = exeBlock
-        owner_p = ry_bridge(obj: owner)
+        self.owner = owner
         super.init()
         owner.addObserver(self, forKeyPath: observeKey, options: [.old, .new], context: nil)
     }
@@ -38,7 +38,7 @@ public class RongYaoObserver: NSObject {
     init(owner: AnyObject, nota: Notification.Name, exeBlock: @escaping (RongYaoObserver)->Void) {
         self.nota = nota;
         self.exeBlock = exeBlock
-        owner_p = ry_bridge(obj: owner)
+        self.owner = owner
         super.init()
         NotificationCenter.default.addObserver(self, selector: #selector(handleNotification), name: nota, object: owner)
     }
@@ -48,10 +48,6 @@ public class RongYaoObserver: NSObject {
     }
     
     deinit {
-        #if DEBUG
-        print("\(#function) - \(#line) - RongYaoObserver")
-        #endif
-        let owner = ry_bridge(ptr: owner_p)
         if ( observeKey != nil ) {
             owner.removeObserver(self, forKeyPath: observeKey!)
         }

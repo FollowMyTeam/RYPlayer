@@ -43,9 +43,6 @@ public class RongYaoButtonItemView: UIView {
     private var titleLabel: UILabel?
     
     private func itemDidChange(_ item: RongYaoButtonItem?, _ oldItem: RongYaoButtonItem?) {
-        #if DEBUG
-        print("\(#function) - \(#line) - \(NSStringFromClass(self.classForCoder))")
-        #endif
         
         if let `oldItem` = oldItem {
             containerView.removeTarget(oldItem.target, action: oldItem.action, for: .touchUpInside)
@@ -114,9 +111,6 @@ public class RongYaoButtonItemView: UIView {
     }
     
     func addObserversOfItem(_ item: RongYaoButtonItem?) {
-        #if DEBUG
-        print("\(#function) - \(#line) - \(NSStringFromClass(self.classForCoder))")
-        #endif
         guard let `item` = item else { return }
         observers.append(RongYaoObserver.init(owner: item, observeKey: "isHidden", exeBlock: { [weak self] (observer) in
             guard let `self` = self else { return }
