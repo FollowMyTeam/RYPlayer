@@ -12,22 +12,22 @@ import AVFoundation
 // MARK: - 播放器(base)
 
 public extension RongYaoTeamPlayer {
-    
+   
     /// 获取属性观察者
     /// - 当以下属性值改变时, 将会调用观察者相应方法
-    public func getAssetPropertyObserver() -> RongYaoTeamPlayerAssetPropertyObserver {
-        return _RongYaoTeamPlayerAssetPropertyObserver.init(self)
+    func getAssetPropertyObserver() -> AssetPropertyObserver {
+        return _AssetPropertyObserver.init(self)
     }
     
     /// error
     /// - 当播放状态为`playFailed`时, 可以查看此error
-    public var error: Error? {
+    var error: Error? {
         return self.assetProperties?.error
     }
     
     /// 播放时长
     /// - 可以通过`属性观察者(player.getAssetPropertyObserver())`来及时的查看新的value
-    public var duration: TimeInterval {
+    var duration: TimeInterval {
         if let `assetProperties` = self.assetProperties {
             return assetProperties.duration
         }
@@ -36,7 +36,7 @@ public extension RongYaoTeamPlayer {
 
     /// 当前时间
     /// - 可以通过`属性观察者(player.getAssetPropertyObserver())`来及时的查看新的value
-    public var currentTime: TimeInterval {
+    var currentTime: TimeInterval {
         if let `assetProperties` = self.assetProperties {
             return assetProperties.currentTime
         }
@@ -45,7 +45,7 @@ public extension RongYaoTeamPlayer {
 
     /// 已缓冲到的时间
     /// - 可以通过`属性观察者(player.getAssetPropertyObserver())`来及时的查看新的value
-    public var bufferLoadedTime: TimeInterval {
+    var bufferLoadedTime: TimeInterval {
         if let `assetProperties` = self.assetProperties {
             return assetProperties.bufferLoadedTime
         }
@@ -54,7 +54,7 @@ public extension RongYaoTeamPlayer {
 
     /// 缓冲状态
     /// - 可以通过`属性观察者(player.getAssetPropertyObserver())`来及时的查看新的value
-    public var bufferStatus: RongYaoTeamPlayer.BufferStatus {
+    var bufferStatus: RongYaoTeamPlayer.BufferStatus {
         if let `assetProperties` = self.assetProperties {
             return assetProperties.bufferStatus
         }
@@ -64,11 +64,20 @@ public extension RongYaoTeamPlayer {
     /// 视频宽高
     /// - 资源初始化未完成之前, 该值为 .zero
     /// - 可以通过`属性观察者(player.getAssetPropertyObserver())`来及时的查看新的value
-    public var presentationSize: CGSize {
+    var presentationSize: CGSize {
         if let `assetProperties` = self.assetProperties {
             return assetProperties.presentationSize
         }
         return .zero
+    }
+    
+    class AssetPropertyObserver {
+        /// 当播放器某个属性值改变时, 将会调用这个block
+        public var propertyValueDidChangeExeBlock: ((RongYaoTeamPlayer, RongYaoTeamPlayer.PropertyKey, Any?)->())?
+        
+        public func setPropertyValueDidChangeExeBlock(_ block: ((RongYaoTeamPlayer, RongYaoTeamPlayer.PropertyKey, Any?)->())?) {
+            self.propertyValueDidChangeExeBlock = block
+        }
     }
 }
 
@@ -414,6 +423,23 @@ public class RongYaoTeamPlayer {
     private var registrar: RongYaoTeamRegistrar = RongYaoTeamRegistrar.init()
 }
 public extension RongYaoTeamPlayer {
+    /// 属性key
+    ///
+    /// - state:             同 player.state
+    /// - duration:          同 player.duration
+    /// - currentTime:       同 player.currentTime
+    /// - bufferLoadedTime:  同 player.bufferLoadedTime
+    /// - bufferStatus:      同 player.bufferStatus
+    /// - presentationSize:  同 player.presentationSize
+    enum PropertyKey:Int {
+        case state
+        case duration
+        case currentTime
+        case bufferLoadedTime
+        case bufferStatus
+        case presentationSize
+    }
+    
     /// 当前播放的状态
     ///
     /// - unknown:      未播放任何资源时的状态
@@ -455,22 +481,6 @@ public extension RongYaoTeamPlayer {
         case unknown
         case empty
         case full
-    }
-    /// 播放器的属性key
-    ///
-    /// - state:             同 player.assetProperties.state
-    /// - duration:          同 player.assetProperties.duration
-    /// - currentTime:       同 player.assetProperties.currentTime
-    /// - bufferLoadedTime:  同 player.assetProperties.bufferLoadedTime
-    /// - bufferStatus:      同 player.assetProperties.bufferStatus
-    /// - presentationSize:  同 player.assetProperties.presentationSize
-    enum PropertyKey:Int {
-        case state
-        case duration
-        case currentTime
-        case bufferLoadedTime
-        case bufferStatus
-        case presentationSize
     }
     
     /// 属性值改变的通知
@@ -545,15 +555,6 @@ extension RongYaoTeamPlayer: RongYaoTeamRegistrarDelegate {
     
     fileprivate func audioSessionInterruption() {
         pause()
-    }
-}
-
-public class RongYaoTeamPlayerAssetPropertyObserver {
-    /// 当播放器某个属性值改变时, 将会调用这个block
-    public var propertyValueDidChangeExeBlock: ((RongYaoTeamPlayer, RongYaoTeamPlayer.PropertyKey, Any?)->())?
-    
-    public func setPropertyValueDidChangeExeBlock(_ block: ((RongYaoTeamPlayer, RongYaoTeamPlayer.PropertyKey, Any?)->())?) {
-        self.propertyValueDidChangeExeBlock = block
     }
 }
 
@@ -909,7 +910,7 @@ fileprivate class RongYaoTeamRegistrar {
     }
 }
 
-fileprivate class _RongYaoTeamPlayerAssetPropertyObserver: RongYaoTeamPlayerAssetPropertyObserver {
+fileprivate class _AssetPropertyObserver: RongYaoTeamPlayer.AssetPropertyObserver {
     init(_ player: RongYaoTeamPlayer) {
         super.init()
         notaToken = NotificationCenter.default.addObserver(forName: RongYaoTeamPlayer.PropertyValueDidChange, object: player, queue: nil) { [weak self] (nota) in

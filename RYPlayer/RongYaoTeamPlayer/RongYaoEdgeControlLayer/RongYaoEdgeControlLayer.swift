@@ -51,7 +51,7 @@ public class RongYaoEdgeControlLayer: UIView {
         rightView.backgroundColor = .green
     }
     
-    private var rotationObserver: RongYaoTeamRotationManagerObserver?
+    private var rotationObserver: RongYaoTeamRotationManager.Observer?
     
     private func playerDidSet() {
 

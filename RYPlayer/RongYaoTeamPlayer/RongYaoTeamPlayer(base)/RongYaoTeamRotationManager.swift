@@ -10,6 +10,30 @@ import UIKit
 
 // MARK: - 旋转管理
 
+public extension RongYaoTeamRotationManager {
+    /// 获取一个观察者
+    /// - 当视图将要旋转时, 将会调用观察者的相应方法
+    /// - 同样, 旋转完毕后, 也会调用相应方法
+    func getObserver() -> RongYaoTeamRotationManager.Observer {
+        return _Observer.init(self);
+    }
+    
+    /// 观察者
+    class Observer {
+        /// 视图将要旋转
+        public var viewWillRotateExeBlock: ((_ mgr: RongYaoTeamRotationManager)->())?
+        public func setViewWillRotateExeBlock(_ block: ((_ mgr: RongYaoTeamRotationManager)->())?) {
+            viewWillRotateExeBlock = block
+        }
+        
+        /// 视图完成旋转
+        public var viewDidEndRotateExeBlock: ((_ mgr: RongYaoTeamRotationManager)->())?
+        public func setViewDidEndRotateExeBlock(_ block: ((_ mgr: RongYaoTeamRotationManager)->())?) {
+            viewDidEndRotateExeBlock = block
+        }
+    }
+}
+
 /// RongYaoTeamRotationManager - 旋转管理类
 /// - 设置自动旋转支持的方向
 /// - 设置旋转动画持续时间
@@ -53,13 +77,6 @@ public class RongYaoTeamRotationManager {
     }
     
     public weak var delegate: (AnyObject & RongYaoTeamRotationManagerDelegate)?
-    
-    /// 获取一个观察者
-    /// - 当视图将要旋转时, 将会调用观察者的相应方法
-    /// - 同样, 旋转完毕后, 也会调用相应方法
-    public func getObserver() -> RongYaoTeamRotationManagerObserver {
-        return _RongYaoTeamRotationManagerObserver.init(self);
-    }
     
     /// 是否禁止自动旋转
     /// - 该属性只会禁止自动旋转, 当调用 rotate 等方法还是可以旋转的
@@ -310,20 +327,6 @@ public class RongYaoTeamRotationManager {
     }
 }
 
-public class RongYaoTeamRotationManagerObserver {
-    /// 视图将要旋转
-    public var viewWillRotateExeBlock: ((_ mgr: RongYaoTeamRotationManager)->())?
-    public func setViewWillRotateExeBlock(_ block: ((_ mgr: RongYaoTeamRotationManager)->())?) {
-        viewWillRotateExeBlock = block
-    }
-    
-    /// 视图完成旋转
-    public var viewDidEndRotateExeBlock: ((_ mgr: RongYaoTeamRotationManager)->())?
-    public func setViewDidEndRotateExeBlock(_ block: ((_ mgr: RongYaoTeamRotationManager)->())?) {
-        viewDidEndRotateExeBlock = block
-    }
-}
-
 public extension RongYaoTeamRotationManager {
     /// 方向
     ///
@@ -369,7 +372,7 @@ public extension RongYaoTeamRotationManager {
     fileprivate static let ViewDidEndRotate: NSNotification.Name = NSNotification.Name.init("RongYaoTeamRotationManager.ViewDidEndRotate")
 }
 
-fileprivate class _RongYaoTeamRotationManagerObserver: RongYaoTeamRotationManagerObserver {
+fileprivate class _Observer: RongYaoTeamRotationManager.Observer {
     fileprivate init(_ mgr: RongYaoTeamRotationManager) {
         super.init()
         notaToken1 = NotificationCenter.default.addObserver(forName: RongYaoTeamRotationManager.ViewWillRotate, object: mgr, queue: nil) { [weak self] (nota) in

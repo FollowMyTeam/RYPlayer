@@ -27,7 +27,7 @@ class RYViewController: UIViewController {
     
     var gestureManager: RongYaoTeamGestureManager!
 
-    var playerPropertyObserver: RongYaoTeamPlayerAssetPropertyObserver?
+    var playerPropertyObserver: RongYaoTeamPlayer.AssetPropertyObserver?
     
     override func viewDidLoad() {
         super.viewDidLoad()
