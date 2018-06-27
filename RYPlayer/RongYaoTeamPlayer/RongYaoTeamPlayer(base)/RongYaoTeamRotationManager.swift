@@ -313,8 +313,15 @@ public class RongYaoTeamRotationManager {
 public class RongYaoTeamRotationManagerObserver {
     /// 视图将要旋转
     public var viewWillRotateExeBlock: ((_ mgr: RongYaoTeamRotationManager)->())?
+    public func setViewWillRotateExeBlock(_ block: ((_ mgr: RongYaoTeamRotationManager)->())?) {
+        viewWillRotateExeBlock = block
+    }
+    
     /// 视图完成旋转
     public var viewDidEndRotateExeBlock: ((_ mgr: RongYaoTeamRotationManager)->())?
+    public func setViewDidEndRotateExeBlock(_ block: ((_ mgr: RongYaoTeamRotationManager)->())?) {
+        viewDidEndRotateExeBlock = block
+    }
 }
 
 public extension RongYaoTeamRotationManager {

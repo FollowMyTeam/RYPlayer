@@ -27,7 +27,7 @@ class RYViewController: UIViewController {
     
     var gestureManager: RongYaoTeamGestureManager!
 
-    var playerPropertyObserver: RongYaoTeamPlayerPropertyObserver?
+    var playerPropertyObserver: RongYaoTeamPlayerAssetPropertyObserver?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,15 +50,19 @@ class RYViewController: UIViewController {
             make.edges.equalTo(player!.view.superview!)
         }
         
-        playerPropertyObserver = player?.getObserver()
-        playerPropertyObserver?.setPropertyValueDidChangeExeBlock({ [weak self] (player, key, value) in
+        
+        playerPropertyObserver = player?.getAssetPropertyObserver()
+        playerPropertyObserver?.setPropertyValueDidChangeExeBlock({ [weak self] (asset, key, value) in
             guard let `self` = self else { return }
-            if ( key == RongYaoTeamPlayer.PropertyKey.currentTime ) {
-                if ( self.slider!.isDragging ) { return }
-                self.slider.value = CGFloat(player.assetProperties!.currentTime / player.assetProperties!.duration)
-            }
-            else if ( key == RongYaoTeamPlayer.PropertyKey.bufferLoadedTime ) {
-                self.slider.bufferProgress = CGFloat(player.assetProperties!.bufferLoadedTime / player.assetProperties!.duration)
+            
+            switch key {
+            case .currentTime:
+                if ( self.slider.isDragging ) { return }
+                self.slider.value = CGFloat(asset.currentTime / asset.duration)
+
+            case .bufferLoadedTime:
+                self.slider.bufferProgress = CGFloat(asset.bufferLoadedTime / asset.duration)
+            default: break
             }
         })
         
@@ -205,8 +209,7 @@ extension RYViewController: SJSliderDelegate {
     }
     
     func sliderDidEndDragging(_ slider: SJSlider) {
-        guard let `assetProperties` = player!.assetProperties else { return }
-        player?.seekToTime(TimeInterval(slider.value) * assetProperties.duration, completionHandler: { (player, _) in })
+        player?.seekToTime(TimeInterval(slider.value) * player.duration, completionHandler: { (player, _) in })
     }
 }
 
