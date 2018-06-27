@@ -8,6 +8,8 @@
 
 import Foundation
 
+/// 暂未使用
+
 func ry_bridge(obj : AnyObject) -> UnsafeMutableRawPointer {
     return Unmanaged.passUnretained(obj).toOpaque()
 }

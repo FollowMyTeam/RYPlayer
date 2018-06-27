@@ -488,6 +488,7 @@ public extension RongYaoTeamPlayer {
     fileprivate static let kPropertyKey: String = "kPropertyKey"
     fileprivate static let kPropertyValueKey: String = "kPropertyValueKey"
 }
+
 extension RongYaoTeamPlayer: RongYaoTeamPlayerAssetPropertiesDelegate {
     fileprivate func properties(_ p: RongYaoTeamPlayerAssetProperties, durationDidChange duration: TimeInterval) {
         propertyValueDidChangeForKey(.duration, value: duration)
@@ -528,7 +529,6 @@ fileprivate protocol RongYaoTeamPlayerAssetPropertiesDelegate {
     func playerItemDidPlayToEnd(_ p: RongYaoTeamPlayerAssetProperties)
     func properties(_ p: RongYaoTeamPlayerAssetProperties, playerItemStatusDidChange status: AVPlayerItemStatus)
 }
-
 
 extension RongYaoTeamPlayer: RongYaoTeamRegistrarDelegate {
     fileprivate func appWillEnterForeground() {
@@ -713,7 +713,8 @@ fileprivate class RongYaoTeamPlayerAssetProperties {
             timer.invalidate()
             isWaitingPlaybackBuffer = false
             self.bufferStatus = .full
-            }, repeats: true)
+            }, repeats: true
+        )
         
         RunLoop.main.add(refreshBufferTimer!, forMode: .commonModes)
         refreshBufferTimer!.fireDate = Date.init(timeIntervalSinceNow: refreshBufferTimer!.timeInterval)
@@ -724,9 +725,7 @@ fileprivate class RongYaoTeamPlayerAssetProperties {
     private var maxPreTime: TimeInterval {
         get {
             let max = self.duration
-            if ( max == 0 ) {
-                return 0
-            }
+            if ( max == 0 ) { return 0 }
             let pre = self.currentTime + 5
             return pre < max ? pre : max
         }

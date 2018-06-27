@@ -17,7 +17,6 @@ public class RongYaoButtonItemView: UIView {
         #endif
     }
     
-    
     init(_ item: RongYaoButtonItem?) {
         super.init(frame: .zero)
         self.item = item

@@ -8,6 +8,8 @@
 
 import Foundation
 
+/// 暂未使用
+
 public class RongYaoMultidelegateManager<Element> {
     
     /// 添加一个代理

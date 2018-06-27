@@ -123,6 +123,17 @@
 			path = RongYaoButtonItem;
 			sourceTree = "<group>";
 		};
+		7714FE0E20E38C2B00CA6612 /* Unused */ = {
+			isa = PBXGroup;
+			children = (
+				A69FA7EA20E099040055609C /* RYPlayer.swift */,
+				A69FA7EB20E099040055609C /* RYPlayModel.swift */,
+				A69FA7EE20E09AD90055609C /* RongYaoMultidelegateManager.swift */,
+				A676925920E0AA6A00B3F843 /* RongYaoBridge.swift */,
+			);
+			path = Unused;
+			sourceTree = "<group>";
+		};
 		7790D17D20CABA2C00F7CAF5 = {
 			isa = PBXGroup;
 			children = (
@@ -155,11 +166,11 @@
 				771C971A20E2273B001BA7FC /* RYTestPlayerViewController.swift */,
 				7714FE0920E3295800CA6612 /* RYTestButtonItemViewController.swift */,
 				7714FE0C20E3585800CA6612 /* RYTestEdgeControlLayerViewController.swift */,
-				A6089F1020DF7D7C00DA5E9B /* RYPlayer */,
 				7714FE0B20E3463D00CA6612 /* RongYaoButtonItem */,
 				A6089F0120DF46AE00DA5E9B /* RongYaoEdgeControlLayer */,
 				7790D19B20CABA4300F7CAF5 /* RongYaoTeamPlayer(base) */,
 				A6089F1520DF808100DA5E9B /* RongYaoExtension */,
+				7714FE0E20E38C2B00CA6612 /* Unused */,
 				7790D18D20CABA2C00F7CAF5 /* Main.storyboard */,
 				7790D19020CABA2D00F7CAF5 /* Assets.xcassets */,
 				7790D19220CABA2D00F7CAF5 /* LaunchScreen.storyboard */,
@@ -179,8 +190,6 @@
 				A6089EFF20DF44E400DA5E9B /* RongYaoTeamGestureManager.swift */,
 				77B8815520D906070054DDE2 /* RongYaoTeamPlayerExport.swift */,
 				7790D1A920CBB22900F7CAF5 /* RongYaoObserver.swift */,
-				A69FA7EE20E09AD90055609C /* RongYaoMultidelegateManager.swift */,
-				A676925920E0AA6A00B3F843 /* RongYaoBridge.swift */,
 			);
 			path = "RongYaoTeamPlayer(base)";
 			sourceTree = "<group>";
@@ -206,15 +215,6 @@
 				771C972420E22EBC001BA7FC /* RongYaoEdgeControlLayerResources.swift */,
 			);
 			path = RongYaoEdgeControlLayer;
-			sourceTree = "<group>";
-		};
-		A6089F1020DF7D7C00DA5E9B /* RYPlayer */ = {
-			isa = PBXGroup;
-			children = (
-				A69FA7EA20E099040055609C /* RYPlayer.swift */,
-				A69FA7EB20E099040055609C /* RYPlayModel.swift */,
-			);
-			path = RYPlayer;
 			sourceTree = "<group>";
 		};
 		A6089F1520DF808100DA5E9B /* RongYaoExtension */ = {
