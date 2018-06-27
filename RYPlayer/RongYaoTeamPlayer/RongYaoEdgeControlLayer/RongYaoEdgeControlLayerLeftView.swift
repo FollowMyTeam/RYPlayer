@@ -10,6 +10,11 @@ import UIKit
 
 /// 边缘控制层 - 左
 
-public class RongYaoEdgeControlLayerLeftView: UIView {
+public protocol RongYaoEdgeControlLayerLeftViewDelegate {
+
+}
+
+public class RongYaoEdgeControlLayerLeftView: RongYaoEdgeControlLayerView {
     
+    override func playerDidSet() { }
 }

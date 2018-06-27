@@ -109,7 +109,6 @@ public extension RongYaoEdgeControlLayerResources {
         case right
     }
     
-    
     class TopViewResources {
         public var backImage: UIImage?
     }

@@ -26,7 +26,7 @@ public extension RongYaoTeamPlayer {
     }
     
     /// 播放时长
-    /// - 可以通过`属性观察者(player.getAssetPropertyObserver())`来及时的查看新的value
+    /// - 可以获取一个`属性观察者(player.getAssetPropertyObserver())`来及时的查看新的value
     var duration: TimeInterval {
         if let `assetProperties` = self.assetProperties {
             return assetProperties.duration
@@ -35,7 +35,7 @@ public extension RongYaoTeamPlayer {
     }
 
     /// 当前时间
-    /// - 可以通过`属性观察者(player.getAssetPropertyObserver())`来及时的查看新的value
+    /// - 可以获取一个`属性观察者(player.getAssetPropertyObserver())`来及时的查看新的value
     var currentTime: TimeInterval {
         if let `assetProperties` = self.assetProperties {
             return assetProperties.currentTime
@@ -44,7 +44,7 @@ public extension RongYaoTeamPlayer {
     }
 
     /// 已缓冲到的时间
-    /// - 可以通过`属性观察者(player.getAssetPropertyObserver())`来及时的查看新的value
+    /// - 可以获取一个`属性观察者(player.getAssetPropertyObserver())`来及时的查看新的value
     var bufferLoadedTime: TimeInterval {
         if let `assetProperties` = self.assetProperties {
             return assetProperties.bufferLoadedTime
@@ -53,7 +53,7 @@ public extension RongYaoTeamPlayer {
     }
 
     /// 缓冲状态
-    /// - 可以通过`属性观察者(player.getAssetPropertyObserver())`来及时的查看新的value
+    /// - 可以获取一个`属性观察者(player.getAssetPropertyObserver())`来及时的查看新的value
     var bufferStatus: RongYaoTeamPlayer.BufferStatus {
         if let `assetProperties` = self.assetProperties {
             return assetProperties.bufferStatus
@@ -63,7 +63,7 @@ public extension RongYaoTeamPlayer {
     
     /// 视频宽高
     /// - 资源初始化未完成之前, 该值为 .zero
-    /// - 可以通过`属性观察者(player.getAssetPropertyObserver())`来及时的查看新的value
+    /// - 可以获取一个`属性观察者(player.getAssetPropertyObserver())`来及时的查看新的value
     var presentationSize: CGSize {
         if let `assetProperties` = self.assetProperties {
             return assetProperties.presentationSize
@@ -81,8 +81,8 @@ public extension RongYaoTeamPlayer {
     }
 }
 
-public class RongYaoTeamPlayer {
-   
+public class RongYaoTeamPlayer: Equatable {
+
     deinit {
         #if DEBUG
         print("\(#function) - \(#line) - RongYaoTeamPlayer")
@@ -106,7 +106,7 @@ public class RongYaoTeamPlayer {
     public private(set) var view: RongYaoTeamPlayerView!
     
     /// 播放状态
-    /// - 可以通过`属性观察者(player.getAssetPropertyObserver())`来及时的查看新的value
+    /// - 可以获取一个`属性观察者(player.getAssetPropertyObserver())`来及时的查看新的value
     public private(set) var status: PlayStatus = .unknown { didSet { stateDidChange() } }
     
     /// 是否静音
@@ -421,6 +421,11 @@ public class RongYaoTeamPlayer {
     
     /// 一些通知记录员
     private var registrar: RongYaoTeamRegistrar = RongYaoTeamRegistrar.init()
+    
+    public static func == (lhs: RongYaoTeamPlayer, rhs: RongYaoTeamPlayer) -> Bool {
+        return Unmanaged.passUnretained(lhs).toOpaque()
+            == Unmanaged.passUnretained(rhs).toOpaque()
+    }
 }
 public extension RongYaoTeamPlayer {
     /// 属性key

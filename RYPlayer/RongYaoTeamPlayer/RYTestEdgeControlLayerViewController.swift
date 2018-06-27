@@ -19,7 +19,8 @@ class RYTestEdgeControlLayerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         player = RongYaoTeamPlayer.init()
-        edgeControlLayer = RongYaoEdgeControlLayer.init(frame: .zero, player: player)
+        edgeControlLayer = RongYaoEdgeControlLayer()
+        edgeControlLayer.player = player
         
         view.addSubview(player.view)
         player.view.snp.makeConstraints { (make) in

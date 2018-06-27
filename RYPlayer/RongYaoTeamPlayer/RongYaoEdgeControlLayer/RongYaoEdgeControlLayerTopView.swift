@@ -11,23 +11,50 @@ import SnapKit
 
 /// 边缘控制层 - 上
 
-public class RongYaoEdgeControlLayerTopView: UIView {
+public protocol RongYaoEdgeControlLayerTopViewDelegate {
+    func clickedBackButtonOnTopView(_ view: RongYaoEdgeControlLayerTopView)
+}
+
+public class RongYaoEdgeControlLayerTopView: RongYaoEdgeControlLayerView {
+    
+    public weak var delegate: (AnyObject & RongYaoEdgeControlLayerTopViewDelegate)?
     
     public var topResrouces: RongYaoEdgeControlLayerResources.TopViewResources? { didSet{ topViewResourcesDidChange() } }
-
     public var rightButtonItems: [RongYaoButtonItem]? { didSet{ rightButtonItemsDidChange() } }
     
     public var backButton: UIButton!
     public var titleLabel: UILabel!
-    private var buttonItemsContainerView: UIView!
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
         self.setupViews()
+        disappearType = [.alpha, .transform]
     }
     
-    public required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+    public override var intrinsicContentSize: CGSize {
+        var height: CGFloat = 55
+        if let `player` = player {
+            if player.view.rotationManager.isFullscreen {
+                height = 75
+            }
+        }
+        return CGSize.init(width: UIScreen.main.bounds.width, height: height)
+    }
+    
+    public override func invalidateIntrinsicContentSize() {
+        super.invalidateIntrinsicContentSize()
+        self.transformOfDisappear = .init(translationX: 0, y: -self.intrinsicContentSize.height)
+    }
+    
+    private var rotationObserver: RongYaoTeamRotationManager.Observer?
+    
+    override func playerDidSet() {
+        rotationObserver = player?.view.rotationManager.getObserver()
+        rotationObserver?.setViewWillRotateExeBlock({ [weak self] (mgr) in
+            guard let `self` = self else { return }
+            self.invalidateIntrinsicContentSize()
+        })
+        invalidateIntrinsicContentSize()
     }
     
     private func setupViews() {
@@ -61,6 +88,7 @@ public class RongYaoEdgeControlLayerTopView: UIView {
         }
     }
     
+    private var buttonItemsContainerView: UIView!
     private func rightButtonItemsDidChange() {
         for sub in buttonItemsContainerView.subviews { sub.removeFromSuperview() }
         guard let `rightButtonItems` = rightButtonItems else { return }
@@ -89,5 +117,10 @@ public class RongYaoEdgeControlLayerTopView: UIView {
         #if DEBUG
         print("\(#function) - \(#line) - \(NSStringFromClass(self.classForCoder))")
         #endif
+        self.delegate?.clickedBackButtonOnTopView(self)
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
     }
 }

@@ -10,29 +10,20 @@ import UIKit
 import SnapKit
 
 /// 边缘控制层
-public class RongYaoEdgeControlLayer: UIView {
-    
-    public convenience init(frame: CGRect, player: RongYaoTeamPlayer) {
-        self.init(frame: frame)
-        self.player = player
-        playerDidSet()
-    }
-    
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
-        setupViews()
-    }
-    
+public class RongYaoEdgeControlLayer: UIView, RongYaoTeamGestureManagerDelegate {
     public weak var player: RongYaoTeamPlayer? { didSet{ playerDidSet() } }
-    
-    private var contentView: UIView!
     
     public var topView: RongYaoEdgeControlLayerTopView!
     public var leftView: RongYaoEdgeControlLayerLeftView!
     public var bottomView: RongYaoEdgeControlLayerBottomView!
     public var rightView: RongYaoEdgeControlLayerRightView!
     
+    private var contentView: UIView!
+    private var gestureManager: RongYaoTeamGestureManager!
+    fileprivate var controlLayerIsAppeared: Bool = true
+    
     private func setupViews() {
+        clipsToBounds = true
         contentView = UIView.init()
         self.addSubview(contentView)
         contentView.snp.makeConstraints { (make) in
@@ -51,29 +42,71 @@ public class RongYaoEdgeControlLayer: UIView {
         rightView.backgroundColor = .green
     }
     
-    private var rotationObserver: RongYaoTeamRotationManager.Observer?
-    
     private func playerDidSet() {
-
-        rotationObserver = self.player?.view.rotationManager.getObserver()
-        rotationObserver?.viewWillRotateExeBlock = { [weak self] (mgr: RongYaoTeamRotationManager) in
-            guard let `self` = self else { return }
-            self.topViewUpdateLayout()
-            self.bottomViewUpdateLayout()
-        }
-        
-        rotationObserver?.viewDidEndRotateExeBlock = { [weak self] (mgr: RongYaoTeamRotationManager) in
-            guard let `self` = self else { return }
-            print(self)
-        }
+        topView.player = player
+        leftView.player = player
+        bottomView.player = player
+        rightView.player = player
     }
     
     @objc private func test() {
         
     }
     
-    required public init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupViews()
+        gestureManager = RongYaoTeamGestureManager.init(target: self)
+        gestureManager.delegate = self
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    public func gestureManager(_ mgr: RongYaoTeamGestureManager, gestureShouldTrigger type: RongYaoTeamGestureManager.GestureType, location: CGPoint) -> Bool {
+        return true
+    }
+    
+    public func triggerSingleTapGestureForGestureManager(_ mgr: RongYaoTeamGestureManager) {
+        UIView.animate(withDuration: 0.4) {
+            if ( self.controlLayerIsAppeared ) {
+                self.controlLayerNeedDisappear()
+            }
+            else {
+                self.controlLayerNeedAppear()
+            }
+        }
+    }
+    
+    public func triggerDoubleTapGestureForGestureManager(_ mgr: RongYaoTeamGestureManager) {
+        
+    }
+    
+    public func triggerPinchGestureForGestureManager(_ mgr: RongYaoTeamGestureManager) {
+        
+    }
+    
+    public func triggerPanGestureForGestureManager(_ mgr: RongYaoTeamGestureManager, state: RongYaoTeamGestureManager.PanGestureState, movingDirection: RongYaoTeamGestureManager.PanGestureMovingDirection, location: RongYaoTeamGestureManager.PanGestureLocation, translate: CGPoint) {
+        
+    }
+}
+
+fileprivate extension RongYaoEdgeControlLayer {
+    func controlLayerNeedAppear() {
+        self.topView.appear()
+        self.leftView.appear()
+        self.bottomView.appear()
+        self.rightView.appear()
+        self.controlLayerIsAppeared = true
+    }
+    
+    func controlLayerNeedDisappear() {
+        self.topView.disappear()
+        self.leftView.disappear()
+        self.bottomView.disappear()
+        self.rightView.disappear()
+        self.controlLayerIsAppeared = false
     }
 }
 
@@ -83,14 +116,6 @@ fileprivate  extension RongYaoEdgeControlLayer {
         superview.addSubview(topView)
         topView.snp.makeConstraints { (make) in
             make.top.leading.trailing.equalTo(topView.superview!)
-            make.height.equalTo(55)
-        }
-    }
-    
-    func topViewUpdateLayout() {
-        topView.snp.updateConstraints { (make) in
-            if (self.player?.view.rotationManager.isFullscreen)! { make.height.equalTo(75) }
-            else { make.height.equalTo(55) }
         }
     }
 }
@@ -104,10 +129,6 @@ fileprivate extension RongYaoEdgeControlLayer {
             make.leading.centerY.equalTo(leftView.superview!)
         }
     }
- 
-    func leftViewUpdateLayout() {
-        
-    }
 }
 
 fileprivate extension RongYaoEdgeControlLayer {
@@ -116,14 +137,6 @@ fileprivate extension RongYaoEdgeControlLayer {
         superview.addSubview(bottomView)
         bottomView.snp.makeConstraints { (make) in
             make.leading.bottom.trailing.equalTo(bottomView.superview!)
-            make.height.equalTo(49)
-        }
-    }
-    
-    func bottomViewUpdateLayout() {
-        bottomView.snp.updateConstraints { (make) in
-            if (self.player?.view.rotationManager.isFullscreen)! { make.height.equalTo(60) }
-            else { make.height.equalTo(49) }
         }
     }
 }
@@ -136,10 +149,5 @@ fileprivate extension RongYaoEdgeControlLayer {
             make.size.equalTo(60)
             make.trailing.centerY.equalTo(rightView.superview!)
         }
-    }
-    
-    
-    func rightViewUpdateLayout() {
-        
     }
 }
