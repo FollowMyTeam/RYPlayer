@@ -20,11 +20,13 @@ public extension RongYaoTeamPlayer {
     }
     
     /// error
+    /// - 当播放状态为`playFailed`时, 可以查看此error
     public var error: Error? {
         return self.assetProperties?.error
     }
     
     /// 播放时长
+    /// - 可以通过`属性观察者(player.getAssetPropertyObserver())`来及时的查看新的value
     public var duration: TimeInterval {
         if let `assetProperties` = self.assetProperties {
             return assetProperties.duration
@@ -33,6 +35,7 @@ public extension RongYaoTeamPlayer {
     }
 
     /// 当前时间
+    /// - 可以通过`属性观察者(player.getAssetPropertyObserver())`来及时的查看新的value
     public var currentTime: TimeInterval {
         if let `assetProperties` = self.assetProperties {
             return assetProperties.currentTime
@@ -41,6 +44,7 @@ public extension RongYaoTeamPlayer {
     }
 
     /// 已缓冲到的时间
+    /// - 可以通过`属性观察者(player.getAssetPropertyObserver())`来及时的查看新的value
     public var bufferLoadedTime: TimeInterval {
         if let `assetProperties` = self.assetProperties {
             return assetProperties.bufferLoadedTime
@@ -49,6 +53,7 @@ public extension RongYaoTeamPlayer {
     }
 
     /// 缓冲状态
+    /// - 可以通过`属性观察者(player.getAssetPropertyObserver())`来及时的查看新的value
     public var bufferStatus: RongYaoTeamPlayer.BufferStatus {
         if let `assetProperties` = self.assetProperties {
             return assetProperties.bufferStatus
@@ -58,6 +63,7 @@ public extension RongYaoTeamPlayer {
     
     /// 视频宽高
     /// - 资源初始化未完成之前, 该值为 .zero
+    /// - 可以通过`属性观察者(player.getAssetPropertyObserver())`来及时的查看新的value
     public var presentationSize: CGSize {
         if let `assetProperties` = self.assetProperties {
             return assetProperties.presentationSize
@@ -91,6 +97,7 @@ public class RongYaoTeamPlayer {
     public private(set) var view: RongYaoTeamPlayerView!
     
     /// 播放状态
+    /// - 可以通过`属性观察者(player.getAssetPropertyObserver())`来及时的查看新的value
     public private(set) var status: PlayStatus = .unknown { didSet { stateDidChange() } }
     
     /// 是否静音
