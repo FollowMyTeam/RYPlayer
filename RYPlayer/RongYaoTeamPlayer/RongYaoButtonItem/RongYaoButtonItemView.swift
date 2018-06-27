@@ -26,16 +26,11 @@ public class RongYaoButtonItemView: UIView {
         containerView.snp.makeConstraints { (make) in
             make.edges.equalTo(0)
         }
+        itemDidChange(item, nil)
     }
     
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-    }
-    
-    public override func layoutSubviews() {
-        superview?.layoutSubviews()
-        
-        print(self.bounds)
     }
     
     private var containerView: UIControl = UIControl.init()
@@ -62,16 +57,20 @@ public class RongYaoButtonItemView: UIView {
             containerView.addTarget(item!.target, action: action, for: .touchUpInside)
         }
         
-        var itemWidth: CGFloat = 49
+        var itemWidth: CGFloat = 36
         if item?.width != 0 {
             itemWidth = item!.width
+        }
+        
+        containerView.snp.makeConstraints { (make) in
+            make.edges.equalToSuperview()
+            make.width.equalTo(itemWidth)
         }
         
         if let `customView` = item?.customView {
             containerView.addSubview(customView)
             customView.snp.remakeConstraints { (make) in
                 make.edges.equalToSuperview()
-                make.width.equalTo(itemWidth)
             }
         }
         else if let `image` = item?.image {
@@ -82,8 +81,7 @@ public class RongYaoButtonItemView: UIView {
             imageView?.image = image
             containerView.addSubview(imageView!)
             imageView?.snp.remakeConstraints({ (make) in
-                make.edges.equalToSuperview()
-                make.width.equalTo(itemWidth)
+                make.center.equalToSuperview()
             })
         }
         else if let `title` = item?.title {
@@ -95,7 +93,6 @@ public class RongYaoButtonItemView: UIView {
             containerView.addSubview(titleLabel!)
             titleLabel?.snp.remakeConstraints({ (make) in
                 make.edges.equalToSuperview()
-                make.width.equalTo(itemWidth)
             })
         }
     }

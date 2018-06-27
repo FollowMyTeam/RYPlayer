@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4311539AAE05C781EA2AF1B7 /* Pods_RongYaoTeamPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5C898A3DAF5A2087BF75381 /* Pods_RongYaoTeamPlayer.framework */; };
 		7714FE0A20E3295800CA6612 /* RYTestButtonItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7714FE0920E3295800CA6612 /* RYTestButtonItemViewController.swift */; };
+		7714FE0D20E3585800CA6612 /* RYTestEdgeControlLayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7714FE0C20E3585800CA6612 /* RYTestEdgeControlLayerViewController.swift */; };
 		771C27A720CBE1D900C17E34 /* RongYaoTeamPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771C27A620CBE1D900C17E34 /* RongYaoTeamPlayer.swift */; };
 		771C971920E21DD0001BA7FC /* RYTestGestureManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771C971820E21DD0001BA7FC /* RYTestGestureManagerViewController.swift */; };
 		771C971B20E2273B001BA7FC /* RYTestPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771C971A20E2273B001BA7FC /* RYTestPlayerViewController.swift */; };
@@ -50,6 +51,7 @@
 		6106DEEF81896DA0859A4508 /* Pods-RongYaoTeamPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RongYaoTeamPlayer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RongYaoTeamPlayer/Pods-RongYaoTeamPlayer.debug.xcconfig"; sourceTree = "<group>"; };
 		6EB0C4A2BDB68892BD77B491 /* Pods-RongYaoTeamPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RongYaoTeamPlayer.release.xcconfig"; path = "Pods/Target Support Files/Pods-RongYaoTeamPlayer/Pods-RongYaoTeamPlayer.release.xcconfig"; sourceTree = "<group>"; };
 		7714FE0920E3295800CA6612 /* RYTestButtonItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYTestButtonItemViewController.swift; sourceTree = "<group>"; };
+		7714FE0C20E3585800CA6612 /* RYTestEdgeControlLayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYTestEdgeControlLayerViewController.swift; sourceTree = "<group>"; };
 		771C27A620CBE1D900C17E34 /* RongYaoTeamPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoTeamPlayer.swift; sourceTree = "<group>"; };
 		771C971820E21DD0001BA7FC /* RYTestGestureManagerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYTestGestureManagerViewController.swift; sourceTree = "<group>"; };
 		771C971A20E2273B001BA7FC /* RYTestPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYTestPlayerViewController.swift; sourceTree = "<group>"; };
@@ -112,6 +114,15 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		7714FE0B20E3463D00CA6612 /* RongYaoButtonItem */ = {
+			isa = PBXGroup;
+			children = (
+				77D0BADA20E2483A00047404 /* RongYaoButtonItem.swift */,
+				77D0BADC20E24CB000047404 /* RongYaoButtonItemView.swift */,
+			);
+			path = RongYaoButtonItem;
+			sourceTree = "<group>";
+		};
 		7790D17D20CABA2C00F7CAF5 = {
 			isa = PBXGroup;
 			children = (
@@ -143,7 +154,9 @@
 				771C971820E21DD0001BA7FC /* RYTestGestureManagerViewController.swift */,
 				771C971A20E2273B001BA7FC /* RYTestPlayerViewController.swift */,
 				7714FE0920E3295800CA6612 /* RYTestButtonItemViewController.swift */,
+				7714FE0C20E3585800CA6612 /* RYTestEdgeControlLayerViewController.swift */,
 				A6089F1020DF7D7C00DA5E9B /* RYPlayer */,
+				7714FE0B20E3463D00CA6612 /* RongYaoButtonItem */,
 				A6089F0120DF46AE00DA5E9B /* RongYaoEdgeControlLayer */,
 				7790D19B20CABA4300F7CAF5 /* RongYaoTeamPlayer(base) */,
 				A6089F1520DF808100DA5E9B /* RongYaoExtension */,
@@ -191,8 +204,6 @@
 				A6089F0820DF478700DA5E9B /* RongYaoEdgeControlLayerBottomView.swift */,
 				A6089F0A20DF478E00DA5E9B /* RongYaoEdgeControlLayerRightView.swift */,
 				771C972420E22EBC001BA7FC /* RongYaoEdgeControlLayerResources.swift */,
-				77D0BADA20E2483A00047404 /* RongYaoButtonItem.swift */,
-				77D0BADC20E24CB000047404 /* RongYaoButtonItemView.swift */,
 			);
 			path = RongYaoEdgeControlLayer;
 			sourceTree = "<group>";
@@ -347,6 +358,7 @@
 				773DD2C420D66761008113CD /* RYTabBarController.swift in Sources */,
 				A69FA7ED20E099040055609C /* RYPlayModel.swift in Sources */,
 				77D0BADD20E24CB000047404 /* RongYaoButtonItemView.swift in Sources */,
+				7714FE0D20E3585800CA6612 /* RYTestEdgeControlLayerViewController.swift in Sources */,
 				A6089F0520DF477200DA5E9B /* RongYaoEdgeControlLayerTopView.swift in Sources */,
 				A6089F1720DF8EA700DA5E9B /* RongYaoTeamRotationManager.swift in Sources */,
 				A6089F0B20DF478E00DA5E9B /* RongYaoEdgeControlLayerRightView.swift in Sources */,

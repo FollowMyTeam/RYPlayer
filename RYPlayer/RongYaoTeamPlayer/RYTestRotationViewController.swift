@@ -109,7 +109,7 @@ extension RYTestRotationViewController: RongYaoTeamRotationManagerDelegate {
         #endif
     }
     
-    func rotationManager(_ mgr: RongYaoTeamRotationManager, didRotateView isFullscreen: Bool) {
+    func rotationManager(_ mgr: RongYaoTeamRotationManager, didEndRotateView isFullscreen: Bool) {
         #if DEBUG
         print("\(#function) - \(#line) - RYTestRotationViewController")
         #endif

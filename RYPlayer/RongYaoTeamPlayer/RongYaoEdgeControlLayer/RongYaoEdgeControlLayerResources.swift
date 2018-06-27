@@ -132,6 +132,7 @@ public extension RongYaoEdgeControlLayerResources {
     }
     
     class SliderConfig {
+        
         /// 轨道
         public var track: Track = Track()
        

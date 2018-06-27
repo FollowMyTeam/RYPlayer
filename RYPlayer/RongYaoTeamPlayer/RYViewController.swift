@@ -126,7 +126,7 @@ extension RYViewController: RongYaoTeamRotationManagerDelegate {
 
     }
     
-    func rotationManager(_ mgr: RongYaoTeamRotationManager, didRotateView isFullscreen: Bool) {
+    func rotationManager(_ mgr: RongYaoTeamRotationManager, didEndRotateView isFullscreen: Bool) {
         print("orientation: \(mgr.currentOrientation)")
     }
 }

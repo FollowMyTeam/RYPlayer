@@ -102,7 +102,7 @@ class RYTestButtonItemViewController: UIViewController {
         item?.width = 49
         item?.isHidden = false
         item?.customView = nil
-        item?.title = NSAttributedString.init(string: "Test Test")
+        item?.title = NSAttributedString.init(string: "Test")
         item?.image = nil
     }
     

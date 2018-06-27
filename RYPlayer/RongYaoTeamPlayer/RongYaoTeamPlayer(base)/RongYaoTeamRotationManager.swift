@@ -54,6 +54,13 @@ public class RongYaoTeamRotationManager {
     
     public weak var delegate: (AnyObject & RongYaoTeamRotationManagerDelegate)?
     
+    /// 获取一个观察者
+    /// - 当视图将要旋转时, 将会调用观察者的相应方法
+    /// - 同样, 旋转完毕后, 也会调用相应方法
+    public func getObserver() -> RongYaoTeamRotationManagerObserver {
+        return _RongYaoTeamRotationManagerObserver.init(self);
+    }
+    
     /// 是否禁止自动旋转
     /// - 该属性只会禁止自动旋转, 当调用 rotate 等方法还是可以旋转的
     /// - 默认为 false
@@ -183,6 +190,7 @@ public class RongYaoTeamRotationManager {
             
             self.transitioning = true
             self.delegate?.rotationManager( self, willRotateView:self.isFullscreen)
+            NotificationCenter.default.post(name: RongYaoTeamRotationManager.ViewWillRotate, object: self)
             UIApplication.shared.statusBarOrientation = statusBarOrientation
             UIView.animate(withDuration: animated ? self.duration : 0, animations: {
                 if ( ori_new == .portrait ) {
@@ -213,7 +221,8 @@ public class RongYaoTeamRotationManager {
                     window.insertSubview(self.blackView, belowSubview: target)
                 }
                 self.transitioning = false
-                self.delegate?.rotationManager( self, didRotateView:self.isFullscreen)
+                self.delegate?.rotationManager( self, didEndRotateView:self.isFullscreen)
+                NotificationCenter.default.post(name: RongYaoTeamRotationManager.ViewDidEndRotate, object: self)
                 completionHandler(self)
             }
         }
@@ -301,6 +310,13 @@ public class RongYaoTeamRotationManager {
     }
 }
 
+public class RongYaoTeamRotationManagerObserver {
+    /// 视图将要旋转
+    public var viewWillRotateExeBlock: ((_ mgr: RongYaoTeamRotationManager)->())?
+    /// 视图完成旋转
+    public var viewDidEndRotateExeBlock: ((_ mgr: RongYaoTeamRotationManager)->())?
+}
+
 public extension RongYaoTeamRotationManager {
     /// 方向
     ///
@@ -338,8 +354,37 @@ public extension RongYaoTeamRotationManager {
         /// value
         public var rawValue: UInt
     }
+    
+    /// 将要旋转的通知
+    fileprivate static let ViewWillRotate: NSNotification.Name = NSNotification.Name.init("RongYaoTeamRotationManager.ViewWillRotate")
+    
+    /// 完成旋转的通知
+    fileprivate static let ViewDidEndRotate: NSNotification.Name = NSNotification.Name.init("RongYaoTeamRotationManager.ViewDidEndRotate")
 }
 
+fileprivate class _RongYaoTeamRotationManagerObserver: RongYaoTeamRotationManagerObserver {
+    fileprivate init(_ mgr: RongYaoTeamRotationManager) {
+        super.init()
+        notaToken1 = NotificationCenter.default.addObserver(forName: RongYaoTeamRotationManager.ViewWillRotate, object: mgr, queue: nil) { [weak self] (nota) in
+            guard let `self` = self else { return }
+            self.viewWillRotateExeBlock?(nota.object! as! RongYaoTeamRotationManager)
+        }
+        
+        notaToken2 = NotificationCenter.default.addObserver(forName: RongYaoTeamRotationManager.ViewDidEndRotate, object: mgr, queue: nil) { [weak self] (nota) in
+            guard let `self` = self else { return }
+            self.viewDidEndRotateExeBlock?(nota.object! as! RongYaoTeamRotationManager)
+        }
+    }
+    
+    deinit {
+        if let `notaObj1` = notaToken1 { NotificationCenter.default.removeObserver(notaObj1) }
+        if let `notaObj2` = notaToken2 { NotificationCenter.default.removeObserver(notaObj2) }
+    }
+    
+    private var notaToken1: Any?
+    private var notaToken2: Any?
+    
+}
 
 /// RongYaoTeamRotationManager - 代理
 public protocol RongYaoTeamRotationManagerDelegate {
@@ -353,5 +398,5 @@ public protocol RongYaoTeamRotationManagerDelegate {
     func rotationManager(_ mgr: RongYaoTeamRotationManager, willRotateView isFullscreen: Bool)
     
     /// 完成旋转的回调
-    func rotationManager(_ mgr: RongYaoTeamRotationManager, didRotateView isFullscreen: Bool)
+    func rotationManager(_ mgr: RongYaoTeamRotationManager, didEndRotateView isFullscreen: Bool)
 }
