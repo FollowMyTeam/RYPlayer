@@ -12,6 +12,13 @@ import AVFoundation
 // MARK: - 播放器(base)
 
 public extension RongYaoTeamPlayer {
+    
+    /// 获取属性观察者
+    /// - 当以下属性值改变时, 将会调用观察者相应方法
+    public func getAssetPropertyObserver() -> RongYaoTeamPlayerAssetPropertyObserver {
+        return _RongYaoTeamPlayerAssetPropertyObserver.init(self)
+    }
+    
     /// error
     public var error: Error? {
         return self.assetProperties?.error
@@ -74,12 +81,6 @@ public class RongYaoTeamPlayer {
         view.backgroundColor = .black
     }
     
-    /// 获取属性观察者
-    /// - 当播放器属性值改变时, 将会调用观察者相应方法
-    public func getAssetPropertyObserver() -> RongYaoTeamPlayerAssetPropertyObserver {
-        return _RongYaoTeamPlayerAssetPropertyObserver.init(self)
-    }
-    
     /// 播放资源
     /// - 使用URL进行初始化
     public var asset: RongYaoTeamPlayerAsset? { didSet{ assetDidChange() } }
@@ -90,7 +91,7 @@ public class RongYaoTeamPlayer {
     public private(set) var view: RongYaoTeamPlayerView!
     
     /// 播放状态
-    public private(set) var status: Status = .unknown { didSet { stateDidChange() } }
+    public private(set) var status: PlayStatus = .unknown { didSet { stateDidChange() } }
     
     /// 是否静音
     public var mute: Bool = false {
@@ -101,6 +102,9 @@ public class RongYaoTeamPlayer {
     
     /// 速率, default is 1.0
     public var rate: Float {
+        get{
+            return _rate
+        }
         set{
             var _new = newValue; if ( _new < 0.1 ) { _new = 0.1 }
             
@@ -110,13 +114,9 @@ public class RongYaoTeamPlayer {
             
             if ( self.asset?.avPlayer == nil ) { return }
             
-            if case Status.playing = status {
+            if case PlayStatus.playing = status {
                 self.asset?.avPlayer?.rate = _rate
             }
-        }
-        
-        get{
-            return _rate
         }
     }
     private var _rate: Float = 1.0
@@ -135,7 +135,6 @@ public class RongYaoTeamPlayer {
     /// - default is true.
     public var pauseWhenAppDidEnterBackground: Bool = true
     
-    
     /// 资源初始化期间, 开发者进行的操作
     /// - 此属性如果有值, 将在资源初始化完成时调用, 调用完成后会置为nil
     private var operationOfInitializing: (()->())?
@@ -144,25 +143,25 @@ public class RongYaoTeamPlayer {
     public func play() {
         guard let `asset` = self.asset else { return }
         
-        if case Status.inactivity(reason: .playEnd) = status {
+        if case PlayStatus.inactivity(reason: .playEnd) = status {
             replay()
             return
         }
         
         // 播放失败
-        if case Status.inactivity(reason: .playFailed) = status {
+        if case PlayStatus.inactivity(reason: .playFailed) = status {
             // 尝试重新播放
             replay()
             return
         }
         
         // 播放中
-        if case Status.playing = status {
+        if case PlayStatus.playing = status {
             return
         }
         
         // 状态未知
-        if case Status.unknown = status {
+        if case PlayStatus.unknown = status {
             // 记录操作, 待资源初始化完成后调用
             operationOfInitializing = self.play
             return
@@ -186,19 +185,19 @@ public class RongYaoTeamPlayer {
         default: break
         }
         
-        if case Status.inactivity(reason: .playEnd) = status {
+        if case PlayStatus.inactivity(reason: .playEnd) = status {
             if case PausedReason.pause = reason {
                 return
             }
         }
         
         // 播放失败
-        if case Status.inactivity(reason: .playFailed) = status {
+        if case PlayStatus.inactivity(reason: .playFailed) = status {
             return
         }
         
         // 状态未知
-        if case Status.unknown = status {
+        if case PlayStatus.unknown = status {
             // 记录操作
             if case PausedReason.pause = reason {
                 operationOfInitializing = self.pause
@@ -219,7 +218,7 @@ public class RongYaoTeamPlayer {
         if ( asset?.isOtherAsset == false ) { self.view.presentView.setAVPlayer(nil) }
         if ( assetProperties != nil ) { assetProperties = nil }
         if ( asset != nil ) { asset = nil }
-        if case Status.unknown = status {
+        if case PlayStatus.unknown = status {
             return
         }
         status = .unknown
@@ -232,7 +231,7 @@ public class RongYaoTeamPlayer {
         guard let `asset` = self.asset else { return }
         
         // 播放失败
-        if case Status.inactivity(reason: .playFailed) = status {
+        if case PlayStatus.inactivity(reason: .playFailed) = status {
             self.asset = RongYaoTeamPlayerAsset.init(asset.playURL, specifyStartTime: asset.specifyStartTime)
             return
         }
@@ -266,7 +265,7 @@ public class RongYaoTeamPlayer {
         
         let current = floor(assetProperties.currentTime)
         let seek = floor(time)
-        if case Status.inactivity(reason: .playEnd) = status {
+        if case PlayStatus.inactivity(reason: .playEnd) = status {
             // .... nothing ....
         }
         else if ( current == seek ) {
@@ -274,7 +273,7 @@ public class RongYaoTeamPlayer {
             return
         }
         
-        if case Status.paused(reason: .seeking) = status {
+        if case PlayStatus.paused(reason: .seeking) = status {
             asset?.playerItem?.cancelPendingSeeks()
         }
         else {
@@ -321,7 +320,7 @@ public class RongYaoTeamPlayer {
     
     private func needPlayNewAsset() {
         assetProperties = nil
-        if case Status.unknown = status {}
+        if case PlayStatus.unknown = status {}
         else { status = .unknown }
         
         // 2. prepare
@@ -382,7 +381,7 @@ public class RongYaoTeamPlayer {
             pause(.buffering)
         case .full:
             // 如果已暂停, break
-            if case Status.paused(reason: .pause) = status {
+            if case PlayStatus.paused(reason: .pause) = status {
                 break
             }
             play()
@@ -397,7 +396,7 @@ public class RongYaoTeamPlayer {
     
     fileprivate func currentTimeDidChange() {
         // 正在播放
-        if case Status.playing = status {
+        if case PlayStatus.playing = status {
             propertyValueDidChangeForKey(.currentTime, value: self.assetProperties!.currentTime)
         }
     }
@@ -408,21 +407,21 @@ public class RongYaoTeamPlayer {
     private var registrar: RongYaoTeamRegistrar = RongYaoTeamRegistrar.init()
 }
 public extension RongYaoTeamPlayer {
-    /// 播放器当前的状态
+    /// 当前播放的状态
     ///
     /// - unknown:      未播放任何资源时的状态
     /// - readyToPlay:  准备就绪
     /// - playing:      播放中
     /// - paused:       暂停状态
     /// - inactivity:   不活跃状态
-    enum Status {
+    enum PlayStatus {
         case unknown
         case readyToPlay
         case playing
         case paused(reason: PausedReason)
         case inactivity(reason: InactivityReason)
     }
-    /// 播放暂停的理由
+    /// 暂停的理由
     ///
     /// - buffering: 正在缓冲
     /// - pause:     被暂停
@@ -432,7 +431,7 @@ public extension RongYaoTeamPlayer {
         case pause
         case seeking
     }
-    /// 播放不活跃的原因
+    /// 不活跃的原因
     ///
     /// - playEnd:    播放完毕
     /// - playFailed: 播放失败
@@ -529,10 +528,10 @@ extension RongYaoTeamPlayer: RongYaoTeamRegistrarDelegate {
     }
     
     fileprivate func oldDeviceUnavailable() {
-        if case Status.playing = status {
+        if case PlayStatus.playing = status {
             pause()
         }
-        else if case Status.paused(reason: .seeking) = status {
+        else if case PlayStatus.paused(reason: .seeking) = status {
             pause()
         }
     }

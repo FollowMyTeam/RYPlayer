@@ -156,7 +156,7 @@ extension RYViewController: RongYaoTeamGestureManagerDelegate {
         #endif
         guard let `player` = player else { return }
         
-        if case RongYaoTeamPlayer.Status.paused(reason: .pause) = player.status {
+        if case RongYaoTeamPlayer.PlayStatus.paused(reason: .pause) = player.status {
             player.play()
         }
         else {
