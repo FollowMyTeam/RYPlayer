@@ -377,8 +377,8 @@ fileprivate class _RongYaoTeamRotationManagerObserver: RongYaoTeamRotationManage
     }
     
     deinit {
-        if let `notaObj1` = notaToken1 { NotificationCenter.default.removeObserver(notaObj1) }
-        if let `notaObj2` = notaToken2 { NotificationCenter.default.removeObserver(notaObj2) }
+        if let `notaToken1` = notaToken1 { NotificationCenter.default.removeObserver(notaToken1) }
+        if let `notaToken2` = notaToken2 { NotificationCenter.default.removeObserver(notaToken2) }
     }
     
     private var notaToken1: Any?

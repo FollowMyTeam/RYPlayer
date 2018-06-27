@@ -21,12 +21,13 @@ class RYViewController: UIViewController {
     
     var playerBackgroundView: UIView!
     
-    var player: RongYaoTeamPlayer?
+    var player: RongYaoTeamPlayer!
     
-    var slider: SJSlider?
+    var slider: SJSlider!
     
     var gestureManager: RongYaoTeamGestureManager!
 
+    var playerPropertyObserver: RongYaoTeamPlayerPropertyObserver?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,7 +41,6 @@ class RYViewController: UIViewController {
 
 //        let videoURL = Bundle.main.url(forResource: "sample", withExtension: "mp4")!
         player = RongYaoTeamPlayer.init()
-        player?.delegates.add(self)
         player?.view.rotationManager.delegate = self
         
         self.edgesForExtendedLayout = UIRectEdge.init(rawValue: 0)
@@ -49,6 +49,18 @@ class RYViewController: UIViewController {
         player!.view.snp.makeConstraints { (make) in
             make.edges.equalTo(player!.view.superview!)
         }
+        
+        playerPropertyObserver = player?.getObserver()
+        playerPropertyObserver?.setPropertyValueDidChangeExeBlock({ [weak self] (player, key, value) in
+            guard let `self` = self else { return }
+            if ( key == RongYaoTeamPlayer.PropertyKey.currentTime ) {
+                if ( self.slider!.isDragging ) { return }
+                self.slider.value = CGFloat(player.assetProperties!.currentTime / player.assetProperties!.duration)
+            }
+            else if ( key == RongYaoTeamPlayer.PropertyKey.bufferLoadedTime ) {
+                self.slider.bufferProgress = CGFloat(player.assetProperties!.bufferLoadedTime / player.assetProperties!.duration)
+            }
+        })
         
         gestureManager = RongYaoTeamGestureManager.init(target: player!.view.presentView)
         gestureManager.delegate = self
@@ -198,14 +210,14 @@ extension RYViewController: SJSliderDelegate {
     }
 }
 
-extension RYViewController: RongYaoTeamPlayerDelegate {
-    func player(_ player: RongYaoTeamPlayer, valueDidChangeForKey key: RongYaoTeamPlayer.PropertyKey) {
-        if ( key == RongYaoTeamPlayer.PropertyKey.currentTime ) {
-            if ( slider!.isDragging ) { return }
-            slider!.value = CGFloat(player.assetProperties!.currentTime / player.assetProperties!.duration)
-        }
-        else if ( key == RongYaoTeamPlayer.PropertyKey.bufferLoadedTime ) {
-            slider?.bufferProgress = CGFloat(player.assetProperties!.bufferLoadedTime / player.assetProperties!.duration)
-        }
-    }
+extension RYViewController {
+//    func player(_ player: RongYaoTeamPlayer, valueDidChangeForKey key: RongYaoTeamPlayer.PropertyKey) {
+//        if ( key == RongYaoTeamPlayer.PropertyKey.currentTime ) {
+//            if ( slider!.isDragging ) { return }
+//            slider!.value = CGFloat(player.assetProperties!.currentTime / player.assetProperties!.duration)
+//        }
+//        else if ( key == RongYaoTeamPlayer.PropertyKey.bufferLoadedTime ) {
+//            slider?.bufferProgress = CGFloat(player.assetProperties!.bufferLoadedTime / player.assetProperties!.duration)
+//        }
+//    }
 }

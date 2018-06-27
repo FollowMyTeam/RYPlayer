@@ -26,6 +26,12 @@ public class RongYaoTeamPlayer {
         view.backgroundColor = .black
     }
     
+    /// 获取属性观察者
+    /// - 当播放器属性值改变时, 将会调用观察者相应方法
+    public func getObserver() -> RongYaoTeamPlayerPropertyObserver {
+        return _RongYaoTeamPlayerPropertyObserver.init(self)
+    }
+    
     /// 播放资源
     /// - 使用URL进行初始化
     public var asset: RongYaoTeamPlayerAsset? { didSet{ assetDidChange() } }
@@ -40,9 +46,6 @@ public class RongYaoTeamPlayer {
     /// - .....
     /// - 如: 当前播放到的时间
     public private(set) var assetProperties: RongYaoTeamPlayerAssetProperties?
-    
-    /// 代理
-    public var delegates: RongYaoMultidelegateManager<RongYaoTeamPlayerDelegate> = RongYaoMultidelegateManager()
     
     /// 播放状态
     public private(set) var status: Status = .unknown { didSet { stateDidChange() } }
@@ -243,20 +246,17 @@ public class RongYaoTeamPlayer {
     }
     
     
-    
-    
-    
-    fileprivate func valueDidChangeForKey(_ key: PropertyKey) {
-        for delegate in delegates.all() {
-            delegate.player(self, valueDidChangeForKey: key)
-        }
+    fileprivate func propertyValueDidChangeForKey(_ key: PropertyKey, value: Any?) {
+        NotificationCenter.default.post(name: RongYaoTeamPlayer.PropertyValueDidChange,
+                                        object: self,
+                                        userInfo: [RongYaoTeamPlayer.kPropertyKey:key, RongYaoTeamPlayer.kPropertyValueKey:value as Any])
     }
-    
+ 
     /// -----------------------------------------------------------------------
     
     /// 播放器状态被改变
     private func stateDidChange() {
-        self.valueDidChangeForKey(.state)
+        self.propertyValueDidChangeForKey(.state, value: status)
         print("state: ", status)
     }
     
@@ -340,7 +340,7 @@ public class RongYaoTeamPlayer {
             play()
         }
         
-        valueDidChangeForKey(.bufferStatus)
+        propertyValueDidChangeForKey(.bufferStatus, value: buffer)
         print("bufferState: ", buffer)
     }
     
@@ -350,7 +350,7 @@ public class RongYaoTeamPlayer {
     fileprivate func currentTimeDidChange() {
         // 正在播放
         if case Status.playing = status {
-            valueDidChangeForKey(.currentTime)
+            propertyValueDidChangeForKey(.currentTime, value: self.assetProperties!.currentTime)
         }
     }
     
@@ -358,17 +358,6 @@ public class RongYaoTeamPlayer {
     
     /// 一些通知记录员
     private var registrar: RongYaoTeamRegistrar = RongYaoTeamRegistrar.init()
-}
-
-/// 播放器的代理
-public protocol RongYaoTeamPlayerDelegate: NSObjectProtocol {
-    /// 相应的属性, 当值改变时的回调
-    ///
-    /// - Parameters:
-    ///   - player: 播放器
-    ///   - valueDidChangeForKey: 相应的属性
-    /// - Returns: Void
-    func player(_ player: RongYaoTeamPlayer, valueDidChangeForKey key: RongYaoTeamPlayer.PropertyKey)
 }
 public extension RongYaoTeamPlayer {
     /// 播放器当前的状态
@@ -421,7 +410,7 @@ public extension RongYaoTeamPlayer {
     /// - bufferLoadedTime:  同 player.assetProperties.bufferLoadedTime
     /// - bufferStatus:      同 player.assetProperties.bufferStatus
     /// - presentationSize:  同 player.assetProperties.presentationSize
-    enum PropertyKey {
+    enum PropertyKey:Int {
         case state
         case duration
         case currentTime
@@ -429,10 +418,15 @@ public extension RongYaoTeamPlayer {
         case bufferStatus
         case presentationSize
     }
+    
+    /// 属性值改变的通知
+    fileprivate static let PropertyValueDidChange: NSNotification.Name = NSNotification.Name.init("RongYaoTeamRotationManager.PropertyValueDidChange")
+    fileprivate static let kPropertyKey: String = "kPropertyKey"
+    fileprivate static let kPropertyValueKey: String = "kPropertyValueKey"
 }
 extension RongYaoTeamPlayer: RongYaoTeamPlayerAssetPropertiesDelegate {
     fileprivate func properties(_ p: RongYaoTeamPlayerAssetProperties, durationDidChange duration: TimeInterval) {
-        valueDidChangeForKey(.duration)
+        propertyValueDidChangeForKey(.duration, value: duration)
     }
     
     fileprivate func properties(_ p: RongYaoTeamPlayerAssetProperties, currentTimeDidChange currentTime: TimeInterval) {
@@ -440,7 +434,7 @@ extension RongYaoTeamPlayer: RongYaoTeamPlayerAssetPropertiesDelegate {
     }
     
     fileprivate func properties(_ p: RongYaoTeamPlayerAssetProperties, bufferLoadedTimeDidChange bufferLoadedTime: TimeInterval) {
-        valueDidChangeForKey(.bufferLoadedTime)
+        propertyValueDidChangeForKey(.bufferLoadedTime, value: bufferLoadedTime)
     }
     
     fileprivate func properties(_ p: RongYaoTeamPlayerAssetProperties, bufferStatusDidChange bufferStatus: BufferStatus) {
@@ -448,7 +442,7 @@ extension RongYaoTeamPlayer: RongYaoTeamPlayerAssetPropertiesDelegate {
     }
     
     fileprivate func properties(_ p: RongYaoTeamPlayerAssetProperties, presentationSizeDidChange presentationSize: CGSize) {
-        valueDidChangeForKey(.presentationSize)
+        propertyValueDidChangeForKey(.presentationSize, value: presentationSize)
     }
     
     fileprivate func playerItemDidPlayToEnd(_ p: RongYaoTeamPlayerAssetProperties) {
@@ -497,6 +491,15 @@ extension RongYaoTeamPlayer: RongYaoTeamRegistrarDelegate {
     
     fileprivate func audioSessionInterruption() {
         pause()
+    }
+}
+
+public class RongYaoTeamPlayerPropertyObserver {
+    /// 当播放器某个属性值改变时, 将会调用这个block
+    public var propertyValueDidChangeExeBlock: ((RongYaoTeamPlayer, RongYaoTeamPlayer.PropertyKey, Any?)->())?
+    
+    public func setPropertyValueDidChangeExeBlock(_ block: ((RongYaoTeamPlayer, RongYaoTeamPlayer.PropertyKey, Any?)->())?) {
+        self.propertyValueDidChangeExeBlock = block
     }
 }
 
@@ -850,4 +853,20 @@ fileprivate class RongYaoTeamRegistrar {
             self.delegate?.audioSessionInterruption()
         }
     }
+}
+
+fileprivate class _RongYaoTeamPlayerPropertyObserver: RongYaoTeamPlayerPropertyObserver {
+    init(_ player: RongYaoTeamPlayer) {
+        super.init()
+        notaToken = NotificationCenter.default.addObserver(forName: RongYaoTeamPlayer.PropertyValueDidChange, object: player, queue: nil) { [weak self] (nota) in
+            guard let `self` = self else { return }
+            let userInfo = nota.userInfo
+            self.propertyValueDidChangeExeBlock?(player, userInfo![RongYaoTeamPlayer.kPropertyKey] as! RongYaoTeamPlayer.PropertyKey, userInfo?[RongYaoTeamPlayer.kPropertyValueKey])
+        }
+    }
+    deinit {
+        if let `notaToken` = notaToken { NotificationCenter.default.removeObserver(notaToken) }
+    }
+    
+    private var notaToken: Any?
 }
