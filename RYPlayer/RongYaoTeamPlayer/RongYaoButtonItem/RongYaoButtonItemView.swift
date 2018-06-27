@@ -44,7 +44,8 @@ public class RongYaoButtonItemView: UIView {
         }
         
         containerView.subviews.first?.removeFromSuperview()
-    
+        containerView.snp.removeConstraints()
+
         observers.removeAll()
         addObserversOfItem(item)
         
@@ -52,28 +53,27 @@ public class RongYaoButtonItemView: UIView {
             return
         }
         
+        guard let `item` = item else { return }
+        
         // action
-        if let `action` = item?.action {
-            containerView.addTarget(item!.target, action: action, for: .touchUpInside)
+        if let `action` = item.action {
+            containerView.addTarget(item.target, action: action, for: .touchUpInside)
         }
         
-        var itemWidth: CGFloat = 36
-        if item?.width != 0 {
-            itemWidth = item!.width
-        }
+        var itemWidth: CGFloat = 36; if item.width != 0 { itemWidth = item.width }
         
         containerView.snp.makeConstraints { (make) in
             make.edges.equalToSuperview()
             make.width.equalTo(itemWidth)
         }
         
-        if let `customView` = item?.customView {
+        if let `customView` = item.customView {
             containerView.addSubview(customView)
             customView.snp.remakeConstraints { (make) in
                 make.edges.equalToSuperview()
             }
         }
-        else if let `image` = item?.image {
+        else if let `image` = item.image {
             if ( imageView == nil ) {
                 imageView = UIImageView.init()
                 imageView?.contentMode = .scaleAspectFit
@@ -84,7 +84,7 @@ public class RongYaoButtonItemView: UIView {
                 make.center.equalToSuperview()
             })
         }
-        else if let `title` = item?.title {
+        else if let `title` = item.title {
             if ( titleLabel == nil ) {
                 titleLabel = UILabel.init()
                 titleLabel?.textAlignment = .center
