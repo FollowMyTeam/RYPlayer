@@ -11,6 +11,13 @@ import SnapKit
 
 public class RongYaoButtonItemView: UIView {
     
+    deinit {
+        #if DEBUG
+        print("\(#function) - \(#line) - \(NSStringFromClass(self.classForCoder))")
+        #endif
+    }
+    
+    
     init(_ item: RongYaoButtonItem?) {
         super.init(frame: .zero)
         self.item = item
@@ -25,13 +32,6 @@ public class RongYaoButtonItemView: UIView {
         super.init(coder: aDecoder)
     }
     
-    public var item: RongYaoButtonItem? {
-        didSet{
-            if ( item == oldValue ) { return }
-            itemDidChange(item, oldValue)
-        }
-    }
-    
     public override func layoutSubviews() {
         superview?.layoutSubviews()
         
@@ -43,6 +43,10 @@ public class RongYaoButtonItemView: UIView {
     private var titleLabel: UILabel?
     
     private func itemDidChange(_ item: RongYaoButtonItem?, _ oldItem: RongYaoButtonItem?) {
+        #if DEBUG
+        print("\(#function) - \(#line) - \(NSStringFromClass(self.classForCoder))")
+        #endif
+        
         if let `oldItem` = oldItem {
             containerView.removeTarget(oldItem.target, action: oldItem.action, for: .touchUpInside)
         }
@@ -101,27 +105,42 @@ public class RongYaoButtonItemView: UIView {
     
     private var observers: [RongYaoObserver] = [RongYaoObserver]()
     
+    
+    public var item: RongYaoButtonItem? {
+        didSet{
+            if ( item == oldValue ) { return }
+            itemDidChange(item, oldValue)
+        }
+    }
+    
     func addObserversOfItem(_ item: RongYaoButtonItem?) {
+        #if DEBUG
+        print("\(#function) - \(#line) - \(NSStringFromClass(self.classForCoder))")
+        #endif
         guard let `item` = item else { return }
-        weak var _self = self
-        observers.append(RongYaoObserver.init(owner: item, observeKey: "isHidden", exeBlock: { (observer) in
-            _self?.itemDidChange(_self?.item, nil)
+        observers.append(RongYaoObserver.init(owner: item, observeKey: "isHidden", exeBlock: { [weak self] (observer) in
+            guard let `self` = self else { return }
+            self.itemDidChange(self.item, nil)
         }))
         
-        observers.append(RongYaoObserver.init(owner: item, observeKey: "width", exeBlock: { (observer) in
-            _self?.itemDidChange(_self?.item, nil)
+        observers.append(RongYaoObserver.init(owner: item, observeKey: "width", exeBlock: { [weak self] (observer) in
+            guard let `self` = self else { return }
+            self.itemDidChange(self.item, nil)
         }))
 
-        observers.append(RongYaoObserver.init(owner: item, observeKey: "image", exeBlock: { (observer) in
-            _self?.itemDidChange(_self?.item, nil)
+        observers.append(RongYaoObserver.init(owner: item, observeKey: "image", exeBlock: { [weak self] (observer) in
+            guard let `self` = self else { return }
+            self.itemDidChange(self.item, nil)
         }))
 
-        observers.append(RongYaoObserver.init(owner: item, observeKey: "title", exeBlock: { (observer) in
-            _self?.itemDidChange(_self?.item, nil)
+        observers.append(RongYaoObserver.init(owner: item, observeKey: "title", exeBlock: { [weak self] (observer) in
+            guard let `self` = self else { return }
+            self.itemDidChange(self.item, nil)
         }))
 
-        observers.append(RongYaoObserver.init(owner: item, observeKey: "customView", exeBlock: { (observer) in
-            _self?.itemDidChange(_self?.item, nil)
+        observers.append(RongYaoObserver.init(owner: item, observeKey: "customView", exeBlock: { [weak self] (observer) in
+            guard let `self` = self else { return }
+            self.itemDidChange(self.item, nil)
         }))
     }
 }

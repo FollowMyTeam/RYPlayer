@@ -48,6 +48,9 @@ public class RongYaoObserver: NSObject {
     }
     
     deinit {
+        #if DEBUG
+        print("\(#function) - \(#line) - RongYaoObserver")
+        #endif
         let owner = ry_bridge(ptr: owner_p)
         if ( observeKey != nil ) {
             owner.removeObserver(self, forKeyPath: observeKey!)

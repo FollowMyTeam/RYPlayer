@@ -10,6 +10,12 @@ import UIKit
 
 public class RongYaoButtonItem: NSObject {
     
+    deinit {
+        #if DEBUG
+        print("\(#function) - \(#line) - \(NSStringFromClass(self.classForCoder))")
+        #endif
+    }
+    
     public init(_ image: UIImage, target: AnyObject, action: Selector) {
         super.init()
         self.image = image

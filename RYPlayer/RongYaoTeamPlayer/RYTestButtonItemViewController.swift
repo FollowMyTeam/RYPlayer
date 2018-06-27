@@ -9,8 +9,7 @@
 import UIKit
 
 class RYTestButtonItemViewController: UIViewController {
-    
-    
+
     var containerView: UIView!
     var itemView1: RongYaoButtonItemView!
     var itemView2: RongYaoButtonItemView!
