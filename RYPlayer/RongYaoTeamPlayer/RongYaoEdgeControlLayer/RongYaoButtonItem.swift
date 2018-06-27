@@ -8,21 +8,24 @@
 
 import UIKit
 
-public class RongYaoButtonItem: Equatable {
+public class RongYaoButtonItem: NSObject {
     
     public init(_ image: UIImage, target: AnyObject, action: Selector) {
+        super.init()
         self.image = image
         self.target = target
         self.action = action
     }
     
     public init(_ title: NSAttributedString, target: AnyObject, action: Selector) {
+        super.init()
         self.title = title
         self.target = target
         self.action = action
     }
     
     public init(_ customView: UIView) {
+        super.init()
         self.customView = customView
     }
     

@@ -160,7 +160,59 @@
                     <view key="view" contentMode="scaleToFill" id="DKI-jZ-AOJ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="KvF-hD-4PB">
+                                <rect key="frame" x="0.0" y="558" width="375" height="60"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SQI-uu-x0t">
+                                        <rect key="frame" x="0.0" y="0.0" width="75" height="60"/>
+                                        <state key="normal" title="isHidden"/>
+                                        <connections>
+                                            <action selector="isHidden:" destination="mIA-71-dEF" eventType="touchUpInside" id="RQf-kU-Y0E"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hdj-nQ-2ub">
+                                        <rect key="frame" x="75" y="0.0" width="75" height="60"/>
+                                        <color key="backgroundColor" red="0.066666666669999999" green="0.75686274509999996" blue="0.94509803920000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title="Width"/>
+                                        <connections>
+                                            <action selector="width:" destination="mIA-71-dEF" eventType="touchUpInside" id="X25-u2-nvY"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SzZ-cf-0bw">
+                                        <rect key="frame" x="150" y="0.0" width="75" height="60"/>
+                                        <state key="normal" title="Image"/>
+                                        <connections>
+                                            <action selector="image:" destination="mIA-71-dEF" eventType="touchUpInside" id="XUv-dH-evD"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Joj-Ia-TAc">
+                                        <rect key="frame" x="225" y="0.0" width="75" height="60"/>
+                                        <color key="backgroundColor" red="0.066666666669999999" green="0.75686274509999996" blue="0.94509803920000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title="Title"/>
+                                        <connections>
+                                            <action selector="title:" destination="mIA-71-dEF" eventType="touchUpInside" id="fDT-Ss-sbJ"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jbM-0P-hh7">
+                                        <rect key="frame" x="300" y="0.0" width="75" height="60"/>
+                                        <state key="normal" title="Custom"/>
+                                        <connections>
+                                            <action selector="custom:" destination="mIA-71-dEF" eventType="touchUpInside" id="g9Q-oi-IXP"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="Cbs-9K-J5K"/>
+                                </constraints>
+                            </stackView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="KvF-hD-4PB" firstAttribute="leading" secondItem="FLJ-ET-HeW" secondAttribute="leading" id="6i8-Bo-Xhm"/>
+                            <constraint firstItem="FLJ-ET-HeW" firstAttribute="trailing" secondItem="KvF-hD-4PB" secondAttribute="trailing" id="LOe-7y-rfg"/>
+                            <constraint firstItem="FLJ-ET-HeW" firstAttribute="bottom" secondItem="KvF-hD-4PB" secondAttribute="bottom" id="eKv-KP-a4Z"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="FLJ-ET-HeW"/>
                     </view>
                 </viewController>

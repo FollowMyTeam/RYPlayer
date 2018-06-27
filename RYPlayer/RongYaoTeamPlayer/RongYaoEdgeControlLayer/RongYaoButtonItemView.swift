@@ -10,6 +10,7 @@ import UIKit
 import SnapKit
 
 public class RongYaoButtonItemView: UIView {
+    
     init(_ item: RongYaoButtonItem?) {
         super.init(frame: .zero)
         self.item = item
@@ -46,9 +47,14 @@ public class RongYaoButtonItemView: UIView {
             containerView.removeTarget(oldItem.target, action: oldItem.action, for: .touchUpInside)
         }
         
-        oldItem?.customView?.removeFromSuperview()
-        imageView?.removeFromSuperview()
-        titleLabel?.removeFromSuperview()
+        containerView.subviews.first?.removeFromSuperview()
+    
+        observers.removeAll()
+        addObserversOfItem(item)
+        
+        if item?.isHidden == true {
+            return
+        }
         
         // action
         if let `action` = item?.action {
@@ -91,5 +97,31 @@ public class RongYaoButtonItemView: UIView {
                 make.width.equalTo(itemWidth)
             })
         }
+    }
+    
+    private var observers: [RongYaoObserver] = [RongYaoObserver]()
+    
+    func addObserversOfItem(_ item: RongYaoButtonItem?) {
+        guard let `item` = item else { return }
+        weak var _self = self
+        observers.append(RongYaoObserver.init(owner: item, observeKey: "isHidden", exeBlock: { (observer) in
+            _self?.itemDidChange(_self?.item, nil)
+        }))
+        
+        observers.append(RongYaoObserver.init(owner: item, observeKey: "width", exeBlock: { (observer) in
+            _self?.itemDidChange(_self?.item, nil)
+        }))
+
+        observers.append(RongYaoObserver.init(owner: item, observeKey: "image", exeBlock: { (observer) in
+            _self?.itemDidChange(_self?.item, nil)
+        }))
+
+        observers.append(RongYaoObserver.init(owner: item, observeKey: "title", exeBlock: { (observer) in
+            _self?.itemDidChange(_self?.item, nil)
+        }))
+
+        observers.append(RongYaoObserver.init(owner: item, observeKey: "customView", exeBlock: { (observer) in
+            _self?.itemDidChange(_self?.item, nil)
+        }))
     }
 }
