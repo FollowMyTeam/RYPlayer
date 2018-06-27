@@ -26,10 +26,7 @@ class RYViewController: UIViewController {
     var slider: SJSlider?
     
     var gestureManager: RongYaoTeamGestureManager!
-    
-    var edgeControlLayer: RongYaoEdgeControlLayer!
-    
-    
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,12 +53,7 @@ class RYViewController: UIViewController {
         gestureManager = RongYaoTeamGestureManager.init(target: player!.view.presentView)
         gestureManager.delegate = self
         
-        edgeControlLayer = RongYaoEdgeControlLayer.init(frame: .zero)
-        player?.view.presentView.addSubview(edgeControlLayer)
-        edgeControlLayer.snp.makeConstraints { (make) in
-            make.edges.equalTo(edgeControlLayer.superview!)
-        }
-        
+    
         slider = SJSlider.init()
         slider?.delegate = self
         slider?.enableBufferProgress = true
@@ -122,11 +114,11 @@ extension RYViewController: RongYaoTeamRotationManagerDelegate {
         return true
     }
     
-    func rotationManager(_ mgr: RongYaoTeamRotationManager, willRotateView isFullscreen: Bool) {
+    func rotationManager(_ mgr: RongYaoTeamRotationManager, viewWillRotate isFullscreen: Bool) {
 
     }
     
-    func rotationManager(_ mgr: RongYaoTeamRotationManager, didEndRotateView isFullscreen: Bool) {
+    func rotationManager(_ mgr: RongYaoTeamRotationManager, viewDidEndRotate isFullscreen: Bool) {
         print("orientation: \(mgr.currentOrientation)")
     }
 }

@@ -103,13 +103,13 @@ extension RYTestRotationViewController: RongYaoTeamRotationManagerDelegate {
         return true
     }
     
-    func rotationManager(_ mgr: RongYaoTeamRotationManager, willRotateView isFullscreen: Bool) {
+    func rotationManager(_ mgr: RongYaoTeamRotationManager, viewWillRotate isFullscreen: Bool) {
         #if DEBUG
         print("\(#function) - \(#line) - RYTestRotationViewController")
         #endif
     }
     
-    func rotationManager(_ mgr: RongYaoTeamRotationManager, didEndRotateView isFullscreen: Bool) {
+    func rotationManager(_ mgr: RongYaoTeamRotationManager, viewDidEndRotate isFullscreen: Bool) {
         #if DEBUG
         print("\(#function) - \(#line) - RYTestRotationViewController")
         #endif

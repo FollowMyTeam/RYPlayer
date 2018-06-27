@@ -189,7 +189,7 @@ public class RongYaoTeamRotationManager {
             self.orientation = ori_new
             
             self.transitioning = true
-            self.delegate?.rotationManager( self, willRotateView:self.isFullscreen)
+            self.delegate?.rotationManager( self, viewWillRotate:self.isFullscreen)
             NotificationCenter.default.post(name: RongYaoTeamRotationManager.ViewWillRotate, object: self)
             UIApplication.shared.statusBarOrientation = statusBarOrientation
             UIView.animate(withDuration: animated ? self.duration : 0, animations: {
@@ -221,7 +221,7 @@ public class RongYaoTeamRotationManager {
                     window.insertSubview(self.blackView, belowSubview: target)
                 }
                 self.transitioning = false
-                self.delegate?.rotationManager( self, didEndRotateView:self.isFullscreen)
+                self.delegate?.rotationManager( self, viewDidEndRotate:self.isFullscreen)
                 NotificationCenter.default.post(name: RongYaoTeamRotationManager.ViewDidEndRotate, object: self)
                 completionHandler(self)
             }
@@ -395,8 +395,8 @@ public protocol RongYaoTeamRotationManagerDelegate {
     func triggerConditionForAutorotation(_ mgr: RongYaoTeamRotationManager) -> Bool
     
     /// 将要旋转的回调
-    func rotationManager(_ mgr: RongYaoTeamRotationManager, willRotateView isFullscreen: Bool)
+    func rotationManager(_ mgr: RongYaoTeamRotationManager, viewWillRotate isFullscreen: Bool)
     
     /// 完成旋转的回调
-    func rotationManager(_ mgr: RongYaoTeamRotationManager, didEndRotateView isFullscreen: Bool)
+    func rotationManager(_ mgr: RongYaoTeamRotationManager, viewDidEndRotate isFullscreen: Bool)
 }
