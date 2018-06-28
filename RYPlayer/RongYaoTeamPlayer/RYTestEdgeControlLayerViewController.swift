@@ -10,28 +10,21 @@ import UIKit
 import SnapKit
 
 class RYTestEdgeControlLayerViewController: UIViewController {
-
-    
-    var player: RongYaoTeamPlayer!
     
     var edgeControlLayer: RongYaoEdgeControlLayer!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        player = RongYaoTeamPlayer.init()
         edgeControlLayer = RongYaoEdgeControlLayer()
-        edgeControlLayer.player = player
         
-        view.addSubview(player.view)
-        player.view.snp.makeConstraints { (make) in
+        edgeControlLayer.backgroundColor = .white
+        view.backgroundColor = .purple
+        
+        view.addSubview(edgeControlLayer)
+        edgeControlLayer.snp.makeConstraints { (make) in
             make.top.equalTo(200)
             make.leading.trailing.equalToSuperview()
-            make.height.equalTo(player.view.snp.width).multipliedBy(9/16.0)
-        }
-        
-        player.view.presentView.addSubview(edgeControlLayer)
-        edgeControlLayer.snp.makeConstraints { (make) in
-            make.edges.equalToSuperview()
+            make.height.equalTo(view.snp.width).multipliedBy(9/16.0)
         }
         
         testTopView()

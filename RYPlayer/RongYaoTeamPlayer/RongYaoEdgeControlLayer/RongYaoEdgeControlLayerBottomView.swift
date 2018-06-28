@@ -12,13 +12,4 @@ import UIKit
 
 public class RongYaoEdgeControlLayerBottomView: RongYaoEdgeControlLayerView {
     
-    public override var intrinsicContentSize: CGSize {
-        var height: CGFloat = 49
-        if let `player` = player {
-            if player.view.rotationManager.isFullscreen {
-                height = 60
-            }
-        }
-        return CGSize.init(width: UIScreen.main.bounds.width, height: height)
-    }
 }

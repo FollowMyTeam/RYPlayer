@@ -10,9 +10,7 @@ import UIKit
 import SnapKit
 
 /// 边缘控制层
-public class RongYaoEdgeControlLayer: UIView, RongYaoTeamGestureManagerDelegate {
-    public weak var player: RongYaoTeamPlayer? { didSet{ playerDidSet() } }
-    
+public class RongYaoEdgeControlLayer: UIView, RongYaoTeamGestureManagerDelegate {    
     public var topView: RongYaoEdgeControlLayerTopView!
     public var leftView: RongYaoEdgeControlLayerLeftView!
     public var bottomView: RongYaoEdgeControlLayerBottomView!
@@ -36,17 +34,14 @@ public class RongYaoEdgeControlLayer: UIView, RongYaoTeamGestureManagerDelegate 
         addRightView(contentView)
 
         /// test
-        topView.backgroundColor = .green
+//        topView.backgroundColor = .green
         leftView.backgroundColor = .green
-        bottomView.backgroundColor = .green
+//        bottomView.backgroundColor = .green
         rightView.backgroundColor = .green
     }
     
     private func playerDidSet() {
-        topView.player = player
-        leftView.player = player
-        bottomView.player = player
-        rightView.player = player
+        
     }
     
     @objc private func test() {
@@ -113,6 +108,7 @@ fileprivate extension RongYaoEdgeControlLayer {
 fileprivate  extension RongYaoEdgeControlLayer {
     func addTopView(_ superview: UIView) {
         topView = RongYaoEdgeControlLayerTopView(frame: .zero)
+        topView.maskStyle = .deepToShallow
         superview.addSubview(topView)
         topView.snp.makeConstraints { (make) in
             make.top.leading.trailing.equalTo(topView.superview!)
@@ -134,6 +130,7 @@ fileprivate extension RongYaoEdgeControlLayer {
 fileprivate extension RongYaoEdgeControlLayer {
     func addBottomView(_ superview: UIView) {
         bottomView = RongYaoEdgeControlLayerBottomView(frame: .zero)
+        bottomView.maskStyle = .shallowToDeep
         superview.addSubview(bottomView)
         bottomView.snp.makeConstraints { (make) in
             make.leading.bottom.trailing.equalTo(bottomView.superview!)

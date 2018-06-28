@@ -15,6 +15,5 @@ public protocol RongYaoEdgeControlLayerLeftViewDelegate {
 }
 
 public class RongYaoEdgeControlLayerLeftView: RongYaoEdgeControlLayerView {
-    
-    override func playerDidSet() { }
+     
 }

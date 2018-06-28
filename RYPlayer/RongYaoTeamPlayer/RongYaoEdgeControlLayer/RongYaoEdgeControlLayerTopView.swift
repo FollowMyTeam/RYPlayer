@@ -31,32 +31,11 @@ public class RongYaoEdgeControlLayerTopView: RongYaoEdgeControlLayerView {
         disappearType = [.alpha, .transform]
     }
     
-    public override var intrinsicContentSize: CGSize {
-        var height: CGFloat = 55
-        if let `player` = player {
-            if player.view.rotationManager.isFullscreen {
-                height = 75
-            }
-        }
-        return CGSize.init(width: UIScreen.main.bounds.width, height: height)
-    }
-    
     public override func invalidateIntrinsicContentSize() {
         super.invalidateIntrinsicContentSize()
         self.transformOfDisappear = .init(translationX: 0, y: -self.intrinsicContentSize.height)
     }
-    
-    private var rotationObserver: RongYaoTeamRotationManager.Observer?
-    
-    override func playerDidSet() {
-        rotationObserver = player?.view.rotationManager.getObserver()
-        rotationObserver?.setViewWillRotateExeBlock({ [weak self] (mgr) in
-            guard let `self` = self else { return }
-            self.invalidateIntrinsicContentSize()
-        })
-        invalidateIntrinsicContentSize()
-    }
-    
+
     private func setupViews() {
         backButton = UIButton.init(type: .custom)
         backButton.addTarget(self, action: #selector(clickedBackBtn), for: .touchUpInside)
