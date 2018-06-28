@@ -11,30 +11,22 @@ import SnapKit
 
 /// 边缘控制层 - 上
 
-public protocol RongYaoEdgeControlLayerTopViewDelegate {
-    func clickedBackButtonOnTopView(_ view: RongYaoEdgeControlLayerTopView)
-}
-
 public class RongYaoEdgeControlLayerTopView: RongYaoEdgeControlLayerView {
     
     public weak var delegate: (AnyObject & RongYaoEdgeControlLayerTopViewDelegate)?
     
-    public var topResrouces: RongYaoEdgeControlLayerResources.TopViewResources? { didSet{ topViewResourcesDidChange() } }
-    public var rightButtonItems: [RongYaoButtonItem]? { didSet{ rightButtonItemsDidChange() } }
+    public var topResrouces: RongYaoEdgeControlLayerResources.TopViewResources? { didSet{ topViewResourcesDidSet() } }
     
-    public var backButton: UIButton!
-    public var titleLabel: UILabel!
+    public var rightButtonItems: [RongYaoButtonItem]? { didSet{ rightButtonItemsDidSet() } }
     
-    public override init(frame: CGRect) {
+    override init(frame: CGRect) {
         super.init(frame: frame)
         self.setupViews()
-        disappearType = [.alpha, .transform]
     }
     
-    public override func invalidateIntrinsicContentSize() {
-        super.invalidateIntrinsicContentSize()
-        self.transformOfDisappear = .init(translationX: 0, y: -self.intrinsicContentSize.height)
-    }
+    private var backButton: UIButton!
+    private var titleLabel: UILabel!
+    private var buttonItemsContainerView: UIView!
 
     private func setupViews() {
         backButton = UIButton.init(type: .custom)
@@ -67,8 +59,7 @@ public class RongYaoEdgeControlLayerTopView: RongYaoEdgeControlLayerView {
         }
     }
     
-    private var buttonItemsContainerView: UIView!
-    private func rightButtonItemsDidChange() {
+    private func rightButtonItemsDidSet() {
         for sub in buttonItemsContainerView.subviews { sub.removeFromSuperview() }
         guard let `rightButtonItems` = rightButtonItems else { return }
         if ( rightButtonItems.count == 0 ) { return }
@@ -88,18 +79,19 @@ public class RongYaoEdgeControlLayerTopView: RongYaoEdgeControlLayerView {
         }
     }
     
-    private func topViewResourcesDidChange() {
-        
+    private func topViewResourcesDidSet() {
+        backButton.setImage(topResrouces?.backImage, for: .normal)
     }
     
     @objc private func clickedBackBtn() {
-        #if DEBUG
-        print("\(#function) - \(#line) - \(NSStringFromClass(self.classForCoder))")
-        #endif
         self.delegate?.clickedBackButtonOnTopView(self)
     }
     
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
+}
+
+public protocol RongYaoEdgeControlLayerTopViewDelegate {
+    func clickedBackButtonOnTopView(_ view: RongYaoEdgeControlLayerTopView)
 }

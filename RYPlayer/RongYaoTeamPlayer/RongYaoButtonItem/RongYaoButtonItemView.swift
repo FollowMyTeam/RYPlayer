@@ -59,11 +59,9 @@ public class RongYaoButtonItemView: UIView {
             containerView.addTarget(item.target, action: action, for: .touchUpInside)
         }
         
-        var itemWidth: CGFloat = 36; if item.width != 0 { itemWidth = item.width }
-        
         containerView.snp.makeConstraints { (make) in
             make.edges.equalToSuperview()
-            make.width.equalTo(itemWidth)
+            make.width.equalTo(item.width)
         }
         
         if let `customView` = item.customView {

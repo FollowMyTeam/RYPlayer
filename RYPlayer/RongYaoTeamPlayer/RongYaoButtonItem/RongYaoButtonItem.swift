@@ -38,8 +38,8 @@ public class RongYaoButtonItem: NSObject {
     /// default is false
     @objc public dynamic var isHidden: Bool = false
     
-    /// default is 0.0
-    @objc public dynamic var width: CGFloat = 0.0
+    /// default is 36.0
+    @objc public dynamic var width: CGFloat = 36.0
     
     @objc public dynamic var image: UIImage?
     
