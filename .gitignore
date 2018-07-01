@@ -34,7 +34,6 @@ Pods/
 *.xccheckout
 *.xcscmblueprint
 .DS_Store
-*/.DS_Store
 
 
 
