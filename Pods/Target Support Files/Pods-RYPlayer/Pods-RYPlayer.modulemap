@@ -1,0 +1,6 @@
+framework module Pods_RYPlayer {
+  umbrella header "Pods-RYPlayer-umbrella.h"
+
+  export *
+  module * { export * }
+}

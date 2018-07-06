@@ -1,0 +1,691 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3A7CA78620CD140F00095942 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7CA78520CD140F00095942 /* AppDelegate.swift */; };
+		3A7CA78820CD140F00095942 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7CA78720CD140F00095942 /* ViewController.swift */; };
+		3A7CA78B20CD140F00095942 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3A7CA78920CD140F00095942 /* Main.storyboard */; };
+		3A7CA78D20CD141300095942 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3A7CA78C20CD141300095942 /* Assets.xcassets */; };
+		3A7CA79020CD141300095942 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3A7CA78E20CD141300095942 /* LaunchScreen.storyboard */; };
+		3A7CA79B20CD141400095942 /* RYPlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7CA79A20CD141400095942 /* RYPlayerTests.swift */; };
+		3A7CA7A620CD141400095942 /* RYPlayerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7CA7A520CD141400095942 /* RYPlayerUITests.swift */; };
+		B6B002260FB08829099D87E7 /* Pods_RYPlayerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A7017FD11F3F84D4C8F1EE61 /* Pods_RYPlayerTests.framework */; };
+		BC02BB532EC6D0E785A967C7 /* Pods_RYPlayerUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD61D52B256B1BD4CF02732A /* Pods_RYPlayerUITests.framework */; };
+		BF2DEA7900105878481AE5D5 /* Pods_RYPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E92A94BC4CF6DB1AD41731C9 /* Pods_RYPlayer.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		3A7CA79720CD141400095942 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3A7CA77A20CD140E00095942 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3A7CA78120CD140E00095942;
+			remoteInfo = RYPlayer;
+		};
+		3A7CA7A220CD141400095942 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3A7CA77A20CD140E00095942 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3A7CA78120CD140E00095942;
+			remoteInfo = RYPlayer;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		3A7CA78220CD140E00095942 /* RYPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RYPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A7CA78520CD140F00095942 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		3A7CA78720CD140F00095942 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		3A7CA78A20CD140F00095942 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		3A7CA78C20CD141300095942 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		3A7CA78F20CD141300095942 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		3A7CA79120CD141300095942 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3A7CA79620CD141400095942 /* RYPlayerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RYPlayerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A7CA79A20CD141400095942 /* RYPlayerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYPlayerTests.swift; sourceTree = "<group>"; };
+		3A7CA79C20CD141400095942 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3A7CA7A120CD141400095942 /* RYPlayerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RYPlayerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A7CA7A520CD141400095942 /* RYPlayerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYPlayerUITests.swift; sourceTree = "<group>"; };
+		3A7CA7A720CD141400095942 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7F41F980EE84BFD859372E20 /* Pods-RYPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RYPlayer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RYPlayer/Pods-RYPlayer.debug.xcconfig"; sourceTree = "<group>"; };
+		813C6561BD356BD7D0E24F06 /* Pods-RYPlayerUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RYPlayerUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-RYPlayerUITests/Pods-RYPlayerUITests.release.xcconfig"; sourceTree = "<group>"; };
+		9EF0A8E1B0FEADA53AB282AE /* Pods-RYPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RYPlayer.release.xcconfig"; path = "Pods/Target Support Files/Pods-RYPlayer/Pods-RYPlayer.release.xcconfig"; sourceTree = "<group>"; };
+		A58C422B255BF14E5031304B /* Pods-RYPlayerUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RYPlayerUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RYPlayerUITests/Pods-RYPlayerUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		A7017FD11F3F84D4C8F1EE61 /* Pods_RYPlayerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RYPlayerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A8292E604536FCA7B0B81A7B /* Pods-RYPlayerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RYPlayerTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RYPlayerTests/Pods-RYPlayerTests.debug.xcconfig"; sourceTree = "<group>"; };
+		AD61D52B256B1BD4CF02732A /* Pods_RYPlayerUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RYPlayerUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DCE8A436E34BB86CEE242089 /* Pods-RYPlayerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RYPlayerTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-RYPlayerTests/Pods-RYPlayerTests.release.xcconfig"; sourceTree = "<group>"; };
+		E92A94BC4CF6DB1AD41731C9 /* Pods_RYPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RYPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3A7CA77F20CD140E00095942 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BF2DEA7900105878481AE5D5 /* Pods_RYPlayer.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3A7CA79320CD141400095942 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B6B002260FB08829099D87E7 /* Pods_RYPlayerTests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3A7CA79E20CD141400095942 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BC02BB532EC6D0E785A967C7 /* Pods_RYPlayerUITests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		3A7CA77920CD140E00095942 = {
+			isa = PBXGroup;
+			children = (
+				3A7CA78420CD140E00095942 /* RYPlayer */,
+				3A7CA79920CD141400095942 /* RYPlayerTests */,
+				3A7CA7A420CD141400095942 /* RYPlayerUITests */,
+				3A7CA78320CD140E00095942 /* Products */,
+				BFDD8677A26F2AC313CCA600 /* Pods */,
+				BAAAE692D66BC3B88F987918 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		3A7CA78320CD140E00095942 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3A7CA78220CD140E00095942 /* RYPlayer.app */,
+				3A7CA79620CD141400095942 /* RYPlayerTests.xctest */,
+				3A7CA7A120CD141400095942 /* RYPlayerUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3A7CA78420CD140E00095942 /* RYPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				3A7CA78520CD140F00095942 /* AppDelegate.swift */,
+				3A7CA78720CD140F00095942 /* ViewController.swift */,
+				3A7CA78920CD140F00095942 /* Main.storyboard */,
+				3A7CA78C20CD141300095942 /* Assets.xcassets */,
+				3A7CA78E20CD141300095942 /* LaunchScreen.storyboard */,
+				3A7CA79120CD141300095942 /* Info.plist */,
+			);
+			path = RYPlayer;
+			sourceTree = "<group>";
+		};
+		3A7CA79920CD141400095942 /* RYPlayerTests */ = {
+			isa = PBXGroup;
+			children = (
+				3A7CA79A20CD141400095942 /* RYPlayerTests.swift */,
+				3A7CA79C20CD141400095942 /* Info.plist */,
+			);
+			path = RYPlayerTests;
+			sourceTree = "<group>";
+		};
+		3A7CA7A420CD141400095942 /* RYPlayerUITests */ = {
+			isa = PBXGroup;
+			children = (
+				3A7CA7A520CD141400095942 /* RYPlayerUITests.swift */,
+				3A7CA7A720CD141400095942 /* Info.plist */,
+			);
+			path = RYPlayerUITests;
+			sourceTree = "<group>";
+		};
+		BAAAE692D66BC3B88F987918 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E92A94BC4CF6DB1AD41731C9 /* Pods_RYPlayer.framework */,
+				A7017FD11F3F84D4C8F1EE61 /* Pods_RYPlayerTests.framework */,
+				AD61D52B256B1BD4CF02732A /* Pods_RYPlayerUITests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		BFDD8677A26F2AC313CCA600 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				7F41F980EE84BFD859372E20 /* Pods-RYPlayer.debug.xcconfig */,
+				9EF0A8E1B0FEADA53AB282AE /* Pods-RYPlayer.release.xcconfig */,
+				A8292E604536FCA7B0B81A7B /* Pods-RYPlayerTests.debug.xcconfig */,
+				DCE8A436E34BB86CEE242089 /* Pods-RYPlayerTests.release.xcconfig */,
+				A58C422B255BF14E5031304B /* Pods-RYPlayerUITests.debug.xcconfig */,
+				813C6561BD356BD7D0E24F06 /* Pods-RYPlayerUITests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3A7CA78120CD140E00095942 /* RYPlayer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3A7CA7AA20CD141400095942 /* Build configuration list for PBXNativeTarget "RYPlayer" */;
+			buildPhases = (
+				C8899FA1EC224DD174DC1295 /* [CP] Check Pods Manifest.lock */,
+				3A7CA77E20CD140E00095942 /* Sources */,
+				3A7CA77F20CD140E00095942 /* Frameworks */,
+				3A7CA78020CD140E00095942 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RYPlayer;
+			productName = RYPlayer;
+			productReference = 3A7CA78220CD140E00095942 /* RYPlayer.app */;
+			productType = "com.apple.product-type.application";
+		};
+		3A7CA79520CD141400095942 /* RYPlayerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3A7CA7AD20CD141400095942 /* Build configuration list for PBXNativeTarget "RYPlayerTests" */;
+			buildPhases = (
+				461FB060B131472910359B79 /* [CP] Check Pods Manifest.lock */,
+				3A7CA79220CD141400095942 /* Sources */,
+				3A7CA79320CD141400095942 /* Frameworks */,
+				3A7CA79420CD141400095942 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3A7CA79820CD141400095942 /* PBXTargetDependency */,
+			);
+			name = RYPlayerTests;
+			productName = RYPlayerTests;
+			productReference = 3A7CA79620CD141400095942 /* RYPlayerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		3A7CA7A020CD141400095942 /* RYPlayerUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3A7CA7B020CD141400095942 /* Build configuration list for PBXNativeTarget "RYPlayerUITests" */;
+			buildPhases = (
+				B69012CB5C346844C20F2C7A /* [CP] Check Pods Manifest.lock */,
+				3A7CA79D20CD141400095942 /* Sources */,
+				3A7CA79E20CD141400095942 /* Frameworks */,
+				3A7CA79F20CD141400095942 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3A7CA7A320CD141400095942 /* PBXTargetDependency */,
+			);
+			name = RYPlayerUITests;
+			productName = RYPlayerUITests;
+			productReference = 3A7CA7A120CD141400095942 /* RYPlayerUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3A7CA77A20CD140E00095942 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0940;
+				LastUpgradeCheck = 0940;
+				ORGANIZATIONNAME = rongyao;
+				TargetAttributes = {
+					3A7CA78120CD140E00095942 = {
+						CreatedOnToolsVersion = 9.4;
+					};
+					3A7CA79520CD141400095942 = {
+						CreatedOnToolsVersion = 9.4;
+						TestTargetID = 3A7CA78120CD140E00095942;
+					};
+					3A7CA7A020CD141400095942 = {
+						CreatedOnToolsVersion = 9.4;
+						TestTargetID = 3A7CA78120CD140E00095942;
+					};
+				};
+			};
+			buildConfigurationList = 3A7CA77D20CD140E00095942 /* Build configuration list for PBXProject "RYPlayer" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 3A7CA77920CD140E00095942;
+			productRefGroup = 3A7CA78320CD140E00095942 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3A7CA78120CD140E00095942 /* RYPlayer */,
+				3A7CA79520CD141400095942 /* RYPlayerTests */,
+				3A7CA7A020CD141400095942 /* RYPlayerUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3A7CA78020CD140E00095942 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A7CA79020CD141300095942 /* LaunchScreen.storyboard in Resources */,
+				3A7CA78D20CD141300095942 /* Assets.xcassets in Resources */,
+				3A7CA78B20CD140F00095942 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3A7CA79420CD141400095942 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3A7CA79F20CD141400095942 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		461FB060B131472910359B79 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RYPlayerTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B69012CB5C346844C20F2C7A /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RYPlayerUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C8899FA1EC224DD174DC1295 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RYPlayer-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3A7CA77E20CD140E00095942 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A7CA78820CD140F00095942 /* ViewController.swift in Sources */,
+				3A7CA78620CD140F00095942 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3A7CA79220CD141400095942 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A7CA79B20CD141400095942 /* RYPlayerTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3A7CA79D20CD141400095942 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A7CA7A620CD141400095942 /* RYPlayerUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3A7CA79820CD141400095942 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3A7CA78120CD140E00095942 /* RYPlayer */;
+			targetProxy = 3A7CA79720CD141400095942 /* PBXContainerItemProxy */;
+		};
+		3A7CA7A320CD141400095942 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3A7CA78120CD140E00095942 /* RYPlayer */;
+			targetProxy = 3A7CA7A220CD141400095942 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		3A7CA78920CD140F00095942 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3A7CA78A20CD140F00095942 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		3A7CA78E20CD141300095942 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3A7CA78F20CD141300095942 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		3A7CA7A820CD141400095942 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		3A7CA7A920CD141400095942 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		3A7CA7AB20CD141400095942 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7F41F980EE84BFD859372E20 /* Pods-RYPlayer.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = RYPlayer/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = cn.rongyao.www.RYPlayer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		3A7CA7AC20CD141400095942 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9EF0A8E1B0FEADA53AB282AE /* Pods-RYPlayer.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = RYPlayer/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = cn.rongyao.www.RYPlayer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		3A7CA7AE20CD141400095942 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A8292E604536FCA7B0B81A7B /* Pods-RYPlayerTests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = RYPlayerTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = cn.rongyao.www.RYPlayerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RYPlayer.app/RYPlayer";
+			};
+			name = Debug;
+		};
+		3A7CA7AF20CD141400095942 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DCE8A436E34BB86CEE242089 /* Pods-RYPlayerTests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = RYPlayerTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = cn.rongyao.www.RYPlayerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RYPlayer.app/RYPlayer";
+			};
+			name = Release;
+		};
+		3A7CA7B120CD141400095942 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A58C422B255BF14E5031304B /* Pods-RYPlayerUITests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = RYPlayerUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = cn.rongyao.www.RYPlayerUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = RYPlayer;
+			};
+			name = Debug;
+		};
+		3A7CA7B220CD141400095942 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 813C6561BD356BD7D0E24F06 /* Pods-RYPlayerUITests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = RYPlayerUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = cn.rongyao.www.RYPlayerUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = RYPlayer;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3A7CA77D20CD140E00095942 /* Build configuration list for PBXProject "RYPlayer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3A7CA7A820CD141400095942 /* Debug */,
+				3A7CA7A920CD141400095942 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3A7CA7AA20CD141400095942 /* Build configuration list for PBXNativeTarget "RYPlayer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3A7CA7AB20CD141400095942 /* Debug */,
+				3A7CA7AC20CD141400095942 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3A7CA7AD20CD141400095942 /* Build configuration list for PBXNativeTarget "RYPlayerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3A7CA7AE20CD141400095942 /* Debug */,
+				3A7CA7AF20CD141400095942 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3A7CA7B020CD141400095942 /* Build configuration list for PBXNativeTarget "RYPlayerUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3A7CA7B120CD141400095942 /* Debug */,
+				3A7CA7B220CD141400095942 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 3A7CA77A20CD140E00095942 /* Project object */;
+}

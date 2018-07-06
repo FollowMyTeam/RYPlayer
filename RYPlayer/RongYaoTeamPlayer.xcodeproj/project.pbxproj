@@ -1,0 +1,581 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4311539AAE05C781EA2AF1B7 /* Pods_RongYaoTeamPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5C898A3DAF5A2087BF75381 /* Pods_RongYaoTeamPlayer.framework */; };
+		7714FE0A20E3295800CA6612 /* RYTestButtonItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7714FE0920E3295800CA6612 /* RYTestButtonItemViewController.swift */; };
+		7714FE0D20E3585800CA6612 /* RYTestEdgeControlLayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7714FE0C20E3585800CA6612 /* RYTestEdgeControlLayerViewController.swift */; };
+		7714FE1420E3951B00CA6612 /* RongYaoEdgeControlLayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7714FE1320E3951B00CA6612 /* RongYaoEdgeControlLayerView.swift */; };
+		771C27A720CBE1D900C17E34 /* RongYaoTeamPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771C27A620CBE1D900C17E34 /* RongYaoTeamPlayer.swift */; };
+		771C971920E21DD0001BA7FC /* RYTestGestureManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771C971820E21DD0001BA7FC /* RYTestGestureManagerViewController.swift */; };
+		771C971B20E2273B001BA7FC /* RYTestPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771C971A20E2273B001BA7FC /* RYTestPlayerViewController.swift */; };
+		771C972320E22E29001BA7FC /* RongYaoEdgeControlLayer.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 771C972220E22E29001BA7FC /* RongYaoEdgeControlLayer.bundle */; };
+		771C972520E22EBC001BA7FC /* RongYaoEdgeControlLayerResources.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771C972420E22EBC001BA7FC /* RongYaoEdgeControlLayerResources.swift */; };
+		773DD2C420D66761008113CD /* RYTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 773DD2C320D66761008113CD /* RYTabBarController.swift */; };
+		773DD2C620D6676D008113CD /* RYNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 773DD2C520D6676D008113CD /* RYNavigationController.swift */; };
+		7790D18A20CABA2C00F7CAF5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7790D18920CABA2C00F7CAF5 /* AppDelegate.swift */; };
+		7790D18C20CABA2C00F7CAF5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7790D18B20CABA2C00F7CAF5 /* ViewController.swift */; };
+		7790D18F20CABA2C00F7CAF5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7790D18D20CABA2C00F7CAF5 /* Main.storyboard */; };
+		7790D19120CABA2D00F7CAF5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7790D19020CABA2D00F7CAF5 /* Assets.xcassets */; };
+		7790D19420CABA2D00F7CAF5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7790D19220CABA2D00F7CAF5 /* LaunchScreen.storyboard */; };
+		7790D1A220CABA7300F7CAF5 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7790D1A120CABA7300F7CAF5 /* AVFoundation.framework */; };
+		7790D1A820CADC6F00F7CAF5 /* RYViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7790D1A720CADC6F00F7CAF5 /* RYViewController.swift */; };
+		7790D1AA20CBB22900F7CAF5 /* RongYaoObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7790D1A920CBB22900F7CAF5 /* RongYaoObserver.swift */; };
+		77B8815420D8EED00054DDE2 /* RongYaoTeamPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B8815320D8EED00054DDE2 /* RongYaoTeamPlayerView.swift */; };
+		77B8815620D906070054DDE2 /* RongYaoTeamPlayerExport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B8815520D906070054DDE2 /* RongYaoTeamPlayerExport.swift */; };
+		77D0BADB20E2483A00047404 /* RongYaoButtonItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D0BADA20E2483A00047404 /* RongYaoButtonItem.swift */; };
+		77D0BADD20E24CB000047404 /* RongYaoButtonItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D0BADC20E24CB000047404 /* RongYaoButtonItemView.swift */; };
+		A6089F0020DF44E400DA5E9B /* RongYaoTeamGestureManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6089EFF20DF44E400DA5E9B /* RongYaoTeamGestureManager.swift */; };
+		A6089F0320DF476100DA5E9B /* RongYaoEdgeControlLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6089F0220DF476100DA5E9B /* RongYaoEdgeControlLayer.swift */; };
+		A6089F0520DF477200DA5E9B /* RongYaoEdgeControlLayerTopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6089F0420DF477200DA5E9B /* RongYaoEdgeControlLayerTopView.swift */; };
+		A6089F0720DF477F00DA5E9B /* RongYaoEdgeControlLayerLeftView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6089F0620DF477F00DA5E9B /* RongYaoEdgeControlLayerLeftView.swift */; };
+		A6089F0920DF478700DA5E9B /* RongYaoEdgeControlLayerBottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6089F0820DF478700DA5E9B /* RongYaoEdgeControlLayerBottomView.swift */; };
+		A6089F0B20DF478E00DA5E9B /* RongYaoEdgeControlLayerRightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6089F0A20DF478E00DA5E9B /* RongYaoEdgeControlLayerRightView.swift */; };
+		A6089F0D20DF73D100DA5E9B /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = A6089F0C20DF73D100DA5E9B /* README.md */; };
+		A6089F0F20DF757200DA5E9B /* RongYaoTeamPlayerAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6089F0E20DF757200DA5E9B /* RongYaoTeamPlayerAsset.swift */; };
+		A6089F1720DF8EA700DA5E9B /* RongYaoTeamRotationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6089F1620DF8EA700DA5E9B /* RongYaoTeamRotationManager.swift */; };
+		A60F285B20E0F65400E1AA12 /* RYTestRotationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60F285A20E0F65400E1AA12 /* RYTestRotationViewController.swift */; };
+		A658746220CB8E0500611B72 /* sample.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = A658746120CB8E0500611B72 /* sample.mp4 */; };
+		A676925A20E0AA6A00B3F843 /* RongYaoBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A676925920E0AA6A00B3F843 /* RongYaoBridge.swift */; };
+		A69FA7EC20E099040055609C /* RYPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A69FA7EA20E099040055609C /* RYPlayer.swift */; };
+		A69FA7ED20E099040055609C /* RYPlayModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A69FA7EB20E099040055609C /* RYPlayModel.swift */; };
+		A69FA7EF20E09AD90055609C /* RongYaoMultidelegateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A69FA7EE20E09AD90055609C /* RongYaoMultidelegateManager.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		6106DEEF81896DA0859A4508 /* Pods-RongYaoTeamPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RongYaoTeamPlayer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RongYaoTeamPlayer/Pods-RongYaoTeamPlayer.debug.xcconfig"; sourceTree = "<group>"; };
+		6EB0C4A2BDB68892BD77B491 /* Pods-RongYaoTeamPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RongYaoTeamPlayer.release.xcconfig"; path = "Pods/Target Support Files/Pods-RongYaoTeamPlayer/Pods-RongYaoTeamPlayer.release.xcconfig"; sourceTree = "<group>"; };
+		7714FE0920E3295800CA6612 /* RYTestButtonItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYTestButtonItemViewController.swift; sourceTree = "<group>"; };
+		7714FE0C20E3585800CA6612 /* RYTestEdgeControlLayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYTestEdgeControlLayerViewController.swift; sourceTree = "<group>"; };
+		7714FE1320E3951B00CA6612 /* RongYaoEdgeControlLayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoEdgeControlLayerView.swift; sourceTree = "<group>"; };
+		771C27A620CBE1D900C17E34 /* RongYaoTeamPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoTeamPlayer.swift; sourceTree = "<group>"; };
+		771C971820E21DD0001BA7FC /* RYTestGestureManagerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYTestGestureManagerViewController.swift; sourceTree = "<group>"; };
+		771C971A20E2273B001BA7FC /* RYTestPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYTestPlayerViewController.swift; sourceTree = "<group>"; };
+		771C972220E22E29001BA7FC /* RongYaoEdgeControlLayer.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = RongYaoEdgeControlLayer.bundle; sourceTree = "<group>"; };
+		771C972420E22EBC001BA7FC /* RongYaoEdgeControlLayerResources.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoEdgeControlLayerResources.swift; sourceTree = "<group>"; };
+		773DD2C320D66761008113CD /* RYTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYTabBarController.swift; sourceTree = "<group>"; };
+		773DD2C520D6676D008113CD /* RYNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYNavigationController.swift; sourceTree = "<group>"; };
+		7790D18620CABA2C00F7CAF5 /* RongYaoTeamPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RongYaoTeamPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7790D18920CABA2C00F7CAF5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		7790D18B20CABA2C00F7CAF5 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		7790D18E20CABA2C00F7CAF5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		7790D19020CABA2D00F7CAF5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		7790D19320CABA2D00F7CAF5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		7790D19520CABA2D00F7CAF5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7790D1A120CABA7300F7CAF5 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		7790D1A720CADC6F00F7CAF5 /* RYViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYViewController.swift; sourceTree = "<group>"; };
+		7790D1A920CBB22900F7CAF5 /* RongYaoObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoObserver.swift; sourceTree = "<group>"; };
+		77B8815320D8EED00054DDE2 /* RongYaoTeamPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoTeamPlayerView.swift; sourceTree = "<group>"; };
+		77B8815520D906070054DDE2 /* RongYaoTeamPlayerExport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoTeamPlayerExport.swift; sourceTree = "<group>"; };
+		77D0BADA20E2483A00047404 /* RongYaoButtonItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoButtonItem.swift; sourceTree = "<group>"; };
+		77D0BADC20E24CB000047404 /* RongYaoButtonItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoButtonItemView.swift; sourceTree = "<group>"; };
+		A6089EFF20DF44E400DA5E9B /* RongYaoTeamGestureManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoTeamGestureManager.swift; sourceTree = "<group>"; };
+		A6089F0220DF476100DA5E9B /* RongYaoEdgeControlLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoEdgeControlLayer.swift; sourceTree = "<group>"; };
+		A6089F0420DF477200DA5E9B /* RongYaoEdgeControlLayerTopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoEdgeControlLayerTopView.swift; sourceTree = "<group>"; };
+		A6089F0620DF477F00DA5E9B /* RongYaoEdgeControlLayerLeftView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoEdgeControlLayerLeftView.swift; sourceTree = "<group>"; };
+		A6089F0820DF478700DA5E9B /* RongYaoEdgeControlLayerBottomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoEdgeControlLayerBottomView.swift; sourceTree = "<group>"; };
+		A6089F0A20DF478E00DA5E9B /* RongYaoEdgeControlLayerRightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoEdgeControlLayerRightView.swift; sourceTree = "<group>"; };
+		A6089F0C20DF73D100DA5E9B /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		A6089F0E20DF757200DA5E9B /* RongYaoTeamPlayerAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoTeamPlayerAsset.swift; sourceTree = "<group>"; };
+		A6089F1620DF8EA700DA5E9B /* RongYaoTeamRotationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoTeamRotationManager.swift; sourceTree = "<group>"; };
+		A60F285A20E0F65400E1AA12 /* RYTestRotationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RYTestRotationViewController.swift; sourceTree = "<group>"; };
+		A658746120CB8E0500611B72 /* sample.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample.mp4; sourceTree = "<group>"; };
+		A676925920E0AA6A00B3F843 /* RongYaoBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoBridge.swift; sourceTree = "<group>"; };
+		A69FA7EA20E099040055609C /* RYPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RYPlayer.swift; sourceTree = "<group>"; };
+		A69FA7EB20E099040055609C /* RYPlayModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RYPlayModel.swift; sourceTree = "<group>"; };
+		A69FA7EE20E09AD90055609C /* RongYaoMultidelegateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RongYaoMultidelegateManager.swift; sourceTree = "<group>"; };
+		F5C898A3DAF5A2087BF75381 /* Pods_RongYaoTeamPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RongYaoTeamPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		7790D18320CABA2C00F7CAF5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7790D1A220CABA7300F7CAF5 /* AVFoundation.framework in Frameworks */,
+				4311539AAE05C781EA2AF1B7 /* Pods_RongYaoTeamPlayer.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5E0BA799AD5D39D77A75EEF6 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				6106DEEF81896DA0859A4508 /* Pods-RongYaoTeamPlayer.debug.xcconfig */,
+				6EB0C4A2BDB68892BD77B491 /* Pods-RongYaoTeamPlayer.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		7714FE0B20E3463D00CA6612 /* RongYaoButtonItem */ = {
+			isa = PBXGroup;
+			children = (
+				77D0BADA20E2483A00047404 /* RongYaoButtonItem.swift */,
+				77D0BADC20E24CB000047404 /* RongYaoButtonItemView.swift */,
+			);
+			path = RongYaoButtonItem;
+			sourceTree = "<group>";
+		};
+		7714FE0E20E38C2B00CA6612 /* Unused */ = {
+			isa = PBXGroup;
+			children = (
+				A69FA7EA20E099040055609C /* RYPlayer.swift */,
+				A69FA7EB20E099040055609C /* RYPlayModel.swift */,
+				A69FA7EE20E09AD90055609C /* RongYaoMultidelegateManager.swift */,
+				A676925920E0AA6A00B3F843 /* RongYaoBridge.swift */,
+			);
+			path = Unused;
+			sourceTree = "<group>";
+		};
+		7790D17D20CABA2C00F7CAF5 = {
+			isa = PBXGroup;
+			children = (
+				A6089F0C20DF73D100DA5E9B /* README.md */,
+				7790D18820CABA2C00F7CAF5 /* RongYaoTeamPlayer */,
+				7790D18720CABA2C00F7CAF5 /* Products */,
+				7790D1A020CABA7200F7CAF5 /* Frameworks */,
+				5E0BA799AD5D39D77A75EEF6 /* Pods */,
+			);
+			sourceTree = "<group>";
+		};
+		7790D18720CABA2C00F7CAF5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7790D18620CABA2C00F7CAF5 /* RongYaoTeamPlayer.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7790D18820CABA2C00F7CAF5 /* RongYaoTeamPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				7790D18920CABA2C00F7CAF5 /* AppDelegate.swift */,
+				7790D18B20CABA2C00F7CAF5 /* ViewController.swift */,
+				773DD2C320D66761008113CD /* RYTabBarController.swift */,
+				773DD2C520D6676D008113CD /* RYNavigationController.swift */,
+				7790D1A720CADC6F00F7CAF5 /* RYViewController.swift */,
+				A60F285A20E0F65400E1AA12 /* RYTestRotationViewController.swift */,
+				771C971820E21DD0001BA7FC /* RYTestGestureManagerViewController.swift */,
+				771C971A20E2273B001BA7FC /* RYTestPlayerViewController.swift */,
+				7714FE0920E3295800CA6612 /* RYTestButtonItemViewController.swift */,
+				7714FE0C20E3585800CA6612 /* RYTestEdgeControlLayerViewController.swift */,
+				7714FE0B20E3463D00CA6612 /* RongYaoButtonItem */,
+				A6089F0120DF46AE00DA5E9B /* RongYaoEdgeControlLayer */,
+				7790D19B20CABA4300F7CAF5 /* RongYaoTeamPlayer(base) */,
+				7714FE0E20E38C2B00CA6612 /* Unused */,
+				7790D18D20CABA2C00F7CAF5 /* Main.storyboard */,
+				7790D19020CABA2D00F7CAF5 /* Assets.xcassets */,
+				7790D19220CABA2D00F7CAF5 /* LaunchScreen.storyboard */,
+				7790D19520CABA2D00F7CAF5 /* Info.plist */,
+				A658746120CB8E0500611B72 /* sample.mp4 */,
+			);
+			path = RongYaoTeamPlayer;
+			sourceTree = "<group>";
+		};
+		7790D19B20CABA4300F7CAF5 /* RongYaoTeamPlayer(base) */ = {
+			isa = PBXGroup;
+			children = (
+				771C27A620CBE1D900C17E34 /* RongYaoTeamPlayer.swift */,
+				A6089F0E20DF757200DA5E9B /* RongYaoTeamPlayerAsset.swift */,
+				77B8815320D8EED00054DDE2 /* RongYaoTeamPlayerView.swift */,
+				A6089F1620DF8EA700DA5E9B /* RongYaoTeamRotationManager.swift */,
+				A6089EFF20DF44E400DA5E9B /* RongYaoTeamGestureManager.swift */,
+				77B8815520D906070054DDE2 /* RongYaoTeamPlayerExport.swift */,
+				7790D1A920CBB22900F7CAF5 /* RongYaoObserver.swift */,
+			);
+			path = "RongYaoTeamPlayer(base)";
+			sourceTree = "<group>";
+		};
+		7790D1A020CABA7200F7CAF5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				7790D1A120CABA7300F7CAF5 /* AVFoundation.framework */,
+				F5C898A3DAF5A2087BF75381 /* Pods_RongYaoTeamPlayer.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A6089F0120DF46AE00DA5E9B /* RongYaoEdgeControlLayer */ = {
+			isa = PBXGroup;
+			children = (
+				771C972220E22E29001BA7FC /* RongYaoEdgeControlLayer.bundle */,
+				A6089F0220DF476100DA5E9B /* RongYaoEdgeControlLayer.swift */,
+				7714FE1320E3951B00CA6612 /* RongYaoEdgeControlLayerView.swift */,
+				A6089F0420DF477200DA5E9B /* RongYaoEdgeControlLayerTopView.swift */,
+				A6089F0620DF477F00DA5E9B /* RongYaoEdgeControlLayerLeftView.swift */,
+				A6089F0820DF478700DA5E9B /* RongYaoEdgeControlLayerBottomView.swift */,
+				A6089F0A20DF478E00DA5E9B /* RongYaoEdgeControlLayerRightView.swift */,
+				771C972420E22EBC001BA7FC /* RongYaoEdgeControlLayerResources.swift */,
+			);
+			path = RongYaoEdgeControlLayer;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		7790D18520CABA2C00F7CAF5 /* RongYaoTeamPlayer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7790D19820CABA2D00F7CAF5 /* Build configuration list for PBXNativeTarget "RongYaoTeamPlayer" */;
+			buildPhases = (
+				80EFC4EC229599D679A5AFF6 /* [CP] Check Pods Manifest.lock */,
+				7790D18220CABA2C00F7CAF5 /* Sources */,
+				7790D18320CABA2C00F7CAF5 /* Frameworks */,
+				7790D18420CABA2C00F7CAF5 /* Resources */,
+				88F5E0DD742747B9FECEE082 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RongYaoTeamPlayer;
+			productName = RongYaoTeamPlayer;
+			productReference = 7790D18620CABA2C00F7CAF5 /* RongYaoTeamPlayer.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		7790D17E20CABA2C00F7CAF5 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = RY;
+				LastSwiftUpdateCheck = 0940;
+				LastUpgradeCheck = 0940;
+				ORGANIZATIONNAME = SanJiang;
+				TargetAttributes = {
+					7790D18520CABA2C00F7CAF5 = {
+						CreatedOnToolsVersion = 9.4;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
+					};
+				};
+			};
+			buildConfigurationList = 7790D18120CABA2C00F7CAF5 /* Build configuration list for PBXProject "RongYaoTeamPlayer" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 7790D17D20CABA2C00F7CAF5;
+			productRefGroup = 7790D18720CABA2C00F7CAF5 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7790D18520CABA2C00F7CAF5 /* RongYaoTeamPlayer */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		7790D18420CABA2C00F7CAF5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7790D19420CABA2D00F7CAF5 /* LaunchScreen.storyboard in Resources */,
+				7790D19120CABA2D00F7CAF5 /* Assets.xcassets in Resources */,
+				771C972320E22E29001BA7FC /* RongYaoEdgeControlLayer.bundle in Resources */,
+				A6089F0D20DF73D100DA5E9B /* README.md in Resources */,
+				7790D18F20CABA2C00F7CAF5 /* Main.storyboard in Resources */,
+				A658746220CB8E0500611B72 /* sample.mp4 in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		80EFC4EC229599D679A5AFF6 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RongYaoTeamPlayer-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		88F5E0DD742747B9FECEE082 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-RongYaoTeamPlayer/Pods-RongYaoTeamPlayer-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Masonry/Masonry.framework",
+				"${BUILT_PRODUCTS_DIR}/SJSlider/SJSlider.framework",
+				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Masonry.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SJSlider.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-RongYaoTeamPlayer/Pods-RongYaoTeamPlayer-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7790D18220CABA2C00F7CAF5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A6089F0020DF44E400DA5E9B /* RongYaoTeamGestureManager.swift in Sources */,
+				A6089F0320DF476100DA5E9B /* RongYaoEdgeControlLayer.swift in Sources */,
+				77B8815420D8EED00054DDE2 /* RongYaoTeamPlayerView.swift in Sources */,
+				7790D18C20CABA2C00F7CAF5 /* ViewController.swift in Sources */,
+				771C972520E22EBC001BA7FC /* RongYaoEdgeControlLayerResources.swift in Sources */,
+				773DD2C420D66761008113CD /* RYTabBarController.swift in Sources */,
+				A69FA7ED20E099040055609C /* RYPlayModel.swift in Sources */,
+				77D0BADD20E24CB000047404 /* RongYaoButtonItemView.swift in Sources */,
+				7714FE0D20E3585800CA6612 /* RYTestEdgeControlLayerViewController.swift in Sources */,
+				A6089F0520DF477200DA5E9B /* RongYaoEdgeControlLayerTopView.swift in Sources */,
+				A6089F1720DF8EA700DA5E9B /* RongYaoTeamRotationManager.swift in Sources */,
+				A6089F0B20DF478E00DA5E9B /* RongYaoEdgeControlLayerRightView.swift in Sources */,
+				771C27A720CBE1D900C17E34 /* RongYaoTeamPlayer.swift in Sources */,
+				7790D18A20CABA2C00F7CAF5 /* AppDelegate.swift in Sources */,
+				A6089F0720DF477F00DA5E9B /* RongYaoEdgeControlLayerLeftView.swift in Sources */,
+				77D0BADB20E2483A00047404 /* RongYaoButtonItem.swift in Sources */,
+				A676925A20E0AA6A00B3F843 /* RongYaoBridge.swift in Sources */,
+				A6089F0F20DF757200DA5E9B /* RongYaoTeamPlayerAsset.swift in Sources */,
+				A69FA7EC20E099040055609C /* RYPlayer.swift in Sources */,
+				7790D1A820CADC6F00F7CAF5 /* RYViewController.swift in Sources */,
+				7714FE1420E3951B00CA6612 /* RongYaoEdgeControlLayerView.swift in Sources */,
+				A6089F0920DF478700DA5E9B /* RongYaoEdgeControlLayerBottomView.swift in Sources */,
+				77B8815620D906070054DDE2 /* RongYaoTeamPlayerExport.swift in Sources */,
+				A60F285B20E0F65400E1AA12 /* RYTestRotationViewController.swift in Sources */,
+				7714FE0A20E3295800CA6612 /* RYTestButtonItemViewController.swift in Sources */,
+				A69FA7EF20E09AD90055609C /* RongYaoMultidelegateManager.swift in Sources */,
+				773DD2C620D6676D008113CD /* RYNavigationController.swift in Sources */,
+				7790D1AA20CBB22900F7CAF5 /* RongYaoObserver.swift in Sources */,
+				771C971B20E2273B001BA7FC /* RYTestPlayerViewController.swift in Sources */,
+				771C971920E21DD0001BA7FC /* RYTestGestureManagerViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		7790D18D20CABA2C00F7CAF5 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7790D18E20CABA2C00F7CAF5 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		7790D19220CABA2D00F7CAF5 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7790D19320CABA2D00F7CAF5 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		7790D19620CABA2D00F7CAF5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		7790D19720CABA2D00F7CAF5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		7790D19920CABA2D00F7CAF5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6106DEEF81896DA0859A4508 /* Pods-RongYaoTeamPlayer.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = DB5B5F2RH5;
+				INFOPLIST_FILE = RongYaoTeamPlayer/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.bluedancer.RongYaoTeamPlayer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "ae73dc69-dfb3-498f-914b-b86d97fd9950";
+				PROVISIONING_PROFILE_SPECIFIER = SanJiangDevelopment;
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		7790D19A20CABA2D00F7CAF5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6EB0C4A2BDB68892BD77B491 /* Pods-RongYaoTeamPlayer.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = RongYaoTeamPlayer/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.bluedancer.RongYaoTeamPlayer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		7790D18120CABA2C00F7CAF5 /* Build configuration list for PBXProject "RongYaoTeamPlayer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7790D19620CABA2D00F7CAF5 /* Debug */,
+				7790D19720CABA2D00F7CAF5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7790D19820CABA2D00F7CAF5 /* Build configuration list for PBXNativeTarget "RongYaoTeamPlayer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7790D19920CABA2D00F7CAF5 /* Debug */,
+				7790D19A20CABA2D00F7CAF5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 7790D17E20CABA2C00F7CAF5 /* Project object */;
+}
